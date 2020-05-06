@@ -16,6 +16,7 @@
   "plugins": ["@typescript-eslint"],
   "rules": {
     "arrow-parens": ["error", "as-needed"],
+    "class-methods-use-this": "off",
     "lines-between-class-members": "off",
     "lines-around-directive": "off",
     "no-console": "off",

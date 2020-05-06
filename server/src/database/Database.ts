@@ -29,7 +29,7 @@ export default class Database {
   public async query<T>(sql: string, params: any[]): Promise<T | T[]> {
     const fSql = sql
       .trim()
-      .replace(/(=.*)\,/g, '$1 AND ')
+      .replace(/(=.*),/g, '$1 AND ')
       .replace(/,\s*LEFT JOIN/g, ' LEFT JOIN')
       .replace(/,\s*FROM/g, ' FROM')
       .replace(/\n/g, ' ')

@@ -1,31 +1,24 @@
 import Model from '../../database/Model';
 
-class Knowledge extends Model {
+export default class Knowledge extends Model {
   constructor() {
-    super().schema('job_vacancy', {
+    super('job_vacancy', {
       id: {
-        type: Number,
-        primaryKey: true,
+        primary: true,
         required: true,
       },
       user_id: {
-        type: Number,
         required: true,
       },
       name: {
-        type: String,
         required: true,
       },
       description: {
-        type: String,
         required: true,
       },
       amount: {
-        type: Number,
         required: true,
       },
     });
   }
 }
-
-export default new Knowledge();

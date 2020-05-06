@@ -8,7 +8,7 @@ import AllySqlModelPrimaryKeyError from '../helpers/errors/AllySqlModelPrimaryKe
 import Context from '../Context';
 
 export default class Model {
-  private db: Database;
+  private db = Context.db;
   public tableName: string;
   public tableSchema: allySql.ISchema;
   public fields: string[];
@@ -17,7 +17,6 @@ export default class Model {
   public returnFields: string[];
 
   constructor(tableName: string, tableSchema: allySql.ISchema) {
-    this.db = Context.db;
     this.tableName = tableName;
     this.tableSchema = tableSchema;
 
@@ -34,8 +33,8 @@ export default class Model {
     }
   }
 
-  async find(query: allySql.IQuery): Promise<any> {
-    const { attrs = this.returnFields, limit = null, offset = 0, where, join = [] } = query;
+  async find(query: allySql.IQuery = {}): Promise<any> {
+    const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
 
     const formattedWhere = Object.entries(where as object);
 
