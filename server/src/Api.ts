@@ -29,7 +29,7 @@ export default class AllyApi {
   }
 
   public listen(port: number = Number(process.env.PORT)) {
-    console.log(`\x1b[0mServer: \x1b[4mhttp://localhost:${port}\x1b[0m `);
+    console.log(`\x1b[0mSERVER: \x1b[34mhttp://localhost:${port}\x1b[0m`);
     this.server.listen(port);
   }
 }

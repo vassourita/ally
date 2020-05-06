@@ -1,6 +1,12 @@
+import Database from '../database/Database';
+
 export {};
 
 declare global {
+  interface Context {
+    db: Database;
+  }
+
   interface HttpRequest {
     body: object;
     query: {
@@ -18,5 +24,5 @@ declare global {
     message: string;
   }
 
-  type ControllerRoute = (request: HttpRequest) => Promise<HttpResponse>;
+  type ControllerRoute = (request: HttpRequest, ctx: Context) => Promise<HttpResponse>;
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Youch from 'youch';
+import Context from '../../Context';
 
 export default class RouterAdapter {
   static adapt(controllerRoute: ControllerRoute) {
@@ -10,7 +11,7 @@ export default class RouterAdapter {
           query: req.query,
           params: req.params,
         };
-        const httpResponse = await controllerRoute(httpRequest);
+        const httpResponse = await controllerRoute(httpRequest, Context);
         return res.status(httpResponse.statusCode).json(httpResponse.body);
       } catch (e) {
         if (process.env.NODE_ENV === 'development') {

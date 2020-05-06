@@ -1,19 +1,23 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable indent */
 import pluralize from 'pluralize';
 
 import Database from './Database';
-import AllySqlModelPrimaryKeyError from './AllySqlModelPrimaryKeyError';
+import AllySqlModelPrimaryKeyError from '../helpers/errors/AllySqlModelPrimaryKeyError';
+import Context from '../Context';
 
 export default class Model {
-  public static db: Database;
-  public static tableName: string;
-  public static tableSchema: allySql.ISchema;
-  public static fields: string[];
-  public static primaryFields: string[];
-  public static requiredFields: string[];
-  public static returnFields: string[];
+  private db: Database;
+  public tableName: string;
+  public tableSchema: allySql.ISchema;
+  public fields: string[];
+  public primaryFields: string[];
+  public requiredFields: string[];
+  public returnFields: string[];
 
-  static init(db: Database, tableName: string, tableSchema: allySql.ISchema) {
-    this.db = db;
+  constructor(tableName: string, tableSchema: allySql.ISchema) {
+    this.db = Context.db;
     this.tableName = tableName;
     this.tableSchema = tableSchema;
 
@@ -30,7 +34,7 @@ export default class Model {
     }
   }
 
-  static async find(query: allySql.IQuery): Promise<any> {
+  async find(query: allySql.IQuery): Promise<any> {
     const { attrs = this.returnFields, limit = null, offset = 0, where, join = [] } = query;
 
     const formattedWhere = Object.entries(where as object);
@@ -64,11 +68,17 @@ export default class Model {
       fields: (): string | string[] => {
         return join.map(j => {
           const attrs = j.attrs || j.model.returnFields;
-          const getJoinName = j.as || pluralize(j.model.tableName)
+          const getJoinName = j.as || pluralize(j.model.tableName);
           const getAttrs = attrs.map(attr => ` '${attr}', ${j.model.tableName}.${attr}, `);
-          const getObjectFields = j.attrs.map(attr => ` '${attr}', ${j.model.tableName}.${attr} ` );
-          const getInnerJoins: string[] = j.join.map(iJ => ` '${iJ.as || pluralize(iJ.model.tableName)}', ${Model.getJoins(j.join, j.model).fields()} ` as string);
-  
+          const getObjectFields = j.attrs.map(attr => ` '${attr}', ${j.model.tableName}.${attr} `);
+          const getInnerJoins: string[] = j.join.map(
+            iJ =>
+              ` '${iJ.as || pluralize(iJ.model.tableName)}', ${Model.getJoins(
+                j.join,
+                j.model as Model,
+              ).fields()} ` as string,
+          );
+
           switch (j.type) {
             case 'many':
               return `
@@ -84,38 +94,38 @@ export default class Model {
                   ) AS ${getJoinName},
                 )
               `;
-              
+
             case 'single':
               return `
                 JSON_OBJECT(
                   ${getObjectFields}
                 ) AS ${getJoinName},
               `;
-          
+
             default:
               throw new Error('Joins must always have a type');
           }
-        }
+        });
       },
       joins: (): string | string[] => {
         if (join) {
           return join.map(j => {
             const getOn = j.on
-              ? 'ON ' + Object.entries(j.on).map(w =>
-                `\n${j.model.tableName}.${w[0]} = ${upperModel.tableName}.${w[1]}`
-              )
-              : ''
-            const getInnerJoins: string | string[] = j.join ? this.getJoins(j.join, j.model).joins() : '';
+              ? `ON ${Object.entries(j.on).map(
+                  w => `\n${j.model.tableName}.${w[0]} = ${upperModel.tableName}.${w[1]}`,
+                )}`
+              : '';
+            const getInnerJoins: string | string[] = j.join ? Model.getJoins(j.join, j.model as Model).joins() : '';
             return `
               LEFT JOIN
                 ${j.model.tableName} 
                   ${getOn}
                 ${getInnerJoins}
             `;
-          })
+          });
         }
         return '';
-      }
-    }
+      },
+    };
   }
 }
