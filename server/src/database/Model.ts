@@ -5,10 +5,10 @@ import pluralize from 'pluralize';
 
 import Database from './Database';
 import AllySqlModelPrimaryKeyError from '../helpers/errors/AllySqlModelPrimaryKeyError';
-import Context from '../Context';
+import database from './index';
 
 export default class Model {
-  private db = Context.db;
+  private db = database;
   public tableName: string;
   public tableSchema: allySql.ISchema;
   public fields: string[];
@@ -39,7 +39,7 @@ export default class Model {
     const formattedWhere = Object.entries(where as object);
 
     const getSelect = attrs.map(a => ` ${this.tableName}.${a} `);
-    const getWhere = formattedWhere
+    const getWhere = formattedWhere[0]
       ? `WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${Database.escape(w[1])}`)}`
       : '';
     const getGroupBy = join.length ? ` GROUP BY ${this.tableName}.${this.primaryFields[0]} ` : '';
@@ -57,9 +57,14 @@ export default class Model {
       ${getOffset}
     `;
 
-    this.db.query(sql, []);
+    const results = this.db.query(sql, []);
 
-    return {};
+    return results;
+  }
+
+  async findOne(query: allySql.IQuery) {
+    const results = await this.find({ ...query, limit: 1 });
+    return results[0] || null;
   }
 
   static getJoins(join: allySql.IJoin[], upperModel: Model) {

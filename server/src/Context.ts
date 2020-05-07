@@ -1,27 +1,21 @@
-import { ConnectionConfig } from 'mysql';
-
-import dbConfig from './config/database';
-import Database from './database/Database';
 import Model from './database/Model';
 import User from './app/models/User';
 import JobVacancy from './app/models/JobVacancy';
 import Rating from './app/models/Rating';
 
 export default class Context {
-  public static db: Database = new Database(dbConfig as ConnectionConfig);
-
   public static Users: Model = new User();
   public static Ratings: Model = new Rating();
   public static JobVacancies: Model = new JobVacancy();
 
-  public static Ok<T>(body: T): HttpResponse {
+  public static Ok(body: any): HttpResponse {
     return {
       statusCode: 200,
       body,
     };
   }
 
-  public static Created<T>(body: T): HttpResponse {
+  public static Created(body: any): HttpResponse {
     return {
       statusCode: 201,
       body,
