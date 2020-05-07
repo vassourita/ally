@@ -58,4 +58,13 @@ export default class Context {
       },
     };
   }
+
+  public NotImplemented(error = 'Method not implemented'): HttpResponse {
+    return {
+      statusCode: 501,
+      body: {
+        message: error,
+      },
+    };
+  }
 }
