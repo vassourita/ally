@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 /* eslint-disable arrow-body-style */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable indent */
@@ -15,6 +16,7 @@ export default class Model {
   public primaryFields: string[];
   public requiredFields: string[];
   public returnFields: string[];
+  public ts: object;
 
   constructor(tableName: string, tableSchema: allySql.ISchema) {
     this.tableName = tableName;
@@ -28,12 +30,18 @@ export default class Model {
     this.requiredFields = keys.filter((k, i) => values[i].required || false);
     this.returnFields = keys.filter((k, i) => values[i].returning || true);
 
+    const ts = {} as any;
+    this.fields.forEach(f => {
+      ts[f] = this.tableSchema[f].type;
+    });
+    this.ts = ts;
+
     if (this.primaryFields.length < 1) {
       throw new AllySqlModelPrimaryKeyError();
     }
   }
 
-  async find(query: allySql.IQuery = {}): Promise<any> {
+  async find(query: allySql.IQueryMany = {}): Promise<any> {
     const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
 
     const formattedWhere = Object.entries(where as object);
@@ -57,17 +65,50 @@ export default class Model {
       ${getOffset}
     `;
 
-    const results = this.db.query(sql, []);
+    const types = this.ts;
+    const results = this.db.query<typeof types[]>(sql, []);
 
     return results;
   }
 
-  async findOne(query: allySql.IQuery) {
+  async findOne(query: allySql.IQueryOne) {
     const results = await this.find({ ...query, limit: 1 });
     return results[0] || null;
   }
 
-  static getJoins(join: allySql.IJoin[], upperModel: Model) {
+  async delete({ where }: allySql.IDeleteQuery) {
+    const formattedWhere = Object.entries(where);
+    const sql = `
+      DELETE FROM ${this.tableName}
+      WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${Database.escape(w[1])}`)}
+    `;
+    const rows = await this.db.query<{ affectedRows: number }>(sql, []);
+    return rows.affectedRows;
+  }
+
+  async create(schema: object, returning = true) {
+    const sql = `
+      INSERT INTO ${this.tableName}
+        (${Object.keys(schema)})
+        VALUES
+        (${Database.escape(Object.values(schema))});
+    `;
+    const { insertId } = await this.db.query<{ insertId: number }>(sql, []);
+
+    if (returning) {
+      const res = await this.findOne({
+        where: { [this.primaryFields[0]]: insertId },
+      });
+      if (res) return res;
+
+      return this.findOne({
+        where: { [this.primaryFields[1]]: insertId },
+      });
+    }
+    return insertId;
+  }
+
+  protected static getJoins(join: allySql.IJoin[], upperModel: Model) {
     return {
       fields: (): string | string[] => {
         return join.map(j => {

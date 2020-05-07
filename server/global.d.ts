@@ -37,20 +37,28 @@ declare global {
         primary?: boolean;
         required?: boolean;
         returning?: boolean;
+        type: Boolean | Number | String | ISchema[];
       };
     }
 
-    interface IQuery {
+    interface IQueryOne {
       attrs?: string[];
       where?: IWhere;
       join?: IJoin[];
-      limit?: number;
       offset?: number;
     }
 
-    interface IWhere {
-      [field: string]: string;
+    interface IQueryMany extends IQueryOne {
+      limit?: number;
     }
+
+    interface IDeleteQuery {
+      where: IWhere;
+    }
+
+    type IWhere = {
+      [field: string]: string | number | boolean;
+    };
 
     interface IJoin {
       model: Model;
