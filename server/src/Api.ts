@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import http from 'http';
 import cors from 'cors';
-import express from 'express';
+import Youch from 'youch';
+import express, { Request, NextFunction, Response } from 'express';
+import 'express-async-errors';
 
-import routes from './routes';
+import Router from './Router';
 
 export default class AllyApi {
   private server: http.Server;
@@ -17,6 +19,7 @@ export default class AllyApi {
 
     this.middlewares();
     this.routes();
+    this.exceptionHandler();
   }
 
   private middlewares() {
@@ -25,7 +28,20 @@ export default class AllyApi {
   }
 
   private routes() {
-    this.app.use(routes);
+    const router = new Router();
+    this.app.use(router.routes);
+  }
+
+  private exceptionHandler() {
+    this.app.use(async (err: Error, req: Request, res: Response, next: NextFunction) => {
+      if (process.env.NODE_ENV === 'development') {
+        const errors = await new Youch(err, req).toJSON();
+
+        return res.status(500).json({ errors });
+      }
+
+      return res.status(500).json({ error: 'Internal server error' });
+    });
   }
 
   public listen(port: number = Number(process.env.PORT)) {

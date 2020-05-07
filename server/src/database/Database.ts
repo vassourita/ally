@@ -26,7 +26,7 @@ export default class Database {
     return res;
   }
 
-  public async query<T>(sql: string, params: any[]): Promise<T> {
+  public async query<T>(sql: string, params: any[]): Promise<T | T[]> {
     const fSql = sql
       .trim()
       .replace(/(=.*),/g, '$1 AND ')

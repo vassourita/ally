@@ -8,17 +8,52 @@ import Database from './Database';
 import AllySqlModelPrimaryKeyError from '../helpers/errors/AllySqlModelPrimaryKeyError';
 import database from './index';
 
+interface ISchema {
+  [fieldName: string]: {
+    primary?: boolean;
+    required?: boolean;
+    returning?: boolean;
+  };
+}
+
+interface IQueryOne {
+  attrs?: string[];
+  where?: IWhere;
+  join?: IJoin[];
+  offset?: number;
+}
+
+interface IQueryMany extends IQueryOne {
+  limit?: number;
+}
+
+interface IDeleteQuery {
+  where: IWhere;
+}
+
+type IWhere = {
+  [field: string]: string | number | boolean;
+};
+
+interface IJoin {
+  model: Model;
+  attrs: string[];
+  join: IJoin[];
+  on: IWhere;
+  as: string;
+  type: 'many' | 'single';
+}
+
 export default class Model {
   private db = database;
   public tableName: string;
-  public tableSchema: allySql.ISchema;
+  public tableSchema: ISchema;
   public fields: string[];
   public primaryFields: string[];
   public requiredFields: string[];
   public returnFields: string[];
-  public ts: object;
 
-  constructor(tableName: string, tableSchema: allySql.ISchema) {
+  constructor(tableName: string, tableSchema: ISchema) {
     this.tableName = tableName;
     this.tableSchema = tableSchema;
 
@@ -30,18 +65,12 @@ export default class Model {
     this.requiredFields = keys.filter((k, i) => values[i].required || false);
     this.returnFields = keys.filter((k, i) => values[i].returning || true);
 
-    const ts = {} as any;
-    this.fields.forEach(f => {
-      ts[f] = this.tableSchema[f].type;
-    });
-    this.ts = ts;
-
     if (this.primaryFields.length < 1) {
       throw new AllySqlModelPrimaryKeyError();
     }
   }
 
-  async find(query: allySql.IQueryMany = {}): Promise<any> {
+  async find(query: IQueryMany = {}): Promise<any> {
     const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
 
     const formattedWhere = Object.entries(where as object);
@@ -65,24 +94,23 @@ export default class Model {
       ${getOffset}
     `;
 
-    const types = this.ts;
-    const results = this.db.query<typeof types[]>(sql, []);
+    const results = this.db.query(sql, []);
 
     return results;
   }
 
-  async findOne(query: allySql.IQueryOne) {
+  async findOne(query: IQueryOne) {
     const results = await this.find({ ...query, limit: 1 });
     return results[0] || null;
   }
 
-  async delete({ where }: allySql.IDeleteQuery) {
+  async delete({ where }: IDeleteQuery) {
     const formattedWhere = Object.entries(where);
     const sql = `
       DELETE FROM ${this.tableName}
       WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${Database.escape(w[1])}`)}
     `;
-    const rows = await this.db.query<{ affectedRows: number }>(sql, []);
+    const rows = await this.db.query<any>(sql, []);
     return rows.affectedRows;
   }
 
@@ -93,7 +121,7 @@ export default class Model {
         VALUES
         (${Database.escape(Object.values(schema))});
     `;
-    const { insertId } = await this.db.query<{ insertId: number }>(sql, []);
+    const { insertId } = await this.db.query<any>(sql, []);
 
     if (returning) {
       const res = await this.findOne({
@@ -108,7 +136,7 @@ export default class Model {
     return insertId;
   }
 
-  protected static getJoins(join: allySql.IJoin[], upperModel: Model) {
+  protected static getJoins(join: IJoin[], upperModel: Model) {
     return {
       fields: (): string | string[] => {
         return join.map(j => {
