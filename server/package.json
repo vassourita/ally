@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon src/index",
-    "build": "sucrase ./src -d ./dist --transforms typescript,imports",
-    "start": "node ./dist/index"
+    "build": "tsc",
+    "start": "node ./dist/src/index"
   },
   "keywords": [],
   "author": "Vinicius Vassão",
