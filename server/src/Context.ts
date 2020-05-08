@@ -1,13 +1,20 @@
-import Model from './database/Model';
-import User from './app/models/User';
-import JobVacancy from './app/models/JobVacancy';
-import Rating from './app/models/Rating';
+import Repository from './database/Repository';
+import UserRepository from './app/repositories/UserRepository';
+import JobVacancyRepository from './app/repositories/JobVacancyRepository';
+import RatingRepository from './app/repositories/RatingRepository';
 import HttpResponse from './protocols/HttpResponse';
+import Database from './database/Database';
 
 export default class Context {
-  public Users: Model = new User();
-  public Ratings: Model = new Rating();
-  public JobVacancies: Model = new JobVacancy();
+  private readonly db: Database;
+
+  public Users: Repository = new UserRepository(this.db);
+  public Ratings: Repository = new RatingRepository(this.db);
+  public JobVacancies: Repository = new JobVacancyRepository(this.db);
+
+  constructor(db: Database) {
+    this.db = db;
+  }
 
   public Ok(body: any): HttpResponse {
     return {

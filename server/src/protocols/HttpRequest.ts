@@ -1,7 +1,7 @@
 export default interface HttpRequest {
   body: object;
   params: {
-    id?: number;
+    id: number;
   };
   query: {
     page?: number;

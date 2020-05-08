@@ -1,8 +1,9 @@
-import Model from '../../database/Model';
+import Repository from '../../database/Repository';
+import Database from '../../database/Database';
 
-export default class User extends Model {
-  constructor() {
-    super('user', {
+export default class UserRepository extends Repository {
+  constructor(db: Database) {
+    super(db, 'user', {
       id: {
         primary: true,
         required: true,

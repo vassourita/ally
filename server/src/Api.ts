@@ -6,12 +6,13 @@ import express, { Request, NextFunction, Response } from 'express';
 import 'express-async-errors';
 
 import Router from './Router';
+import Database from './database/Database';
 
 export default class AllyApi {
   private server: http.Server;
   private app: express.Application;
 
-  constructor() {
+  constructor(private readonly db: Database) {
     this.app = express();
     this.app.disable('x-powered-by');
 
@@ -28,7 +29,7 @@ export default class AllyApi {
   }
 
   private routes() {
-    const router = new Router();
+    const router = new Router(this.db);
     this.app.use(router.routes);
   }
 

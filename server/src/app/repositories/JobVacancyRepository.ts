@@ -1,8 +1,9 @@
-import Model from '../../database/Model';
+import Repository from '../../database/Repository';
+import Database from '../../database/Database';
 
-export default class Knowledge extends Model {
-  constructor() {
-    super('job_vacancy', {
+export default class JobVacancyRepository extends Repository {
+  constructor(db: Database) {
+    super(db, 'job_vacancy', {
       id: {
         primary: true,
         required: true,

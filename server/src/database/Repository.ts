@@ -5,8 +5,7 @@
 import pluralize from 'pluralize';
 
 import Database from './Database';
-import AllySqlModelPrimaryKeyError from '../helpers/errors/AllySqlModelPrimaryKeyError';
-import database from './index';
+import AllySqlRepositoryPrimaryKeyError from '../helpers/errors/AllySqlRepositoryPrimaryKeyError';
 
 interface ISchema {
   [fieldName: string]: {
@@ -36,7 +35,7 @@ type IWhere = {
 };
 
 interface IJoin {
-  model: Model;
+  repo: Repository;
   attrs: string[];
   join: IJoin[];
   on: IWhere;
@@ -44,8 +43,7 @@ interface IJoin {
   type: 'many' | 'single';
 }
 
-export default class Model {
-  private db = database;
+export default class Repository {
   public tableName: string;
   public tableSchema: ISchema;
   public fields: string[];
@@ -53,7 +51,7 @@ export default class Model {
   public requiredFields: string[];
   public returnFields: string[];
 
-  constructor(tableName: string, tableSchema: ISchema) {
+  constructor(private readonly db: Database, tableName: string, tableSchema: ISchema) {
     this.tableName = tableName;
     this.tableSchema = tableSchema;
 
@@ -66,7 +64,7 @@ export default class Model {
     this.returnFields = keys.filter((k, i) => values[i].returning || true);
 
     if (this.primaryFields.length < 1) {
-      throw new AllySqlModelPrimaryKeyError();
+      throw new AllySqlRepositoryPrimaryKeyError();
     }
   }
 
@@ -85,9 +83,9 @@ export default class Model {
 
     const sql = `
       SELECT ${getSelect}
-      ,${Model.getJoins(join, this).fields()}
+      ,${Repository.getJoins(join, this).fields()}
       FROM ${this.tableName}
-      ${Model.getJoins(join, this).joins()}
+      ${Repository.getJoins(join, this).joins()}
       ${getWhere}
       ${getGroupBy}
       ${getLimit}
@@ -136,19 +134,19 @@ export default class Model {
     return insertId;
   }
 
-  protected static getJoins(join: IJoin[], upperModel: Model) {
+  protected static getJoins(join: IJoin[], upperRepository: Repository) {
     return {
       fields: (): string | string[] => {
         return join.map(j => {
-          const attrs = j.attrs || j.model.returnFields;
-          const getJoinName = j.as || pluralize(j.model.tableName);
-          const getAttrs = attrs.map(attr => ` '${attr}', ${j.model.tableName}.${attr}, `);
-          const getObjectFields = j.attrs.map(attr => ` '${attr}', ${j.model.tableName}.${attr} `);
+          const attrs = j.attrs || j.repo.returnFields;
+          const getJoinName = j.as || pluralize(j.repo.tableName);
+          const getAttrs = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr}, `);
+          const getObjectFields = j.attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr} `);
           const getInnerJoins: string[] = j.join.map(
             iJ =>
-              ` '${iJ.as || pluralize(iJ.model.tableName)}', ${Model.getJoins(
+              ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(
                 j.join,
-                j.model as Model,
+                j.repo as Repository,
               ).fields()} ` as string,
           );
 
@@ -156,7 +154,7 @@ export default class Model {
             case 'many':
               return `
                 IF(
-                  ${j.model.tableName}.${j.model.primaryFields[0]} IS NULL,
+                  ${j.repo.tableName}.${j.repo.primaryFields[0]} IS NULL,
                   JSON_ARRAY(),
                   JSON_ARRAYAGG(
                     JSON_OBJECT(
@@ -185,13 +183,15 @@ export default class Model {
           return join.map(j => {
             const getOn = j.on
               ? `ON ${Object.entries(j.on).map(
-                  w => `\n${j.model.tableName}.${w[0]} = ${upperModel.tableName}.${w[1]}`,
+                  w => `\n${j.repo.tableName}.${w[0]} = ${upperRepository.tableName}.${w[1]}`,
                 )}`
               : '';
-            const getInnerJoins: string | string[] = j.join ? Model.getJoins(j.join, j.model as Model).joins() : '';
+            const getInnerJoins: string | string[] = j.join
+              ? Repository.getJoins(j.join, j.repo as Repository).joins()
+              : '';
             return `
               LEFT JOIN
-                ${j.model.tableName} 
+                ${j.repo.tableName} 
                   ${getOn}
                 ${getInnerJoins}
             `;

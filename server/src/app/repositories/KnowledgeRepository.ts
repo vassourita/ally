@@ -1,8 +1,9 @@
-import Model from '../../database/Model';
+import Repository from '../../database/Repository';
+import Database from '../../database/Database';
 
-export default class Knowledge extends Model {
-  constructor() {
-    super('knowledge', {
+export default class KnowledgeRepository extends Repository {
+  constructor(db: Database) {
+    super(db, 'knowledge', {
       id: {
         primary: true,
         required: true,

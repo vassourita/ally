@@ -1,8 +1,9 @@
-import Model from '../../database/Model';
+import Repository from '../../database/Repository';
+import Database from '../../database/Database';
 
-export default class Rating extends Model {
-  constructor() {
-    super('rating', {
+export default class RatingRepository extends Repository {
+  constructor(db: Database) {
+    super(db, 'rating', {
       id: {
         primary: true,
         required: true,
