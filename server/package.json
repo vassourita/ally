@@ -5,13 +5,13 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon src/index",
-    "start": "tsc && node ./dist/index"
+    "build": "sucrase ./src -d ./dist --transforms typescript,imports",
+    "start": "node ./dist/index"
   },
   "keywords": [],
   "author": "Vinicius Vassão",
   "license": "MIT",
   "dependencies": {
-    "ally-sql": "file://./../ally-sql",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
