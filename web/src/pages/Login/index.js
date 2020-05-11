@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
+import api from '../../services/api';
+
+import ErrorBox from '../../components/ErrorBox';
 import CardHeader from '../../components/CardHeader';
 import InputBlock from '../../components/InputBlock';
 import CheckBox from '../../components/CheckBox';
 import Button from '../../components/Button';
-import { Link } from 'react-router-dom';
-
-import { OpaqueLink } from './styles';
+import OpaqueLink from '../../components/OpaqueLink';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -14,19 +16,59 @@ function Login() {
   const [keepLogged, setKeepLogged] = useState(false);
   const [error, setError] = useState('');
 
+  const history = useHistory();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const response = await api.post('/sessions', {
+        email,
+        password,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error.field);
+      } else {
+        sessionStorage.setItem('ally_authorization', response.data.token);
+        history.push('/profile');
+      }
+    } catch (error) {
+      setError('server');
+      setTimeout(() => setError(''), 4000);
+    }
+  }
+
   return (
     <>
+      {error === 'server' && <ErrorBox message="Servidor offline. Tente novamente mais tarde" />}
+
       <CardHeader title="Login" sub="Faça login para acessar sua conta" />
-      <form>
-        <InputBlock label="Email" id="email" />
-        <InputBlock label="Senha" id="password" type="password" isPass />
+      <form onSubmit={handleSubmit}>
+        <InputBlock
+          label="Email"
+          id="email"
+          onChange={e => setEmail(e.target.value)}
+          value={email}
+          setError={error === 'email'}
+          errorMessage="Este usuário não existe"
+        />
+        <InputBlock
+          label="Senha"
+          id="password"
+          type="password"
+          onChange={e => setPassword(e.target.value)}
+          value={password}
+          setError={error === 'password'}
+          errorMessage="Senha inválida"
+          isPass
+        />
         <CheckBox onChange={e => setKeepLogged(Boolean(e.target.checked))} checked={keepLogged}>
           Manter-me conectado
         </CheckBox>
         <Button text={'Login'} />
-        <OpaqueLink>
+        <OpaqueLink to="/register/1" text="Cadastre-se">
           Não tem uma conta?
-          <Link to="/register/1">Cadastre-se</Link>
         </OpaqueLink>
       </form>
     </>

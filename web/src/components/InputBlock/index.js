@@ -60,7 +60,7 @@ const Input = styled.div`
   position: relative;
 
   border: 1px solid #aaa;
-  transition: 0.3s ease-in-out;
+  transition: all 0.4s ease-out;
 
   button {
     border: none;
@@ -84,15 +84,15 @@ const Input = styled.div`
     left: 15px;
 
     background-color: #fff;
-    transition: 0.3s ease-in-out;
+    transition: all 0.4s ease-out;
 
     label {
       margin: 0 4px;
       color: #000;
       opacity: 60%;
       font-size: 16px;
+      transition: all 0.4s ease-out;
       cursor: text;
-      transition: 0.3s ease-in-out;
     }
   }
 
@@ -101,6 +101,8 @@ const Input = styled.div`
     font-size: 14px;
     border: none;
     color: #4f4f4f;
+
+    transition: all 0.4s ease-out;
 
     &:focus + div {
       label {
