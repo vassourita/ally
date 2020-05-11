@@ -1,9 +1,13 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
   :root {
+    --ally-red-l: #f1328e;
     --ally-red: #A30B54;
+    --ally-red-d: #690736;
+    --ally-blue-l: #7fa3d6;
     --ally-blue: #3D73BF;
+    --ally-blue-d: #274a7c;
     --ally-dark: #191929;
   }
   * {
@@ -13,5 +17,18 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing:border-box;
     font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+  #root {
+    height: 100vh;
+  }
+  a {
+    color: #fff;
+    text-decoration: none;
+    &:visited {
+      color: inherit
+    }
+    &:hover {
+      color: inherit
+    }
   }
 `;
