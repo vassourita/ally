@@ -30,29 +30,38 @@ export default class Context {
     };
   }
 
-  public BadRequest(error = 'Invalid request syntax'): HttpResponse {
+  public BadRequest(error = 'Invalid request syntax', field = ''): HttpResponse {
     return {
       statusCode: 400,
       body: {
-        message: error,
+        error: {
+          message: error,
+          field,
+        },
       },
     };
   }
 
-  public Unauthorized(error = 'Operation not authorized'): HttpResponse {
+  public Unauthorized(error = 'Operation not authorized', field = ''): HttpResponse {
     return {
       statusCode: 401,
       body: {
-        message: error,
+        error: {
+          message: error,
+          field,
+        },
       },
     };
   }
 
-  public NotFound(error = 'Resource not found'): HttpResponse {
+  public NotFound(error = 'Resource not found', field = ''): HttpResponse {
     return {
       statusCode: 404,
       body: {
-        message: error,
+        error: {
+          message: error,
+          field,
+        },
       },
     };
   }
@@ -61,7 +70,9 @@ export default class Context {
     return {
       statusCode: 500,
       body: {
-        message: error,
+        error: {
+          message: error,
+        },
       },
     };
   }
@@ -70,7 +81,9 @@ export default class Context {
     return {
       statusCode: 501,
       body: {
-        message: error,
+        error: {
+          message: error,
+        },
       },
     };
   }

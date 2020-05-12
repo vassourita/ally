@@ -12,6 +12,9 @@ const Container = styled.div`
   & > div {
     margin: 0;
   }
+  nav + * > & {
+    width: calc(100vw - 190px - 330px - 80px);
+  }
 `;
 
 export default CardBox;
