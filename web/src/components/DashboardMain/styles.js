@@ -10,4 +10,7 @@ export const Container = styled.div`
 export const Page = styled.div`
   grid-row: 2/2;
   grid-column: 2/2;
+  transition: 0.5s ease;
+  background-image: url(${p => p.imgUrl});
+  background-size: cover;
 `;

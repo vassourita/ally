@@ -1,12 +1,45 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { FiUser, FiBriefcase, FiMessageSquare, FiBell, FiStar } from 'react-icons/fi';
 
-import { Container } from './styles';
+import { Container, Title, List, ListItem, PageName } from './styles';
 
 function DashboardNav() {
   return (
     <Container>
-      <div></div>
+      <Title>Menu</Title>
+      <List>
+        <ListItem>
+          <NavLink activeClassName="nav-link-active" to="/profile">
+            <FiUser size="20" />
+            <PageName>Perfil</PageName>
+          </NavLink>
+        </ListItem>
+        <ListItem>
+          <NavLink activeClassName="nav-link-active" to="/vacancies">
+            <FiBriefcase size="20" />
+            <PageName>Vagas</PageName>
+          </NavLink>
+        </ListItem>
+        <ListItem>
+          <NavLink activeClassName="nav-link-active" to="/chat">
+            <FiMessageSquare size="20" />
+            <PageName>Mensagens</PageName>
+          </NavLink>
+        </ListItem>
+        <ListItem>
+          <NavLink activeClassName="nav-link-active" to="/notifications">
+            <FiBell size="20" />
+            <PageName>Notificações</PageName>
+          </NavLink>
+        </ListItem>
+        <ListItem>
+          <NavLink activeClassName="nav-link-active" to="/rate">
+            <FiStar size="20" />
+            <PageName>Avaliar</PageName>
+          </NavLink>
+        </ListItem>
+      </List>
     </Container>
   );
 }

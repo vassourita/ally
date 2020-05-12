@@ -1,5 +1,7 @@
 import React from 'react';
 
+import img from '../../assets/background/dash-1.png';
+
 import DashboardHeader from '../DashboardHeader';
 import DashboardNav from '../DashboardNav';
 
@@ -10,7 +12,7 @@ function DashboardMain({ children }) {
     <Container>
       <DashboardHeader />
       <DashboardNav />
-      <Page>{children}</Page>
+      <Page imgUrl={img}>{children}</Page>
     </Container>
   );
 }
