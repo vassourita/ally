@@ -6,11 +6,11 @@ import iconImg from '../../assets/logo/icon50.png';
 import { Container, Head, List, ListItem, Greeting } from './styles';
 
 function DashboardHeader() {
-  const user = {
+  const [user] = useState({
     name: 'Anônimo',
     image_url:
       'https://images.unsplash.com/photo-1580925594670-117567b46f26?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1049&q=80',
-  };
+  });
 
   function getGreetingBasedOnTime() {
     const hours = new Date().getHours();

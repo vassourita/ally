@@ -1,7 +1,14 @@
 import React from 'react';
 
+import CardBox from '../../components/CardBox';
+import CardHeader from '../../components/CardHeader';
+
 function Notifications() {
-  return <h1>Notifications</h1>;
+  return (
+    <CardBox>
+      <CardHeader title="Notificações" />
+    </CardBox>
+  );
 }
 
 export default Notifications;

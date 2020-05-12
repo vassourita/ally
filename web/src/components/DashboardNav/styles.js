@@ -26,6 +26,7 @@ export const ListItem = styled.li`
     display: flex;
     align-items: center;
     opacity: 60%;
+    transition: 0.3s ease-out;
     &.nav-link-active {
       opacity: 100%;
       border-right: 7px solid #fff;
