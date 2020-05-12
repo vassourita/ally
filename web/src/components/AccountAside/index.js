@@ -6,7 +6,7 @@ import { Container, ReturnButton, Title, Paragraph, SocialIcons } from './styles
 
 function AccountAside() {
   return (
-    <Container>
+    <Container className="modal-shadow">
       <ReturnButton>
         <Link to="/">
           <FiArrowLeft />

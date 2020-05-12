@@ -8,10 +8,11 @@ import Vacancies from '../../pages/Vacancies';
 import CreateVacancy from '../../pages/CreateVacancy';
 import Notifications from '../../pages/Notifications';
 
+import DashboardMain from '../../components/DashboardMain';
+
 function Dashboard() {
   return (
-    <>
-      <h1>Dashboard</h1>
+    <DashboardMain>
       <Switch>
         <Route path="/chat" component={Chat} />
         <Route path="/rate" component={Rating} />
@@ -20,7 +21,7 @@ function Dashboard() {
         <Route path="/vacancies/new" component={CreateVacancy} />
         <Route path="/notifications" component={Notifications} />
       </Switch>
-    </>
+    </DashboardMain>
   );
 }
 

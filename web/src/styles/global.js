@@ -31,4 +31,10 @@ export const GlobalStyles = createGlobalStyle`
       color: inherit
     }
   }
+  li {
+    list-style: none;
+  }
+  .modal-shadow {
+    box-shadow: 0px 0px 8px rgba(34, 34, 34, 0.4);
+  }
 `;
