@@ -1,0 +1,38 @@
+import React from 'react';
+
+import InputBlock from '../../components/InputBlock';
+
+function Form1({ state, setState }) {
+  return (
+    <>
+      <InputBlock
+        label="Nome da empresa"
+        id="name"
+        value={state.name}
+        onChange={e => setState({ ...state, name: e.target.value })}
+      />
+      <InputBlock
+        label="Email"
+        id="email"
+        value={state.email}
+        onChange={e => setState({ ...state, email: e.target.value })}
+      />
+      <InputBlock
+        label="Senha"
+        id="password"
+        isPass
+        value={state.password}
+        onChange={e => setState({ ...state, password: e.target.value })}
+      />
+      <InputBlock
+        label="Confirmar senha"
+        id="confirm"
+        isPass
+        value={state.confirm}
+        onChange={e => setState({ ...state, confirm: e.target.value })}
+      />
+    </>
+  );
+}
+
+export default Form1;

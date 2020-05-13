@@ -2,7 +2,7 @@ import React from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import styled from 'styled-components';
 
-export default function InputBlock({ id, label, error = 'Erro', isPass, setError = false, type = 'text', ...rest }) {
+export default function InputBlock({ id, label, errors = [{}], isPass, type = 'text', ...rest }) {
   const [passwordShown, setPasswordShown] = React.useState(false);
 
   const togglePasswordVisiblity = e => {
@@ -11,18 +11,20 @@ export default function InputBlock({ id, label, error = 'Erro', isPass, setError
   };
 
   function getType() {
-    if (!isPass) {
-      return type;
-    }
-    if (passwordShown) {
-      return 'text';
-    }
+    if (!isPass) return type;
+    if (passwordShown) return 'text';
     return 'password';
+  }
+
+  function getErrors() {
+    for (const error of errors) {
+      if (error.cond) return error.text;
+    }
   }
 
   return (
     <Container>
-      <Input>
+      <InputContainer>
         <input id={id} type={getType()} {...rest} />
         {isPass && (
           <button onClick={togglePasswordVisiblity}>
@@ -32,8 +34,8 @@ export default function InputBlock({ id, label, error = 'Erro', isPass, setError
         <div>
           <label htmlFor={id}>{label}</label>
         </div>
-      </Input>
-      <span>{setError && error}</span>
+      </InputContainer>
+      <span>{getErrors()}</span>
     </Container>
   );
 }
@@ -51,7 +53,7 @@ const Container = styled.div`
   }
 `;
 
-const Input = styled.div`
+const InputContainer = styled.div`
   padding: 0 15px;
   height: 42px;
 
@@ -65,6 +67,8 @@ const Input = styled.div`
   button {
     border: none;
     background: none;
+    position: relative;
+    top: 1px;
   }
 
   &:focus-within {

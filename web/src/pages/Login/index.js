@@ -50,8 +50,7 @@ function Login() {
           id="email"
           onChange={e => setEmail(e.target.value)}
           value={email}
-          setError={error === 'email'}
-          errorMessage="Este usuário não existe"
+          errors={[{ cond: error === 'email', text: 'Esse usuário não existe' }]}
         />
         <InputBlock
           label="Senha"
@@ -59,15 +58,14 @@ function Login() {
           type="password"
           onChange={e => setPassword(e.target.value)}
           value={password}
-          setError={error === 'password'}
-          errorMessage="Senha inválida"
+          errors={[{ cond: error === 'password', text: 'Senha inválida' }]}
           isPass
         />
         <CheckBox onChange={e => setKeepLogged(Boolean(e.target.checked))} checked={keepLogged}>
           Manter-me conectado
         </CheckBox>
-        <Button text={'Login'} />
-        <OpaqueLink to="/register/1" text="Cadastre-se">
+        <Button text="Login" />
+        <OpaqueLink to="/register" text="Cadastre-se">
           Não tem uma conta?
         </OpaqueLink>
       </form>
