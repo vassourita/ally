@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import InputBlock from '../../components/InputBlock';
 
@@ -12,6 +12,7 @@ function Form3({ state, setState }) {
         id="postal"
         value={state.location.postalCode}
         onChange={e => setState({ ...state, location: { ...state.location, postalCode: e.target.value } })}
+        errors={[{ cond: state.location.cep && !state.location.isValid, text: 'CEP inválido' }]}
       />
       <DoubleInputContainer>
         <InputBlock label="Cidade" id="city" readOnly value={state.location.city} />

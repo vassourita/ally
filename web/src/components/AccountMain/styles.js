@@ -9,6 +9,8 @@ export const Container = styled.div`
     width: 100%;
     max-width: 345px;
   }
+  max-height: 100vh;
+  overflow-y: hidden;
 `;
 
 export const Logo = styled.div`
@@ -28,4 +30,6 @@ export const Logo = styled.div`
 
 export const Outlet = styled.div`
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
 `;

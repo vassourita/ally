@@ -1,6 +1,7 @@
 import React from 'react';
 
 import InputBlock from '../../components/InputBlock';
+import isValidEmail from '../../validators/isValidEmail';
 
 function Form1({ state, setState }) {
   return (
@@ -16,6 +17,7 @@ function Form1({ state, setState }) {
         id="email"
         value={state.email}
         onChange={e => setState({ ...state, email: e.target.value })}
+        errors={[{ cond: state.email && !isValidEmail(state.email), text: 'Email inválido' }]}
       />
       <InputBlock
         label="Senha"
@@ -23,6 +25,7 @@ function Form1({ state, setState }) {
         isPass
         value={state.password}
         onChange={e => setState({ ...state, password: e.target.value })}
+        errors={[{ cond: state.password && state.password.length < 7, text: 'Senha muito curta' }]}
       />
       <InputBlock
         label="Confirmar senha"
@@ -30,6 +33,7 @@ function Form1({ state, setState }) {
         isPass
         value={state.confirm}
         onChange={e => setState({ ...state, confirm: e.target.value })}
+        errors={[{ cond: state.confirm && !(state.confirm === state.password), text: 'As senhas não batem' }]}
       />
     </>
   );

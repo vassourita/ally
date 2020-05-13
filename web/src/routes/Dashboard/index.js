@@ -2,8 +2,6 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import '../../styles/animations.css';
-
 import Chat from '../../pages/Chat';
 import Rating from '../../pages/Rating';
 import Profile from '../../pages/Profile';

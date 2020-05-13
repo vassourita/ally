@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import styled from 'styled-components';
 
 export default function InputBlock({ id, label, errors = [{}], isPass, type = 'text', ...rest }) {
@@ -18,7 +18,12 @@ export default function InputBlock({ id, label, errors = [{}], isPass, type = 't
 
   function getErrors() {
     for (const error of errors) {
-      if (error.cond) return error.text;
+      if (error.cond)
+        return (
+          <>
+            {error.text} <FiAlertCircle size={13} />
+          </>
+        );
     }
   }
 
@@ -26,11 +31,12 @@ export default function InputBlock({ id, label, errors = [{}], isPass, type = 't
     <Container>
       <InputContainer>
         <input id={id} type={getType()} {...rest} />
-        {isPass && (
-          <button onClick={togglePasswordVisiblity}>
-            {passwordShown ? <FiEyeOff size="20" color="#777" /> : <FiEye size="20" color="#777" />}
-          </button>
-        )}
+        {isPass &&
+          (passwordShown ? (
+            <FiEyeOff size="20" color="#777" onClick={togglePasswordVisiblity} />
+          ) : (
+            <FiEye size="20" color="#777" onClick={togglePasswordVisiblity} />
+          ))}
         <div>
           <label htmlFor={id}>{label}</label>
         </div>
@@ -44,12 +50,17 @@ const Container = styled.div`
   margin: 35px 0;
   position: relative;
   span {
+    display: flex;
+    align-items: center;
     font-size: 12px;
     color: #df5080;
     position: absolute;
     bottom: -16px;
     right: 0;
     text-align: right;
+    svg {
+      margin-left: 3px;
+    }
   }
 `;
 
@@ -64,11 +75,9 @@ const InputContainer = styled.div`
   border: 1px solid #aaa;
   transition: all 0.4s ease-out;
 
-  button {
+  svg {
     border: none;
     background: none;
-    position: relative;
-    top: 1px;
   }
 
   &:focus-within {
@@ -114,7 +123,7 @@ const InputContainer = styled.div`
         opacity: 100%;
       }
     }
-    &:focus + button + div {
+    &:focus + svg + div {
       label {
         color: var(--ally-blue);
         opacity: 100%;

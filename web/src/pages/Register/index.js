@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import isValidEmail from '../../validators/isValidEmail';
 import isValidPhone from '../../validators/isValidPhone';
@@ -7,6 +8,9 @@ import isValidCnpj from '../../validators/isValidCnpj';
 import CardHeader from '../../components/CardHeader';
 import Button from '../../components/Button';
 import OpaqueLink from '../../components/OpaqueLink';
+import ErrorBox from '../../components/ErrorBox';
+
+import api from '../../services/api';
 
 import { IndicatorContainer, Indicator, DoubleButtonContainer } from './styles';
 
@@ -18,6 +22,7 @@ const Forms = [Form1, Form2, Form3];
 
 function Register() {
   const [index, setIndex] = useState(0);
+  const [error, setError] = useState('');
 
   const [state, setState] = useState({
     email: '',
@@ -26,7 +31,7 @@ function Register() {
     confirm: '',
     cnpj: '',
     phone: '',
-    image: '',
+    image: null,
     location: {
       isValid: false,
       postalCode: '',
@@ -37,34 +42,46 @@ function Register() {
     },
   });
 
+  const history = useHistory();
+
   const requirements = [
     state.name && state.email && state.password && state.password === state.confirm && isValidEmail(state.email),
     state.cnpj && state.phone && state.image && isValidCnpj(state.cnpj) && isValidPhone(state.phone),
     state.location.isValid,
   ];
 
-  function handleClick(e, returning = false) {
+  async function handleClick(e, returning = false) {
     e.preventDefault();
 
     if (returning) return setIndex(index - 1);
 
-    if (index < 3 && requirements[index]) return setIndex(index + 1);
-    if (index === 3) {
+    if (index < 2 && requirements[index]) return setIndex(index + 1);
+    if (index === 2) {
+      try {
+        const response = await api.post('/users', state);
+        if (response.status === 201) {
+          history.push('/login');
+        }
+      } catch (error) {
+        setError('server');
+        setTimeout(() => setError(''), 4000);
+      }
     }
   }
 
-  const getCurrentForm = () => Forms.map((Form, i) => index === i && <Form state={state} setState={setState} />);
+  const getCurrentForm = () =>
+    Forms.map((Form, i) => index === i && <Form key={i} state={state} setState={setState} />);
 
   function getCurrentFormCommands() {
-    return Forms.map(function (_, i) {
+    return Forms.map((_, i) => {
       if (index === i) {
         if (i === 0 && i === index) {
-          return <Button text="Próximo" onClick={e => handleClick(e)} />;
+          return <Button key={i} text="Próximo" onClick={handleClick} />;
         }
         return (
-          <DoubleButtonContainer>
+          <DoubleButtonContainer key={i}>
             <Button text="Retornar" onClick={e => handleClick(e, true)} outlined />
-            <Button text={i === 2 ? 'Finalizar' : 'Próximo'} onClick={e => handleClick(e)} />
+            <Button text={i === 2 ? 'Finalizar' : 'Próximo'} onClick={handleClick} />
           </DoubleButtonContainer>
         );
       }
@@ -73,6 +90,7 @@ function Register() {
 
   return (
     <>
+      {error === 'server' && <ErrorBox message="Servidor offline. Tente novamente mais tarde" />}
       <CardHeader title="Cadastro" sub="Crie uma conta e encontre os melhores profissionais" />
       <IndicatorContainer>
         {Forms.map((_, i) => (
