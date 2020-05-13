@@ -1,32 +1,31 @@
 import mysql from 'mysql';
 import { promisify } from 'util';
 
-export default class Database {
-  private client: mysql.Connection;
+import dbConfig from '../../config/database';
 
-  constructor(config: string | mysql.ConnectionConfig) {
+class Database {
+  constructor(config) {
     this.client = mysql.createConnection(config);
     this.connect();
   }
 
-  public connect() {
-    this.client.connect((err: Error) => {
+  connect() {
+    this.client.connect(err => {
       if (err) throw err;
       console.log('\x1b[0mDATABASE: \x1b[34mok\x1b[0m');
     });
-    this.client.query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
   }
 
-  public static escape<T>(value: T): string {
+  escape(value) {
     return mysql.escape(value);
   }
 
-  public async raw(sql: string, params: any[]): Promise<any> {
-    const res = await promisify<string, any[]>(this.client.query).bind(this.client)(sql, params);
+  async raw(sql, params) {
+    const res = await promisify(this.client.query).bind(this.client)(sql, params);
     return res;
   }
 
-  public async query<T>(sql: string, params: any[]): Promise<T | T[]> {
+  async query(sql, params = []) {
     const fSql = sql
       .trim()
       .replace(/(=.*),/g, '$1 AND ')
@@ -41,10 +40,10 @@ export default class Database {
 
     console.log(`\x1b[36m${fSql}\x1b[0m`);
 
-    const r = await promisify<string, any[], T>(this.client.query).bind(this.client)(fSql, params);
+    const r = await promisify(this.client.query).bind(this.client)(fSql, params);
 
-    function parseQueryResults(res: any[]) {
-      return res.map((result: object, i: number) => {
+    function parseQueryResults(res) {
+      return res.map((result, i) => {
         const fields = Object.entries(result);
         fields.forEach(f => {
           try {
@@ -58,8 +57,10 @@ export default class Database {
     }
 
     if (r instanceof Array) {
-      return parseQueryResults(r) as T[];
+      return parseQueryResults(r);
     }
     return r;
   }
 }
+
+export default new Database(dbConfig);
