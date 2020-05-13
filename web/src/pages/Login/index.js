@@ -64,7 +64,7 @@ function Login() {
         <CheckBox onChange={e => setKeepLogged(Boolean(e.target.checked))} checked={keepLogged}>
           Manter-me conectado
         </CheckBox>
-        <Button text="Login" />
+        <Button>Login</Button>
         <OpaqueLink to="/register" text="Cadastre-se">
           Não tem uma conta?
         </OpaqueLink>

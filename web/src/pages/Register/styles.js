@@ -30,6 +30,8 @@ export const FileInputContainer = styled.label`
   margin-bottom: 35px;
   border: 1px dashed #aaa;
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
   height: 119px;
   display: flex;
   justify-content: center;

@@ -2,7 +2,7 @@ import React from 'react';
 import { FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import styled from 'styled-components';
 
-export default function InputBlock({ id, label, errors = [{}], isPass, type = 'text', ...rest }) {
+export default function InputBlock({ id, label, errors = [{}], isPass, type = 'text', value, ...rest }) {
   const [passwordShown, setPasswordShown] = React.useState(false);
 
   const togglePasswordVisiblity = e => {
@@ -30,7 +30,7 @@ export default function InputBlock({ id, label, errors = [{}], isPass, type = 't
   return (
     <Container>
       <InputContainer>
-        <input id={id} type={getType()} {...rest} />
+        <input id={id} value={value || ''} type={getType()} {...rest} />
         {isPass &&
           (passwordShown ? (
             <FiEyeOff size="20" color="#777" onClick={togglePasswordVisiblity} />

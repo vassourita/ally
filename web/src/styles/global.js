@@ -37,4 +37,10 @@ export const GlobalStyles = createGlobalStyle`
   .modal-shadow {
     box-shadow: 0px 0px 8px rgba(34, 34, 34, 0.4);
   }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 60px white inset !important;
+  }
 `;

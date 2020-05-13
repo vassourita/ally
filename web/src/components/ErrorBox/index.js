@@ -15,6 +15,8 @@ const Container = styled.div`
   top: 0;
   left: 50%;
   transform: translate(-50%, 0);
+  opacity: 90%;
+  max-width: 280px;
 
   text-align: center;
   font-size: 14px;

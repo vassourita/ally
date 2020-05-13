@@ -1,7 +1,7 @@
 import React from 'react';
 
 import InputBlock from '../../components/InputBlock';
-import isValidEmail from '../../validators/isValidEmail';
+import isValidEmail from '../../utils/validators/isValidEmail';
 
 function Form1({ state, setState }) {
   return (

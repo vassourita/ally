@@ -1,12 +1,13 @@
 import React from 'react';
 
+import loadingGif from '../../assets/loading.gif';
+
 import { Container } from './styles';
 
-export default function Button({ text = 'Clique', outlined, children, ...rest }) {
+export default function Button({ outlined, isLoading, children, ...rest }) {
   return (
     <Container outlined={outlined} {...rest}>
-      {children}
-      {text}
+      {isLoading ? <img src={loadingGif} height="20" alt="loading" /> : children}
     </Container>
   );
 }
