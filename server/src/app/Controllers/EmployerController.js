@@ -38,9 +38,10 @@ export default class EmployerController {
   }
 
   static async store(req, res) {
-    const data = req.body;
+    const { data } = req.body;
 
     const userExists = await UserRepository.findOne({
+      attrs: ['id'],
       where: { email: data.email },
     });
 
