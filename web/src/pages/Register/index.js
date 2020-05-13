@@ -48,7 +48,7 @@ function Register() {
 
     if (returning) return setIndex(index - 1);
 
-    if (index < 3 && requirements(state)[index]) return setIndex(index + 1);
+    if (index < 3 && requirements[index]) return setIndex(index + 1);
     if (index === 3) {
     }
   }
