@@ -15,21 +15,25 @@ export const Header = styled.div`
 `;
 
 export const UserInfo = styled.div`
-  background-color: #fff;
   grid-area: info;
-  display: flex;
-  img {
-    width: 300px;
-    height: 300px;
-    object-fit: cover;
-  }
+  display: grid;
+  grid-template-columns: 300px 300px;
+  background-color: #fff;
+`;
+
+export const UserImage = styled.div`
+  height: 300px;
+  background-size: cover;
+  background-position: center center;
 `;
 
 export const Info = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
   padding: 20px;
   width: 100%;
   button {
-    margin-top: 35px;
+    align-self: flex-end;
   }
 `;
 

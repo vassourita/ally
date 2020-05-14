@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import Chat from '../../pages/Chat';
@@ -11,11 +11,9 @@ import Notifications from '../../pages/Notifications';
 
 import DashboardMain from '../../components/DashboardMain';
 
-import { isAuthenticated } from '../../services/auth';
+import PrivateRoute from '../PrivateRoute';
 
 function Dashboard() {
-  if (!isAuthenticated) return <Redirect to="/login" />;
-
   return (
     <DashboardMain>
       <Route
@@ -24,12 +22,12 @@ function Dashboard() {
             <TransitionGroup>
               <CSSTransition timeout={400} classNames="fade-roll" key={location.key}>
                 <Switch location={location}>
-                  <Route path="/chat" component={Chat} />
-                  <Route path="/rate" component={Rating} />
-                  <Route path="/profile" component={Profile} />
-                  <Route path="/vacancies" component={Vacancies} />
-                  <Route path="/vacancies/new" component={CreateVacancy} />
-                  <Route path="/notifications" component={Notifications} />
+                  <PrivateRoute path="/chat" component={Chat} />
+                  <PrivateRoute path="/rate" component={Rating} />
+                  <PrivateRoute path="/profile" component={Profile} />
+                  <PrivateRoute path="/vacancies" component={Vacancies} />
+                  <PrivateRoute path="/vacancies/new" component={CreateVacancy} />
+                  <PrivateRoute path="/notifications" component={Notifications} />
                 </Switch>
               </CSSTransition>
             </TransitionGroup>

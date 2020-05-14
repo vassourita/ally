@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import api from '../../services/api';
+import * as auth from '../../services/auth';
 
 import ErrorBox from '../../components/ErrorBox';
 import CardHeader from '../../components/CardHeader';
@@ -22,21 +23,21 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await api.post('/sessions', {
+      const { status, data } = await api.post('/sessions', {
         email,
         password,
       });
 
-      if (response.status !== 200) {
-        setError(response.data.error.field);
-      } else {
-        sessionStorage.setItem('ally_authorization', response.data.token);
-        history.push('/profile');
+      if (status === 200) {
+        auth.login(data.token);
+        return history.push('/profile');
       }
-    } catch (error) {
+      if (status > 300 && status < 500) setError(data.error.field);
+      if (status >= 500) setError('server');
+    } catch (_) {
       setError('server');
-      setTimeout(() => setError(''), 4000);
     }
+    return setTimeout(() => setError(''), 4000);
   }
 
   return (
@@ -64,7 +65,7 @@ function Login() {
         <CheckBox onChange={e => setKeepLogged(Boolean(e.target.checked))} checked={keepLogged}>
           Manter-me conectado
         </CheckBox>
-        <Button>Login</Button>
+        <Button disabled={!email || !password}>Login</Button>
         <OpaqueLink to="/register" text="Cadastre-se">
           Não tem uma conta?
         </OpaqueLink>

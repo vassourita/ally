@@ -1,7 +1,9 @@
-export function isAuthenticated() {
-  const token = sessionStorage.getItem('ally_authorization');
-  if (!token) {
-    return true;
-  }
-  return true;
-}
+export const TOKEN_KEY = '@ally-authorization';
+export const isAuthenticated = () => localStorage.getItem(TOKEN_KEY) !== null;
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export const login = token => {
+  localStorage.setItem(TOKEN_KEY, token);
+};
+export const logout = () => {
+  localStorage.removeItem(TOKEN_KEY);
+};

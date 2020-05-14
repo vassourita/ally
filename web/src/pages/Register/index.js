@@ -40,6 +40,7 @@ function Register() {
       state: '',
       neighborhood: '',
       address: '',
+      ibgeCode: '',
     },
   });
 
@@ -62,26 +63,33 @@ function Register() {
     }
     if (index < 2) return setIndex(index + 1);
 
-    if (index === 2 && requirements.every(r => r)) {
-      setLoading(true);
-      const data = new FormData();
+    if (!requirements.every(r => r)) return;
 
-      Object.entries(state).forEach(([key, value]) => {
-        data.append(key, key !== 'location' ? value : JSON.stringify(value));
-      });
+    setLoading(true);
+    const data = new FormData();
 
-      try {
-        const response = await api.post('/users', data);
-        if (response.status === 201) {
+    Object.entries(state).forEach(([key, value]) => {
+      data.append(key, key === 'location' ? JSON.stringify(value) : value);
+    });
+
+    try {
+      const response = await api.post('/employers', data);
+      console.log(response.data.errors);
+
+      switch (response.status) {
+        case 201:
           history.push('/login');
-        }
-      } catch (error) {
-        setError('server');
-        setTimeout(() => setError(''), 4000);
+          break;
+        default:
+          setError('server');
+          setTimeout(() => setError(''), 4000);
       }
-
-      setLoading(false);
+    } catch (_) {
+      setError('server');
+      setTimeout(() => setError(''), 4000);
     }
+
+    setLoading(false);
   }
 
   const getCurrentForm = () =>
