@@ -9,6 +9,7 @@ export default class SessionController {
     const { email, password } = req.body;
 
     const user = await UserRepository.findOne({
+      attrs: ['id', 'email', 'password'],
       where: { email },
     });
 

@@ -5,7 +5,7 @@ import { extname, resolve } from 'path';
 export default class UploadMiddleware {
   static get config() {
     return multer.diskStorage({
-      destination: resolve(__dirname, '..', '..', 'public', 'uploads'),
+      destination: resolve(__dirname, '..', '..', '..', 'public', 'uploads'),
       filename: (req, file, cb) => {
         crypto.randomBytes(16, (err, bytes) => {
           if (err) return cb(err);

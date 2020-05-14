@@ -7,15 +7,19 @@ import SessionStoreValidator from './app/Validators/SessionStoreValidator';
 
 import SessionController from './app/Controllers/SessionController';
 import EmployerController from './app/Controllers/EmployerController';
+import ProfileController from './app/Controllers/ProfileController';
 
 export default class Router {
   constructor() {
     const routes = express.Router();
 
-    routes.post('/employers', UploadMiddleware.single('file'), EmployerController.store);
     routes.post('/sessions', SessionStoreValidator.validate, SessionController.store);
+    routes.post('/employers', UploadMiddleware.single('image'), EmployerController.store);
 
     routes.use(AuthMiddleware.handle);
+
+    routes.delete('/employers', EmployerController.destroy);
+    routes.get('/employers', EmployerController.show);
 
     this.routes = routes;
   }

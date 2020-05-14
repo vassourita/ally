@@ -1,6 +1,7 @@
 import 'dotenv/config';
-import http from 'http';
 import cors from 'cors';
+import http from 'http';
+import path from 'path';
 import Youch from 'youch';
 import express from 'express';
 import 'express-async-errors';
@@ -22,6 +23,7 @@ export default class AllyApi {
   middlewares() {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use('/files', express.static(path.resolve(__dirname, '..', 'public', 'uploads')));
   }
 
   routes() {
@@ -31,9 +33,9 @@ export default class AllyApi {
   exceptionHandler() {
     this.app.use(async (err, req, res, _next) => {
       if (process.env.NODE_ENV === 'development') {
-        const errors = await new Youch(err, req).toJSON();
+        const error = await new Youch(err, req).toJSON();
 
-        return res.status(500).json({ errors });
+        return res.status(500).json({ error });
       }
 
       return res.status(500).json({ error: 'Internal server error' });

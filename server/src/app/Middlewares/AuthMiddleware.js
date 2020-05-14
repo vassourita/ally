@@ -5,7 +5,7 @@ import authConfig from '../../config/auth';
 
 export default class AuthMiddleware {
   static async handle(req, res, next) {
-    const auth = req.headers.Authorization;
+    const auth = req.headers.authorization;
 
     if (!auth) {
       return res.status(401).json({ error: { message: 'No token provided' } });
