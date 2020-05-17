@@ -20,12 +20,13 @@ function Profile() {
       try {
         const { status, data } = await api.get('/employers');
 
-        if (status === 200) setUser(data.user);
+        if (status === 200) return setUser(data.user);
         history.push('/login');
       } catch {
         history.push('/login');
       }
     })();
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -38,21 +39,21 @@ function Profile() {
       <UserInfo className="modal-shadow">
         <UserImage
           style={{
-            backgroundImage: `url(${user.image_url ? `http://localhost:3333/files/${user?.image_url}` : null})`,
+            backgroundImage: `url(${user.image_url ? `${process.env.REACT_APP_FILES_URL}/${user.image_url}` : null})`,
           }}
         />
         <Info>
           <div>
-            <Title>{user?.name}</Title>
+            <Title>{user.name}</Title>
             <Content>
-              {user?.city} - {user?.state}
+              {user.city} - {user.state}
             </Content>
-            <Content>CNPJ {user?.fiscal_code}</Content>
+            <Content>CNPJ {user.fiscal_code}</Content>
           </div>
           <div>
             <Title>Contato</Title>
-            <Content>{user?.email}</Content>
-            <Content>{user?.phone}</Content>
+            <Content>{user.email}</Content>
+            <Content>{user.phone}</Content>
           </div>
           <Button outlined text="Editar">
             <FiEdit size="16" />
@@ -61,7 +62,7 @@ function Profile() {
       </UserInfo>
       <UserAbout className="modal-shadow">
         <Title>Sobre</Title>
-        <Content>{user.about}</Content>
+        <Content>{user.about || 'Não há descrição ainda'}</Content>
         <Title>Endereço</Title>
         <Content>{user.street}</Content>
         <Content>

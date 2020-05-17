@@ -1,28 +1,40 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
 import iconImg from '../../assets/logo/icon50.png';
+
+import api from '../../services/api';
 
 import { Container, Head, List, ListItem, Greeting } from './styles';
 
 function DashboardHeader() {
-  const [user] = useState({
-    name: 'Anônimo',
-    image_url:
-      'https://images.unsplash.com/photo-1580925594670-117567b46f26?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1049&q=80',
-  });
+  const [user, setUser] = useState({});
+
+  const history = useHistory();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { status, data } = await api.get('/employers');
+
+        if (status === 200) return setUser(data.user);
+        history.push('/login');
+      } catch {
+        history.push('/login');
+      }
+    })();
+    // eslint-disable-next-line
+  }, []);
 
   function getGreetingBasedOnTime() {
     const hours = new Date().getHours();
-    if (hours < 12) {
+    if (hours <= 12) {
       return 'Bom dia';
     }
-    if (hours > 12 && hours < 18) {
+    if (hours <= 18) {
       return 'Boa tarde';
     }
-    if (hours > 18) {
-      return 'Boa noite';
-    }
+    return 'Boa noite';
   }
 
   return (
@@ -41,9 +53,13 @@ function DashboardHeader() {
       <Greeting>
         <p>
           {getGreetingBasedOnTime()}, <br />
-          <strong>{user?.name}</strong>
+          <strong>{user.name}</strong>
         </p>
-        <img src={user?.image_url} alt="" className="imgUser" />
+        <img
+          src={user.image_url ? `${process.env.REACT_APP_FILES_URL}/${user.image_url}` : null}
+          alt=""
+          className="imgUser"
+        />
       </Greeting>
     </Container>
   );
