@@ -2,6 +2,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import http from 'http';
 import path from 'path';
+import morgan from 'morgan';
 import Youch from 'youch';
 import express from 'express';
 import 'express-async-errors';
@@ -23,6 +24,7 @@ export default class AllyApi {
   middlewares() {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(morgan('dev'));
     this.app.use('/files', express.static(path.resolve(__dirname, '..', 'public', 'uploads')));
   }
 
