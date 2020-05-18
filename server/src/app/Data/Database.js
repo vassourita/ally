@@ -3,10 +3,17 @@ import { promisify } from 'util';
 
 import dbConfig from '../../config/database';
 
-class Database {
+export default class Database {
   constructor(config) {
     this.client = mysql.createConnection(config);
     this.connect();
+  }
+
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new Database(dbConfig);
+    }
+    return this.instance;
   }
 
   connect() {
@@ -62,5 +69,3 @@ class Database {
     return r;
   }
 }
-
-export default new Database(dbConfig);

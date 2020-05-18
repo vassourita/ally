@@ -1,13 +1,13 @@
 /* eslint-disable indent */
 import pluralize from 'pluralize';
 
-import database from './Database';
+import Database from './Database';
 import AllySqlRepositoryPrimaryKeyError from '../../helpers/errors/AllySqlRepositoryPrimaryKeyError';
 import AllySqlJoinTypeError from '../../helpers/errors/AllySqlJoinTypeError';
 
 export default class Repository {
   constructor(tableName, tableSchema) {
-    this.db = database;
+    this.db = Database.getInstance();
     this.tableName = tableName;
     this.tableSchema = tableSchema;
 
