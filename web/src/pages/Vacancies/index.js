@@ -1,16 +1,52 @@
 import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
-import { Grid, Header, Nav, List, ListItem, UserInfo } from './styles';
-import { Link } from 'react-router-dom';
+import Img from '../../assets/background/dash-2.png';
+
+import {
+  Container,
+  Header,
+  Nav,
+  NavList,
+  NavItem,
+  Badge,
+  Title,
+  Available,
+  List,
+  ListItem,
+  UserImg,
+  UserName,
+  UserInfo,
+} from './styles';
 
 function Vacancies() {
   return (
-    <Grid>
+    <Container>
       <Nav>
-        <CardHeader title="Vagas" sub="Visualize as vagas que você criou e as suas propostas" />
+        <CardHeader title="Suas vagas" sub="Visualize as vagas que você criou e as suas propostas" />
+        <NavList>
+          <NavItem>
+            <NavLink activeClassName="nav-link-active" to="/vacancies/1">
+              <div>
+                <Title>Vaga para Entregador</Title>
+                <Available>3 vagas disponíveis</Available>
+              </div>
+              <Badge>2</Badge>
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink activeClassName="nav-link-active" to="/vacancies/2">
+              <div>
+                <Title>Vaga para Garçom</Title>
+                <Available>1 vaga disponível</Available>
+              </div>
+              <Badge>3</Badge>
+            </NavLink>
+          </NavItem>
+        </NavList>
       </Nav>
       <Header>
         <CardBox>
@@ -19,14 +55,23 @@ function Vacancies() {
       </Header>
       <List>
         <ListItem>
-          <UserInfo>
-            <img src="https://images.unsplash.com/photo-1587994344997-f78753c899d5?w=600" alt="" />
+          <UserImg src={Img} alt="" />
+          <UserName>
             <h3>Daniel Airton</h3>
             <Link to="/profile">Clique para ver o perfil</Link>
-          </UserInfo>
+          </UserName>
+          <UserInfo></UserInfo>
+        </ListItem>
+        <ListItem>
+          <UserImg src={Img} alt="" />
+          <UserName>
+            <h3>Daniel Airton</h3>
+            <Link to="/profile">Clique para ver o perfil</Link>
+          </UserName>
+          <UserInfo></UserInfo>
         </ListItem>
       </List>
-    </Grid>
+    </Container>
   );
 }
 

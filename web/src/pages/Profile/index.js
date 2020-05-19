@@ -39,7 +39,7 @@ function Profile() {
       <UserInfo className="modal-shadow">
         <UserImage
           style={{
-            backgroundImage: `url(${user.image_url ? `${process.env.REACT_APP_FILES_URL}/${user.image_url}` : null})`,
+            backgroundImage: `url(${user.image_url ? `${process.env.REACT_APP_FILES_URL}${user.image_url}` : null})`,
           }}
         />
         <Info>

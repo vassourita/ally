@@ -78,6 +78,7 @@ function Register() {
 
       switch (response.status) {
         case 201:
+          alert('Cadastrado com sucesso!');
           history.push('/login');
           break;
         default:

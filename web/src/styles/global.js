@@ -41,6 +41,41 @@ export const GlobalStyles = createGlobalStyle`
   input:-webkit-autofill:hover, 
   input:-webkit-autofill:focus, 
   input:-webkit-autofill:active  {
-    -webkit-box-shadow: 0 0 0 60px white inset !important;
+    box-shadow: 0 0 0 60px white inset !important;
+    color: #4f4f4f;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #ffffff;
+    border: 0px none #ffffff;
+    border-radius: 0px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #e0e0e0;
+  }
+  ::-webkit-scrollbar-thumb:active {
+    background: #e0e0e0;
+  }
+  ::-webkit-scrollbar-track {
+    background: #ffffff00;
+    border: 0px none #ffffff00;
+    border-radius: 0px;
+  }
+  ::-webkit-scrollbar-track:hover {
+    background: #ffffff00;
+  }
+  ::-webkit-scrollbar-track:active {
+    background: #ffffff00;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 `;
