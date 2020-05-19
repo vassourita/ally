@@ -1,9 +1,11 @@
 SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));
 
-CREATE SCHEMA IF NOT EXISTS ally;
+DROP SCHEMA IF EXISTS ally;
+
+CREATE SCHEMA ally;
 USE ally;
 
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE user (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
@@ -23,20 +25,20 @@ CREATE TABLE IF NOT EXISTS user (
   created_at TIMESTAMP DEFAULT current_timestamp
 );
 
-CREATE TABLE IF NOT EXISTS job_vacancy (
+CREATE TABLE job_vacancy (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  user_id INT NOT NULL,
+  employer_id INT NOT NULL,
   name VARCHAR(50) NOT NULL,
   description TEXT NOT NULL,
-  amount INT NOT NULL DEFAULT 1,
+  amount INT NOT NULL,
   created_at TIMESTAMP DEFAULT current_timestamp,
-  CONSTRAINT fk_job_vacancy_user
-    FOREIGN KEY (user_id)
+  CONSTRAINT fk_job_vacancy_employer
+    FOREIGN KEY (employer_id)
     REFERENCES user (id)
     ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS message (
+CREATE TABLE message (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   author_id INT NOT NULL,
   target_id INT NOT NULL,
@@ -52,19 +54,18 @@ CREATE TABLE IF NOT EXISTS message (
     ON DELETE NO ACTION
 );
 
-CREATE TABLE IF NOT EXISTS knowledge_type (
+CREATE TABLE knowledge_type (
   id INT PRIMARY KEY NOT NULL,
   name VARCHAR(24) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS knowledge (
+CREATE TABLE knowledge (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   name VARCHAR(180) NOT NULL,
   user_id INT,
   job_vacancy_id INT,
   knowledge_type_id INT NOT NULL,
   differential BOOLEAN,
-  date DATE,
   CONSTRAINT fk_knowledge_user
     FOREIGN KEY (user_id)
     REFERENCES user (id)
@@ -79,12 +80,12 @@ CREATE TABLE IF NOT EXISTS knowledge (
     ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS notification_type (
+CREATE TABLE notification_type (
   id INT PRIMARY KEY NOT NULL,
   name VARCHAR(24) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS notification (
+CREATE TABLE notification (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   description VARCHAR(255) NOT NULL,
   user_id INT NOT NULL,
@@ -102,7 +103,7 @@ CREATE TABLE IF NOT EXISTS notification (
     ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS rating (
+CREATE TABLE rating (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   author_id INT NOT NULL,
   target_id INT NOT NULL,
@@ -123,7 +124,7 @@ CREATE TABLE IF NOT EXISTS rating (
     ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS report (
+CREATE TABLE report (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   author_id INT NOT NULL,
   target_id INT NOT NULL,
@@ -144,13 +145,10 @@ CREATE TABLE IF NOT EXISTS report (
     ON DELETE NO ACTION
 );
 
-CREATE TABLE IF NOT EXISTS proposal (
+CREATE TABLE proposal (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   user_id INT NOT NULL,
   job_vacancy_id INT NOT NULL,
-  user_accepted BOOLEAN NOT NULL,
-  job_vacancy_accepted BOOLEAN NOT NULL,
-  adequacy INT NOT NULL,
   CONSTRAINT fk_proposal_user
     FOREIGN KEY (user_id)
     REFERENCES user (id)
@@ -161,14 +159,14 @@ CREATE TABLE IF NOT EXISTS proposal (
     ON DELETE CASCADE
 );
 
-INSERT INTO knowledge_type (id, name) VALUES (1, 'especialização');
-INSERT INTO knowledge_type (id, name) VALUES (2, 'graduação');
-INSERT INTO knowledge_type (id, name) VALUES (3, 'certificação');
-INSERT INTO knowledge_type (id, name) VALUES (4, 'curso');
-INSERT INTO knowledge_type (id, name) VALUES (5, 'experiência');
-INSERT INTO knowledge_type (id, name) VALUES (6, 'conhecimento');
+INSERT INTO knowledge_type (id, name) VALUES (1, 'Especialização');
+INSERT INTO knowledge_type (id, name) VALUES (2, 'Graduação');
+INSERT INTO knowledge_type (id, name) VALUES (3, 'Certificação');
+INSERT INTO knowledge_type (id, name) VALUES (4, 'Curso');
+INSERT INTO knowledge_type (id, name) VALUES (5, 'Experiência');
+INSERT INTO knowledge_type (id, name) VALUES (6, 'Conhecimento');
 
 INSERT INTO notification_type (id, name) VALUES (1, 'Nova mensagem');
-INSERT INTO notification_type (id, name) VALUES (2, 'Proposta');
-INSERT INTO notification_type (id, name) VALUES (3, 'Nova vaga');
-INSERT INTO notification_type (id, name) VALUES (4, 'Avaliação');
+INSERT INTO notification_type (id, name) VALUES (2, 'Nova Proposta');
+INSERT INTO notification_type (id, name) VALUES (3, 'Nova Vaga');
+INSERT INTO notification_type (id, name) VALUES (4, 'Avaliação Disponível');
