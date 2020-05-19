@@ -26,7 +26,7 @@ export default class SessionController {
     });
 
     return res.status(200).json({
-      user_id: user.id,
+      userId: user.id,
       token,
     });
   }

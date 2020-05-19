@@ -6,10 +6,10 @@ import cities from '../Data/cities';
 
 export default class EmployerController {
   static async show(req, res) {
-    const id = req.userId;
+    const { id } = req.userId;
 
     const user = await UserRepository.findOne({
-      where: { id },
+      where: { id, employer: true },
     });
 
     return res.json({ user });
@@ -21,7 +21,7 @@ export default class EmployerController {
 
     const userExists = await UserRepository.findOne({
       attrs: ['id'],
-      where: { email },
+      where: { email, employer: true },
     });
 
     if (userExists) {
@@ -34,26 +34,23 @@ export default class EmployerController {
 
     const passwordHash = await bcrypt.hash(password, 8);
 
-    const user = await UserRepository.create(
-      {
-        employer: true,
-        name,
-        email,
-        password: passwordHash,
-        fiscal_code: cnpj,
-        phone,
-        image_url: filename,
-        postal_code: postalCode,
-        city,
-        state,
-        address,
-        neighborhood,
-        microregion_id: microregion.id,
-      },
-      false,
-    );
+    const user = await UserRepository.create({
+      employer: true,
+      name,
+      email,
+      password: passwordHash,
+      fiscal_code: cnpj,
+      phone,
+      image_url: filename,
+      postal_code: postalCode,
+      city,
+      state,
+      address,
+      neighborhood,
+      microregion_id: microregion.id,
+    });
 
-    return res.status(201).json(user);
+    return res.status(201).json({ user });
   }
 
   static async destroy(req, res) {
@@ -64,7 +61,7 @@ export default class EmployerController {
     }
 
     const deleted = await UserRepository.delete({
-      where: { id },
+      where: { id, employer: true },
     });
 
     return res.json({ deleted });
