@@ -4,13 +4,14 @@ const JobVacancyRepository = new Repository('job_vacancy', {
   id: {
     primary: true,
   },
-  user_id: {
+  employer_id: {
     returning: false,
   },
   name: {},
   description: {},
   amount: {},
   created_at: {},
+  image_url: {},
 });
 
 export default JobVacancyRepository;

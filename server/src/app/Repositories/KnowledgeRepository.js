@@ -15,7 +15,6 @@ const KnowledgeRepository = new Repository('knowledge', {
     returning: false,
   },
   differential: {},
-  date: {},
 });
 
 export default KnowledgeRepository;

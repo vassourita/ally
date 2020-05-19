@@ -1,8 +1,4 @@
-import bcrypt from 'bcryptjs';
-
 import UserRepository from '../Repositories/UserRepository';
-
-import cities from '../Data/cities';
 
 export default class UserController {
   static async show(req, res) {
@@ -12,7 +8,7 @@ export default class UserController {
       where: { id, employer: false },
     });
 
-    return res.json({ user });
+    return res.status(200).json({ user });
   }
 
   static async destroy(req, res) {
@@ -26,6 +22,6 @@ export default class UserController {
       where: { id, employer: false },
     });
 
-    return res.json({ deleted });
+    return res.status(200).json({ deleted });
   }
 }
