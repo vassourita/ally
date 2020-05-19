@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
-import Img from '../../assets/background/dash-2.png';
+import Img from '../../assets/test/user.jpg';
 
 import {
   Container,
@@ -58,7 +58,7 @@ function Vacancies() {
           <UserImg src={Img} alt="" />
           <UserName>
             <h3>Daniel Airton</h3>
-            <Link to="/profile">Clique para ver o perfil</Link>
+            <Link to="/users/1">Clique para ver o perfil</Link>
           </UserName>
           <UserInfo></UserInfo>
         </ListItem>
@@ -66,7 +66,7 @@ function Vacancies() {
           <UserImg src={Img} alt="" />
           <UserName>
             <h3>Daniel Airton</h3>
-            <Link to="/profile">Clique para ver o perfil</Link>
+            <Link to="/users/2">Clique para ver o perfil</Link>
           </UserName>
           <UserInfo></UserInfo>
         </ListItem>

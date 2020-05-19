@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import Chat from '../../pages/Chat';
+import User from '../../pages/User';
 import Rating from '../../pages/Rating';
 import Profile from '../../pages/Profile';
 import Vacancies from '../../pages/Vacancies';
@@ -24,6 +25,7 @@ function Dashboard() {
                 <Switch location={location}>
                   <PrivateRoute path="/chat" component={Chat} />
                   <PrivateRoute path="/rate" component={Rating} />
+                  <PrivateRoute path="/users/:id" component={User} />
                   <PrivateRoute path="/profile" component={Profile} />
                   <PrivateRoute path="/vacancies" component={Vacancies} />
                   <PrivateRoute path="/vacancies/new" component={CreateVacancy} />

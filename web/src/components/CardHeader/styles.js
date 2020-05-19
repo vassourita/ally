@@ -8,6 +8,8 @@ export const Container = styled.div`
     font-size: 20px;
     margin-bottom: 6px;
     opacity: 85%;
+    display: flex;
+    align-items: center;
   }
   p {
     font-size: 14px;

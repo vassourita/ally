@@ -93,6 +93,7 @@ export const UserImg = styled.img`
   filter: brightness(55%);
   height: 300px;
   width: 300px;
+  object-fit: cover;
   transition: 0.5s ease-in;
   &:hover {
     filter: brightness(100%);
