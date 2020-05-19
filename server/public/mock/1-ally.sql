@@ -31,6 +31,7 @@ CREATE TABLE job_vacancy (
   name VARCHAR(50) NOT NULL,
   description TEXT NOT NULL,
   amount INT NOT NULL,
+  image_url VARCHAR(120),
   created_at TIMESTAMP DEFAULT current_timestamp,
   CONSTRAINT fk_job_vacancy_employer
     FOREIGN KEY (employer_id)
