@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import iconImg from '../../assets/logo/icon50.png';
 
 import api from '../../services/api';
+import { getUserId } from '../../services/auth';
 
 import { Container, Head, List, ListItem, Greeting } from './styles';
 
@@ -15,7 +16,7 @@ function DashboardHeader() {
   useEffect(() => {
     (async () => {
       try {
-        const { status, data } = await api.get('/employers');
+        const { status, data } = await api.get(`/profiles/${getUserId()}`);
 
         if (status === 200) return setUser(data.user);
         history.push('/login');

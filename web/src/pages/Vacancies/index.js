@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
@@ -23,9 +23,10 @@ import {
 } from './styles';
 
 function Vacancies() {
+  const { id } = useParams();
   return (
     <Container>
-      <Nav>
+      <Nav className="modal-shadow">
         <CardHeader title="Suas vagas" sub="Visualize as vagas que você criou e as suas propostas" />
         <NavList>
           <NavItem>
@@ -54,19 +55,19 @@ function Vacancies() {
         </CardBox>
       </Header>
       <List>
-        <ListItem>
+        <ListItem className="modal-shadow">
           <UserImg src={Img} alt="" />
           <UserName>
             <h3>Daniel Airton</h3>
-            <Link to="/users/1">Clique para ver o perfil</Link>
+            <Link to="/users/4">Clique para ver o perfil</Link>
           </UserName>
           <UserInfo></UserInfo>
         </ListItem>
-        <ListItem>
+        <ListItem className="modal-shadow">
           <UserImg src={Img} alt="" />
           <UserName>
             <h3>Daniel Airton</h3>
-            <Link to="/users/2">Clique para ver o perfil</Link>
+            <Link to="/users/5">Clique para ver o perfil</Link>
           </UserName>
           <UserInfo></UserInfo>
         </ListItem>

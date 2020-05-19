@@ -18,7 +18,7 @@ function User() {
   useEffect(() => {
     (async () => {
       try {
-        const { status, data } = await api.get(`/users/${id}`);
+        const { status, data } = await api.get(`/profiles/${id}`);
 
         if (status === 200) return setUser(data.user);
       } catch {}

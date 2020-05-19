@@ -29,7 +29,7 @@ function Login() {
       });
 
       if (status === 200) {
-        auth.login(data.token);
+        auth.login(data.token, data.userId);
         return history.push('/profile');
       }
       if (status > 300 && status < 500) setError(data.error.field);
