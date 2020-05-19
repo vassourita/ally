@@ -19,12 +19,8 @@ const UserRepository = new Repository('user', {
   microregion_id: {},
   postal_code: {},
   employer: {},
-  birth: {
-    required: false,
-  },
-  about: {
-    required: false,
-  },
+  birth: {},
+  about: {},
   created_at: {},
 });
 

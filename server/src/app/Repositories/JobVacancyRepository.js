@@ -12,6 +12,7 @@ const JobVacancyRepository = new Repository('job_vacancy', {
   amount: {},
   created_at: {},
   image_url: {},
+  region_only: {},
 });
 
 export default JobVacancyRepository;
