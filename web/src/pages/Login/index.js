@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import api from '../../services/api';
-import * as auth from '../../services/auth';
+import Auth from '../../services/auth';
 
-import ErrorBox from '../../components/ErrorBox';
-import CardHeader from '../../components/CardHeader';
-import InputBlock from '../../components/InputBlock';
-import CheckBox from '../../components/CheckBox';
 import Button from '../../components/Button';
+import CheckBox from '../../components/CheckBox';
+import ErrorBox from '../../components/ErrorBox';
+import InputBlock from '../../components/InputBlock';
 import OpaqueLink from '../../components/OpaqueLink';
+import CardHeader from '../../components/CardHeader';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -23,21 +23,21 @@ function Login() {
     e.preventDefault();
 
     try {
-      const { status, data } = await api.post('/sessions', {
+      const response = await api.post('/sessions', {
         email,
         password,
       });
 
-      if (status === 200) {
-        auth.login(data.token, data.userId);
+      if (response.status === 200) {
+        Auth.login(response.data.token, response.data.userId);
         return history.push('/profile');
       }
-      if (status > 300 && status < 500) setError(data.error.field);
-      if (status >= 500) setError('server');
+      if (response.status >= 300 && response.status < 500) setError(response.data.error.field);
+      if (response.status >= 500) setError('server');
     } catch (_) {
       setError('server');
     }
-    return setTimeout(() => setError(''), 4000);
+    setTimeout(() => setError(''), 4000);
   }
 
   return (

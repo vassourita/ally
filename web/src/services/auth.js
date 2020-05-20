@@ -1,15 +1,31 @@
-export const TOKEN_KEY = '@ally-authorization';
+export default class Auth {
+  static TOKEN_KEY = '@ally-authorization';
 
-export const isAuthenticated = () => !!localStorage.getItem(TOKEN_KEY);
+  static get isAuthenticated() {
+    return !!localStorage.getItem(this.TOKEN_KEY);
+  }
 
-export const getToken = () => JSON.parse(localStorage.getItem(TOKEN_KEY)).token;
+  static getToken = () => {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (token) {
+      const parsed = JSON.parse(token);
+      return parsed.token;
+    }
+  };
 
-export const getUserId = () => JSON.parse(localStorage.getItem(TOKEN_KEY)).id;
+  static getUserId = () => {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (token) {
+      const parsed = JSON.parse(token);
+      return parsed.id;
+    }
+  };
 
-export const login = (token, id) => {
-  localStorage.setItem(TOKEN_KEY, JSON.stringify({ token, id }));
-};
+  static login = (token, id) => {
+    localStorage.setItem(this.TOKEN_KEY, JSON.stringify({ token, id }));
+  };
 
-export const logout = () => {
-  localStorage.removeItem(TOKEN_KEY);
-};
+  static logout = () => {
+    localStorage.removeItem(this.TOKEN_KEY);
+  };
+}

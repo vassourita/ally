@@ -68,6 +68,7 @@ export const GlobalStyles = createGlobalStyle`
     background: #ffffff00;
     border: 0px none #ffffff00;
     border-radius: 0px;
+    margin-bottom: 40px;
   }
   ::-webkit-scrollbar-track:hover {
     background: #ffffff00;

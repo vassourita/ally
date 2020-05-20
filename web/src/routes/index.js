@@ -12,7 +12,7 @@ function Routes() {
         <Route exact path="/" component={Home} />
         <Route path={['/login', '/register']} component={Account} />
         <Route
-          path={['/profile', '/chat', '/vacancies', '/vacancies/:id', '/notifications', '/rate', '/users']}
+          path={['/profile', '/chat', '/vacancies', 'vacancies/:id', '/notifications', '/rate', '/users']}
           component={Dashboard}
         />
       </Switch>

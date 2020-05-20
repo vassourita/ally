@@ -16,7 +16,7 @@ function DashboardNav() {
           </NavLink>
         </ListItem>
         <ListItem>
-          <NavLink activeClassName="nav-link-active" to="/vacancies">
+          <NavLink activeClassName="nav-link-active" to="/vacancies/all">
             <FiBriefcase size="20" />
             <PageName>Vagas</PageName>
           </NavLink>

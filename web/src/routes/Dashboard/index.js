@@ -27,9 +27,9 @@ function Dashboard() {
                   <PrivateRoute path="/rate" component={Rating} />
                   <PrivateRoute path="/users/:id" component={User} />
                   <PrivateRoute path="/profile" component={Profile} />
-                  <PrivateRoute path="/vacancies" component={Vacancies} />
-                  <PrivateRoute path="/vacancies/:id" component={Vacancies} />
+                  <PrivateRoute path="/vacancies/all" component={Vacancies} />
                   <PrivateRoute path="/vacancies/new" component={CreateVacancy} />
+                  <PrivateRoute path="/vacancies/:id" component={Vacancies} />
                   <PrivateRoute path="/notifications" component={Notifications} />
                 </Switch>
               </CSSTransition>

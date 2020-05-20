@@ -1,17 +1,17 @@
 import axios from 'axios';
-import { getToken } from './auth';
+import Auth from './auth';
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   validateStatus: false,
 });
 
-api.interceptors.request.use(async config => {
-  const token = getToken();
+api.interceptors.request.use(async req => {
+  const token = Auth.getToken();
   if (token) {
-    config.headers.authorization = `Bearer ${token}`;
+    req.headers.authorization = `Bearer ${token}`;
   }
-  return config;
+  return req;
 });
 
 export default api;
