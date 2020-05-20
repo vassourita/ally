@@ -1,8 +1,4 @@
-import bcrypt from 'bcryptjs';
-
 import UserRepository from '../Repositories/UserRepository';
-
-import cities from '../Data/cities';
 
 export default class ProfileController {
   static async show(req, res) {
@@ -13,7 +9,11 @@ export default class ProfileController {
     });
 
     if (!user) {
-      return res.status(404).json({});
+      return res.status(404).json({
+        error: {
+          message: 'User not found',
+        },
+      });
     }
 
     return res.status(200).json({ user });

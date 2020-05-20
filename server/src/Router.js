@@ -5,10 +5,11 @@ import UploadMiddleware from './app/Middlewares/UploadMiddleware';
 
 import SessionStoreValidator from './app/Validators/SessionStoreValidator';
 
+import UserController from './app/Controllers/UserController';
+import ProfileController from './app/Controllers/ProfileController';
 import SessionController from './app/Controllers/SessionController';
 import EmployerController from './app/Controllers/EmployerController';
-import ProfileController from './app/Controllers/ProfileController';
-import UserController from './app/Controllers/UserController';
+import JobVacancyController from './app/Controllers/JobVacancyController';
 
 export default class Router {
   constructor() {
@@ -20,8 +21,12 @@ export default class Router {
 
     routes.use(AuthMiddleware.handle);
 
-    routes.delete('/employers', EmployerController.destroy);
     routes.delete('/users', UserController.destroy);
+
+    routes.delete('/employers', EmployerController.destroy);
+
+    routes.get('/jobs', JobVacancyController.index);
+    routes.get('/jobs/:jobId', JobVacancyController.show);
 
     this.routes = routes;
   }
