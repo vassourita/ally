@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import authConfig from '../../config/auth';
 import UserRepository from '../Repositories/UserRepository';
+import KnowledgeRepository from '../Repositories/KnowledgeRepository';
+import JobVacancyRepository from '../Repositories/JobVacancyRepository';
 
 export default class SessionController {
   static async store(req, res) {
@@ -25,8 +27,12 @@ export default class SessionController {
       expiresIn: authConfig.expiresIn,
     });
 
+    const loggedUser = await UserRepository.findOne({
+      where: { id: user.id },
+    });
+
     return res.status(200).json({
-      userId: user.id,
+      user: loggedUser,
       token,
     });
   }
