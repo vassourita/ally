@@ -12,6 +12,7 @@ export default class ProfileController {
       return res.status(404).json({
         error: {
           message: 'User not found',
+          field: 'id',
         },
       });
     }

@@ -10,6 +10,7 @@ import ProfileController from './app/Controllers/ProfileController';
 import SessionController from './app/Controllers/SessionController';
 import EmployerController from './app/Controllers/EmployerController';
 import JobVacancyController from './app/Controllers/JobVacancyController';
+import OpportunitiesController from './app/Controllers/OpportunitiesController';
 
 export default class Router {
   constructor() {
@@ -22,11 +23,12 @@ export default class Router {
     routes.use(AuthMiddleware.handle);
 
     routes.delete('/users', UserController.destroy);
-
     routes.delete('/employers', EmployerController.destroy);
 
     routes.get('/jobs', JobVacancyController.index);
     routes.get('/jobs/:jobId', JobVacancyController.show);
+
+    routes.get('/opportunities', OpportunitiesController.index);
 
     this.routes = routes;
   }

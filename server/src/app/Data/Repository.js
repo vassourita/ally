@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable indent */
 import pluralize from 'pluralize';
 
@@ -17,7 +18,7 @@ export default class Repository {
     this.fields = keys;
     this.primaryFields = keys.filter((k, i) => values[i].primary || false);
     this.requiredFields = keys.filter((k, i) => values[i].required || true);
-    this.returnFields = keys.filter((k, i) => values[i].returning || true);
+    this.returnFields = keys.filter((k, i) => values[i].returning !== false);
 
     if (this.primaryFields.length < 1) {
       throw new AllySqlRepositoryPrimaryKeyError();
@@ -56,11 +57,11 @@ export default class Repository {
     return results[0] || null;
   }
 
-  async delete({ where }) {
+  async delete({ where, operator = '=' }) {
     const formattedWhere = Object.entries(where);
     const sql = `
       DELETE FROM ${this.tableName}
-      WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${Database.escape(w[1])}`)}
+      WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} ${operator} ${Database.escape(w[1])}`)}
     `;
     const rows = await this.db.query(sql, []);
     return rows.affectedRows;
@@ -95,10 +96,12 @@ export default class Repository {
           const attrs = j.attrs || j.repo.returnFields;
           const getJoinName = j.as || pluralize(j.repo.tableName);
           const getAttrs = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr}, `);
-          const getObjectFields = j.attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr} `);
-          const getInnerJoins = j.join.map(
-            iJ => ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(j.join, j.repo).fields()} `,
-          );
+          const getObjectFields = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr} `);
+          const getInnerJoins = j.join
+            ? j.join.map(
+                iJ => ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(j.join, j.repo).fields()} `,
+              )
+            : '';
 
           if (j.type === 'many') {
             return `
@@ -111,15 +114,14 @@ export default class Repository {
                     ${getInnerJoins}
                   )
                 )
-                ) ${getJoinName},
-              )
+              ) AS ${getJoinName},
             `;
           }
           if (j.type === 'single') {
             return `
               JSON_OBJECT(
                 ${getObjectFields}
-              ) ${getJoinName},
+              ) AS ${getJoinName},
             `;
           }
 
@@ -129,14 +131,12 @@ export default class Repository {
       joins() {
         if (join) {
           return join.map(j => {
-            const getOn = j.on
-              ? `ON ${Object.entries(j.on).map(
-                  w => `\n${j.repo.tableName}.${w[0]} = ${upperRepository.tableName}.${w[1]}`,
-                )}`
-              : '';
-            const getInnerJoins = j.join ? Repository.getJoins(j.join, j.repo).joins() : '';
+            const getOn =
+              j.on && `ON ${Object.entries(j.on).map(w => `\n${j.repo.tableName}.${w[0]} ${join.op || '='} ${w[1]}`)}`;
+
+            const getInnerJoins = j.join && Repository.getJoins(j.join, j.repo).joins();
             return `
-              LEFT JOIN
+              ${j.side || 'LEFT'} JOIN
                 ${j.repo.tableName} 
                   ${getOn}
                 ${getInnerJoins}
