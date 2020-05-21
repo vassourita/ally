@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { UserContext } from '../../providers/UserProvider';
 import api from '../../services/api';
 import Auth from '../../services/auth';
 
@@ -17,6 +18,8 @@ function Login() {
   const [keepLogged, setKeepLogged] = useState(false);
   const [error, setError] = useState('');
 
+  const { setUser } = useContext(UserContext);
+
   const history = useHistory();
 
   async function handleSubmit(e) {
@@ -29,7 +32,8 @@ function Login() {
       });
 
       if (response.status === 200) {
-        Auth.login(response.data.token, response.data.userId);
+        Auth.login(response.data.token, response.data.user.id);
+        setUser(response.data.user);
         return history.push('/profile');
       }
       if (response.status >= 300 && response.status < 500) setError(response.data.error.field);

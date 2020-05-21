@@ -1,31 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 
 import iconImg from '../../assets/logo/icon50.png';
 
-import api from '../../services/api';
-import Auth from '../../services/auth';
+import { UserContext } from '../../providers/UserProvider';
 
 import { Container, Head, List, ListItem, Greeting } from './styles';
 
 function DashboardHeader() {
-  const [user, setUser] = useState({});
-
-  const history = useHistory();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { status, data } = await api.get(`/profiles/${Auth.getUserId()}`);
-
-        if (status === 200) return setUser(data.user);
-        history.push('/login');
-      } catch {
-        history.push('/login');
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
+  const { user } = useContext(UserContext);
 
   function getGreetingBasedOnTime() {
     const hours = new Date().getHours();
@@ -56,11 +39,7 @@ function DashboardHeader() {
           {getGreetingBasedOnTime()}, <br />
           <strong>{user.name}</strong>
         </p>
-        <img
-          src={user.image_url ? `${process.env.REACT_APP_FILES_URL}${user.image_url}` : null}
-          alt=""
-          className="imgUser"
-        />
+        <img src={user.image_url ? `${process.env.REACT_APP_FILES_URL}${user.image_url}` : null} alt="" className="imgUser" />
       </Greeting>
     </Container>
   );

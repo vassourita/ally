@@ -1,34 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
 import { FiEdit } from 'react-icons/fi';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 import Button from '../../components/Button';
 
-import api from '../../services/api';
-import Auth from '../../services/auth';
+import { UserContext } from '../../providers/UserProvider';
 
 import { Grid, Header, UserAbout, UserImage, UserInfo, Info, Title, Content } from './styles';
 
 function Profile() {
-  const [user, setUser] = useState({});
-
-  const history = useHistory();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { status, data } = await api.get(`/profiles/${Auth.getUserId()}`);
-
-        if (status === 200) return setUser(data.user);
-        history.push('/login');
-      } catch {
-        history.push('/login');
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
+  const { user } = useContext(UserContext);
 
   return (
     <Grid>

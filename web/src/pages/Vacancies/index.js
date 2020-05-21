@@ -7,8 +7,6 @@ import Auth from '../../services/auth';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
-import Img from '../../assets/test/user.jpg';
-
 import {
   Container,
   Header,
@@ -25,10 +23,9 @@ import {
   UserInfo,
 } from './styles';
 
-function Vacancies() {
+function Vacancies({ hasJobId = true }) {
   const [jobs, setJobs] = useState([]);
   const [actualJob, setActualJob] = useState(null);
-
   const { id: jobId } = useParams();
 
   useEffect(() => {
@@ -63,7 +60,7 @@ function Vacancies() {
                   <Title>{job.name}</Title>
                   <Available>{getJobAmount(job.amount)}</Available>
                 </div>
-                <Badge>0</Badge>
+                <Badge>{job.proposals?.length || 0}</Badge>
               </NavLink>
             </NavItem>
           ))}
