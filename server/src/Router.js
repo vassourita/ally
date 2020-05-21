@@ -10,7 +10,7 @@ import ProfileController from './app/Controllers/ProfileController';
 import SessionController from './app/Controllers/SessionController';
 import EmployerController from './app/Controllers/EmployerController';
 import JobVacancyController from './app/Controllers/JobVacancyController';
-import OpportunitiesController from './app/Controllers/OpportunitiesController';
+import OpportunityController from './app/Controllers/OpportunityController';
 
 export default class Router {
   constructor() {
@@ -28,7 +28,7 @@ export default class Router {
     routes.get('/jobs', JobVacancyController.index);
     routes.get('/jobs/:jobId', JobVacancyController.show);
 
-    routes.get('/opportunities', OpportunitiesController.index);
+    routes.get('/opportunities', OpportunityController.index);
 
     this.routes = routes;
   }
