@@ -1,20 +1,21 @@
 import JobVacancyRepository from '../Repositories/JobVacancyRepository';
+import JobServices from '../../services/Jobs';
 
-export default class ProfileController {
+export default class JobVacancyController {
   static async index(req, res) {
-    const { user, region, microregion } = req.query;
+    const { user, microregion, date, local } = req.query;
 
-    const query = {};
+    if (user && !date && !microregion && !local) {
+      const jobVacancies = await JobVacancyRepository.find({
+        where: { employer_id: user },
+      });
 
-    if (user) query.employer_id = Number(user);
-    if (region !== undefined) query.region_only = !!region;
-    if (microregion) query.microregion_id = microregion;
+      return res.status(200).json({ jobVacancies });
+    }
 
-    const jobVacancies = await JobVacancyRepository.find({
-      where: query,
-    });
+    const jobs = JobServices.filterJobs({ date, microregion, local });
 
-    return res.status(200).json({ jobVacancies });
+    return res.status(200).json({ jobVacancies: jobs });
   }
 
   static async show(req, res) {

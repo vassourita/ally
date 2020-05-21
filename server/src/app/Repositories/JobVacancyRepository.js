@@ -11,7 +11,6 @@ const JobVacancyRepository = new Repository('job_vacancy', {
   description: {},
   amount: {},
   created_at: {},
-  image_url: {},
   region_only: {},
 });
 

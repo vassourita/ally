@@ -23,7 +23,7 @@ export default class Database {
     });
   }
 
-  escape(value) {
+  static escape(value) {
     return mysql.escape(value);
   }
 

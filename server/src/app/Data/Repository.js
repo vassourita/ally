@@ -29,7 +29,7 @@ export default class Repository {
 
     const getSelect = attrs.map(a => ` ${this.tableName}.${a} `);
     const getWhere = formattedWhere[0]
-      ? `WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${this.db.escape(w[1])}`)}`
+      ? `WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${Database.escape(w[1])}`)}`
       : '';
     const getGroupBy = join.length ? ` GROUP BY ${this.tableName}.${this.primaryFields[0]} ` : '';
     const getLimit = limit ? ` LIMIT ${limit} ` : '';
@@ -60,7 +60,7 @@ export default class Repository {
     const formattedWhere = Object.entries(where);
     const sql = `
       DELETE FROM ${this.tableName}
-      WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${this.db.escape(w[1])}`)}
+      WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${Database.escape(w[1])}`)}
     `;
     const rows = await this.db.query(sql, []);
     return rows.affectedRows;
@@ -71,7 +71,7 @@ export default class Repository {
       INSERT INTO ${this.tableName}
         (${Object.keys(schema)})
         VALUES
-        (${this.db.escape(Object.values(schema))});
+        (${Database.escape(Object.values(schema))});
     `;
     const { insertId } = await this.db.query(sql, []);
 
