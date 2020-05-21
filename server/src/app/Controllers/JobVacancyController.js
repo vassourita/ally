@@ -3,9 +3,9 @@ import JobServices from '../../services/Jobs';
 
 export default class JobVacancyController {
   static async index(req, res) {
-    const { user, microregion, date, local } = req.query;
+    const { user, microregion, days, local } = req.query;
 
-    if (user && !date && !microregion && !local) {
+    if (user) {
       const jobVacancies = await JobVacancyRepository.find({
         where: { employer_id: user },
       });
@@ -13,7 +13,7 @@ export default class JobVacancyController {
       return res.status(200).json({ jobVacancies });
     }
 
-    const jobs = JobServices.filterJobs({ date, microregion, local });
+    const jobs = await JobServices.filterJobs({ days, microregion, local });
 
     return res.status(200).json({ jobVacancies: jobs });
   }
