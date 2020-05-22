@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import cors from 'cors';
-import http from 'http';
+import Http from 'http';
 import path from 'path';
 import morgan from 'morgan';
 import Youch from 'youch';
@@ -8,17 +8,30 @@ import express from 'express';
 import 'express-async-errors';
 
 import Router from './Router';
+import WebSocket from './WebSocket';
 
 export default class AllyApi {
   constructor() {
     this.app = express();
     this.app.disable('x-powered-by');
 
-    this.server = http.createServer(this.app);
+    this.server = Http.createServer(this.app);
 
     this.middlewares();
+    this.setupWebSocket();
     this.routes();
     this.exceptionHandler();
+  }
+
+  setupWebSocket() {
+    this.ws = new WebSocket(this.server, (err, io) => {
+      if (err) throw err;
+      console.log('\x1b[0mSOCKET: \x1b[34mok\x1b[0m');
+    });
+    this.app.use((req, res, next) => {
+      req.webSocket = this.io;
+      next();
+    });
   }
 
   middlewares() {
