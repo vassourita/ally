@@ -4,28 +4,30 @@ export default class JobVacancyController {
   static async index(req, res) {
     const { userId } = req;
 
-    const jobVacancies = await JobVacancyRepository.find({
+    const jobs = await JobVacancyRepository.find({
       where: { employer_id: userId },
     });
 
-    return res.status(200).json({ jobVacancies });
+    return res.status(200).json({ jobs });
   }
 
   static async show(req, res) {
-    const { jobId } = req.params;
+    const { id } = req.params;
 
-    const jobVacancy = await JobVacancyRepository.findOne({
-      where: { id: jobId },
+    const job = await JobVacancyRepository.findOne({
+      where: { id },
     });
 
-    if (!jobVacancy) {
-      return res.status(404).json({
-        error: {
-          message: 'Job Vacancy not found',
-        },
-      });
-    }
+    return res.status(200).json({ job });
+  }
 
-    return res.status(200).json({ jobVacancy });
+  static async destroy(req, res) {
+    const { id } = req.params;
+
+    const deleted = await JobVacancyRepository.delete({
+      where: { id },
+    });
+
+    return res.status(200).json({ deleted });
   }
 }

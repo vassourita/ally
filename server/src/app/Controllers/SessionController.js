@@ -3,8 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import authConfig from '../../config/auth';
 import UserRepository from '../Repositories/UserRepository';
-import KnowledgeRepository from '../Repositories/KnowledgeRepository';
-import JobVacancyRepository from '../Repositories/JobVacancyRepository';
+import RatingRepository from '../Repositories/RatingRepository';
 
 export default class SessionController {
   static async store(req, res) {
@@ -29,6 +28,14 @@ export default class SessionController {
 
     const loggedUser = await UserRepository.findOne({
       where: { id: user.id },
+      join: [
+        {
+          repo: RatingRepository,
+          on: { target_id: 'user.id' },
+          type: 'count',
+          as: 'likes',
+        },
+      ],
     });
 
     return res.status(200).json({

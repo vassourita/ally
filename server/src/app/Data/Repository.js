@@ -42,11 +42,23 @@ export default class Repository {
         attrs: string[],
         as: string,
         type: "many" | "single" | "count",
-        side: "LEFT"| "RIGHT" | "INNER"
+        side: "LEFT"| "RIGHT" | "INNER",
+        join: [{
+          repo: Repository,
+          on: {
+            [field: string]: string
+          },
+          attrs: string[],
+          as: string,
+          type: "many" | "single" | "count",
+          side: "LEFT"| "RIGHT" | "INNER"
+          join: []
+        }]
       }]
-     }} Query
+     }} query
    */
-  async find({ attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = {}) {
+  async find(query = {}) {
+    const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
     const formattedWhere = Object.entries(where);
 
     const getSelect = attrs.map(a => ` ${this.tableName}.${a} `);
@@ -88,9 +100,20 @@ export default class Repository {
       attrs: string[],
       as: string,
       type: "many" | "single" | "count",
-      side: "LEFT"| "RIGHT" | "INNER"
+      side: "LEFT"| "RIGHT" | "INNER",
+      join: [{
+        repo: Repository,
+        on: {
+          [field: string]: string
+        },
+        attrs: string[],
+        as: string,
+        type: "many" | "single" | "count",
+        side: "LEFT"| "RIGHT" | "INNER"
+        join: []
+      }]
     }]
-  }} Query
+  }} query
   */
   async findOne(query) {
     const results = await this.find({ ...query, limit: 1 });

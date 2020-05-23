@@ -6,7 +6,6 @@ import UploadMiddleware from './app/Middlewares/UploadMiddleware';
 import SessionStoreValidator from './app/Validators/SessionStoreValidator';
 
 import UserController from './app/Controllers/UserController';
-import ProfileController from './app/Controllers/ProfileController';
 import SessionController from './app/Controllers/SessionController';
 import EmployerController from './app/Controllers/EmployerController';
 import JobVacancyController from './app/Controllers/JobVacancyController';
@@ -16,17 +15,25 @@ export default class Router {
   constructor() {
     const routes = express.Router();
 
-    routes.get('/profiles/:id', ProfileController.show);
     routes.post('/sessions', SessionStoreValidator.validate, SessionController.store);
     routes.post('/employers', UploadMiddleware.single('image'), EmployerController.store);
 
     routes.use(AuthMiddleware.handle);
 
-    routes.delete('/users', UserController.destroy);
-    routes.delete('/employers', EmployerController.destroy);
+    routes.get('/employers', EmployerController.index);
+    routes.get('/employers/:id', EmployerController.show);
+    // routes.put('/employers', EmployerController.update);
+    routes.delete('/employers/:id', EmployerController.show);
+
+    routes.get('/users', UserController.index);
+    routes.get('/users/:id', UserController.show);
+    // routes.put('/users', UserController.update);
+    routes.delete('/users/:id', UserController.destroy);
 
     routes.get('/jobs', JobVacancyController.index);
-    routes.get('/jobs/:jobId', JobVacancyController.show);
+    routes.get('/jobs/:id', JobVacancyController.show);
+    // routes.put('/jobs', JobVacancyController.update);
+    routes.delete('/jobs/:id', JobVacancyController.destroy);
 
     routes.get('/opportunities', OpportunityController.index);
 
