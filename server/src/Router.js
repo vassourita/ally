@@ -16,6 +16,8 @@ export default class Router {
     const routes = express.Router();
 
     routes.post('/sessions', SessionStoreValidator.validate, SessionController.store);
+
+    routes.post('/users', UploadMiddleware.single('image'), UserController.store);
     routes.post('/employers', UploadMiddleware.single('image'), EmployerController.store);
 
     routes.use(AuthMiddleware.handle);

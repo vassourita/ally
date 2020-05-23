@@ -46,22 +46,21 @@ export default class EmployerController {
 
   static async store(req, res) {
     const { name, email, password, cnpj, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
+    const { filename } = req.file;
 
     const userExists = await UserRepository.findOne({
-      attrs: ['id'],
+      attrs: ['id', 'email'],
       where: { email, employer: true },
     });
 
     if (userExists) {
-      if (userExists.email === email) return res.status(400).json({ error: 'Email already in use', field: 'email' });
+      return res.status(400).json({ error: 'Email already in use', field: 'email' });
     }
-
-    const { filename } = req.file;
 
     const microregion = cities.find(c => c.id.toString() === ibgeCode).microrregiao;
 
     if (!microregion) {
-      return res.status(400).json({ error: { message: 'City does not exists', field: 'ibge' } });
+      return res.status(400).json({ error: { message: 'City does not exists', field: 'ibgeCode' } });
     }
 
     const passwordHash = await bcrypt.hash(password, 8);

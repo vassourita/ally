@@ -41,7 +41,7 @@ export default class JobService {
                 'id', knowledge_type.id,
                 'name', knowledge_type.name
               ),
-              'is_met', (knowledge_type.id >= user_knowledge_type.id AND
+              'is_met', (knowledge_type.id >= user_knowledge.knowledge_type_id AND
                         LOWER(knowledge.name) = LOWER(user_knowledge.name))
             )
           )
@@ -64,7 +64,7 @@ export default class JobService {
         ON user_knowledge.user_id = professional.id
       INNER JOIN knowledge_type AS user_knowledge_type
         ON user_knowledge_type.id = user_knowledge.knowledge_type_id
-      ${days ? ` WHERE DATE(job_vacancy.created_at) > (NOW() - INTERVAL ${Database.escape(Number(days))} DAY) ` : ''}
+      ${days ? ` WHERE DATE(job_vacancy.created_at) >= (NOW() - INTERVAL ${Database.escape(Number(days))} DAY) ` : ''}
       GROUP BY job_vacancy.id
     `;
 
@@ -79,7 +79,20 @@ export default class JobService {
       if (!job.knowledges.length) {
         return true;
       }
-      const hasMetAllRequired = !!job.knowledges.filter(k => k.is_met && !k.differential).length;
+
+      const allDifferential = job.knowledges.filter(k => !k.differential).length === job.knowledges.length;
+
+      if (allDifferential) {
+        return true;
+      }
+
+      const hasMetAllRequired = !!job.knowledges
+        .filter(k => !k.differential)
+        .filter(k => {
+          if (k.is_met) return true;
+          return false;
+        }).length;
+
       if (hasMetAllRequired) {
         return true;
       }

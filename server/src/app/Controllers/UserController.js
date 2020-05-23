@@ -1,6 +1,10 @@
+import bcrypt from 'bcryptjs';
+
 import UserRepository from '../Repositories/UserRepository';
 import KnowledgeRepository from '../Repositories/KnowledgeRepository';
 import KnowledgeTypeRepository from '../Repositories/KnowledgeTypeRepository';
+
+import cities from '../Data/cities';
 
 export default class UserController {
   static async index(req, res) {
@@ -55,6 +59,46 @@ export default class UserController {
     });
 
     return res.status(200).json({ user });
+  }
+
+  static async store(req, res) {
+    const { name, email, password, cpf, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
+    const { filename } = req.file;
+
+    const userExists = await UserRepository.findOne({
+      attrs: ['id', 'email'],
+      where: { email, employer: true },
+    });
+
+    if (userExists) {
+      return res.status(400).json({ error: 'Email already in use', field: 'email' });
+    }
+
+    const microregion = cities.find(c => c.id.toString() === ibgeCode).microrregiao;
+
+    if (!microregion) {
+      return res.status(400).json({ error: { message: 'City does not exists', field: 'ibgeCode' } });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 8);
+
+    const user = await UserRepository.create({
+      employer: false,
+      name,
+      email,
+      password: passwordHash,
+      fiscal_code: cpf,
+      phone,
+      image_url: filename,
+      postal_code: postalCode,
+      city,
+      state,
+      address,
+      neighborhood,
+      microregion_id: microregion.id,
+    });
+
+    return res.status(201).json({ user });
   }
 
   static async destroy(req, res) {

@@ -6,6 +6,6 @@ export default class OpportunitiesController {
 
     const jobs = await JobService.filterJobs({ days, microregion, local, userId: req.userId });
 
-    return res.status(200).json({ opportunities: jobs });
+    return res.status(200).json({ jobs });
   }
 }
