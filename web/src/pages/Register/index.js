@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import isValidEmail from '../../utils/validators/isValidEmail';
 import isValidPhone from '../../utils/validators/isValidPhone';
@@ -8,7 +9,6 @@ import isValidCnpj from '../../utils/validators/isValidCnpj';
 import CardHeader from '../../components/CardHeader';
 import Button from '../../components/Button';
 import OpaqueLink from '../../components/OpaqueLink';
-import ErrorBox from '../../components/ErrorBox';
 
 import api from '../../services/api';
 
@@ -23,7 +23,6 @@ const Forms = [Form1, Form2, Form3];
 
 function Register() {
   const [index, setIndex] = useState(0);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     email: '',
@@ -33,15 +32,13 @@ function Register() {
     cnpj: '',
     phone: '',
     image: null,
-    location: {
-      isValidCep: false,
-      postalCode: '',
-      city: '',
-      state: '',
-      neighborhood: '',
-      address: '',
-      ibgeCode: '',
-    },
+    isValidCep: false,
+    postalCode: '',
+    city: '',
+    state: '',
+    neighborhood: '',
+    address: '',
+    ibgeCode: '',
   });
 
   const history = useHistory();
@@ -49,7 +46,7 @@ function Register() {
   const requirements = [
     state.name && state.email && state.password && state.password === state.confirm && isValidEmail(state.email),
     state.cnpj && state.phone && state.image && isValidCnpj(state.cnpj) && isValidPhone(formatPhone(state.phone)),
-    state.location.isValidCep,
+    state.isValidCep,
   ];
 
   async function handleClick(e, returning = false) {
@@ -58,8 +55,8 @@ function Register() {
     if (returning) return setIndex(index - 1);
 
     if (!requirements[index]) {
-      setError('inputs');
-      return setTimeout(() => setError(''), 4000);
+      toast.error('Preencha corretamente todos os campos para prosseguir');
+      return;
     }
     if (index < 2) return setIndex(index + 1);
 
@@ -69,7 +66,7 @@ function Register() {
     const data = new FormData();
 
     Object.entries(state).forEach(([key, value]) => {
-      data.append(key, key === 'location' ? JSON.stringify(value) : value);
+      data.append(key, value);
     });
 
     try {
@@ -78,16 +75,14 @@ function Register() {
 
       switch (response.status) {
         case 201:
-          alert('Cadastrado com sucesso!');
+          toast.info('Sua conta foi criada com sucesso!');
           history.push('/login');
           break;
         default:
-          setError('server');
-          setTimeout(() => setError(''), 4000);
+          toast.error('Ocorreu um erro inesperado em nosso servidor');
       }
     } catch (_) {
-      setError('server');
-      setTimeout(() => setError(''), 4000);
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
     }
 
     setLoading(false);
@@ -100,9 +95,9 @@ function Register() {
     //eslint-disable-next-line
     return Forms.map((_, i) => {
       if (index === i) {
-        if (i === 0 && i === index) {
+        if (i === 0) {
           return (
-            <Button isLoading={loading} key={i} onClick={handleClick}>
+            <Button disabled={!requirements[index]} isLoading={loading} key={i} onClick={handleClick}>
               Próximo
             </Button>
           );
@@ -112,7 +107,7 @@ function Register() {
             <Button onClick={e => handleClick(e, true)} outlined>
               Retornar
             </Button>
-            <Button isLoading={loading} onClick={handleClick}>
+            <Button disabled={!requirements[index]} isLoading={loading} onClick={handleClick}>
               {i === 2 ? 'Finalizar' : 'Próximo'}
             </Button>
           </DoubleButtonContainer>
@@ -123,9 +118,6 @@ function Register() {
 
   return (
     <>
-      {error === 'server' && <ErrorBox message="Servidor offline. Tente novamente mais tarde" />}
-      {error === 'inputs' && <ErrorBox message="Preencha corretamente todos os campos para prosseguir" />}
-
       <CardHeader title="Cadastro" sub="Crie uma conta e encontre os melhores profissionais" />
       <IndicatorContainer>
         {Forms.map((_, i) => (

@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { FiEdit } from 'react-icons/fi';
+import { FiEdit, FiThumbsUp } from 'react-icons/fi';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 import Button from '../../components/Button';
 
-import { UserContext } from '../../providers/UserProvider';
+import UserContext from '../../contexts/UserContext';
 
 import { Grid, Header, UserAbout, UserImage, UserInfo, Info, Title, Content } from './styles';
 
@@ -47,11 +47,15 @@ function Profile() {
         <Title>Sobre</Title>
         <Content>{user.about || 'Não há descrição ainda'}</Content>
         <Title>Endereço</Title>
-        <Content>{user.street}</Content>
+        <Content>{user.address}</Content>
         <Content>
           {user.neighborhood}, {user.city} - {user.state}
         </Content>
-        <Content>{user.postal_code}</Content>
+        <Content>CEP {user.postal_code}</Content>
+        <Title>Avaliação geral</Title>
+        <Content>
+          <FiThumbsUp /> {user.likes || 0}
+        </Content>
       </UserAbout>
     </Grid>
   );

@@ -26,9 +26,9 @@ function Dashboard() {
                   <PrivateRoute path="/chat" component={Chat} />
                   <PrivateRoute path="/rate" component={Rating} />
                   <PrivateRoute path="/users/:id" component={User} />
-                  <PrivateRoute path="/profile" component={Profile} />
-                  <PrivateRoute exact path="/vacancies" component={({ ...props }) => <Vacancies {...props} hasJobId={false} />} />
-                  <PrivateRoute path="/vacancies/new" component={CreateVacancy} />
+                  <PrivateRoute exact path="/profile" component={Profile} />
+                  <PrivateRoute exact path="/vacancies" component={Vacancies} />
+                  <PrivateRoute exact path="/vacancies/new" component={CreateVacancy} />
                   <PrivateRoute path="/vacancies/:id" component={Vacancies} />
                   <PrivateRoute path="/notifications" component={Notifications} />
                 </Switch>

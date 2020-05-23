@@ -41,6 +41,9 @@ export const NavItem = styled.li`
       opacity: 100%;
       border-right: 7px solid var(--ally-blue);
     }
+    button {
+      margin-right: 35px;
+    }
   }
 `;
 
@@ -74,6 +77,7 @@ export const Header = styled.div`
 export const List = styled.ul`
   grid-area: list;
   overflow-y: auto;
+  overflow-x: hidden;
   /* margin: 0 0 40px 0; */
 `;
 

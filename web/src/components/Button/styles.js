@@ -1,6 +1,14 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.button`
+  ${p =>
+    p.disabled
+      ? css`
+          opacity: 80%;
+        `
+      : css`
+          cursor: pointer;
+        `}
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +23,14 @@ export const Container = styled.button`
   &:hover {
     ${p =>
       !p.outlined
-        ? 'background-color: var(--ally-blue-d)'
-        : 'border: 1px solid var(--ally-blue); color: var(--ally-blue)'};
+        ? !p.disabled &&
+          css`
+            background-color: var(--ally-blue-d);
+          `
+        : !p.disabled &&
+          css`
+            border: 1px solid var(--ally-blue);
+            color: var(--ally-blue);
+          `};
   }
 `;

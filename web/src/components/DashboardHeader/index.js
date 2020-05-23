@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import iconImg from '../../assets/logo/icon50.png';
 
-import { UserContext } from '../../providers/UserProvider';
+import UserContext from '../../contexts/UserContext';
 
 import { Container, Head, List, ListItem, Greeting } from './styles';
 

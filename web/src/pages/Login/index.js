@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import { UserContext } from '../../providers/UserProvider';
+import UserContext from '../../contexts/UserContext';
 import api from '../../services/api';
 import Auth from '../../services/auth';
 
 import Button from '../../components/Button';
 import CheckBox from '../../components/CheckBox';
-import ErrorBox from '../../components/ErrorBox';
 import InputBlock from '../../components/InputBlock';
 import OpaqueLink from '../../components/OpaqueLink';
 import CardHeader from '../../components/CardHeader';
@@ -37,17 +37,14 @@ function Login() {
         return history.push('/profile');
       }
       if (response.status >= 300 && response.status < 500) setError(response.data.error.field);
-      if (response.status >= 500) setError('server');
+      if (response.status >= 500) toast.error('Ocorreu um erro inesperado em nosso servidor');
     } catch (_) {
-      setError('server');
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
     }
-    setTimeout(() => setError(''), 4000);
   }
 
   return (
     <>
-      {error === 'server' && <ErrorBox message="Servidor offline. Tente novamente mais tarde" />}
-
       <CardHeader title="Login" sub="Faça login para acessar sua conta" />
       <form onSubmit={handleSubmit}>
         <InputBlock

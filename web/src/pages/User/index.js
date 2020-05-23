@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiThumbsUp } from 'react-icons/fi';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
@@ -18,7 +18,7 @@ function User() {
   useEffect(() => {
     (async () => {
       try {
-        const { status, data } = await api.get(`/profiles/${id}`);
+        const { status, data } = await api.get(`/users/${id}`);
 
         if (status === 200) return setUser(data.user);
       } catch {}
@@ -46,25 +46,26 @@ function User() {
           }}
         />
         <Info>
-          <div>
-            <Title>{user.name}</Title>
-            <Content>
-              {user.city} - {user.state}
-            </Content>
-            <Content>CPF {user.fiscal_code}</Content>
-          </div>
-          <div>
-            <Title>Contato</Title>
-            <Content>{user.email}</Content>
-            <Content>{user.phone}</Content>
-          </div>
+          <Title>{user.name}</Title>
+          <Content>
+            {user.city} - {user.state}
+          </Content>
+
+          <Title>Contato</Title>
+          <Content>{user.email}</Content>
+          <Content>{user.phone}</Content>
+
+          <Title>Avaliação geral</Title>
+          <Content>
+            <FiThumbsUp /> {user.likes || 0}
+          </Content>
         </Info>
       </UserInfo>
       <UserAbout className="modal-shadow">
         <Title>Sobre</Title>
         <Content>{user.about || 'Não há descrição ainda'}</Content>
         <Title>Endereço</Title>
-        <Content>{user.street}</Content>
+        <Content>{user.address}</Content>
         <Content>
           {user.neighborhood}, {user.city} - {user.state}
         </Content>

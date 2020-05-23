@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 export const GlobalStyles = createGlobalStyle`
   :root {
     --ally-red-l: #f1328e;
@@ -78,5 +80,27 @@ export const GlobalStyles = createGlobalStyle`
   }
   ::-webkit-scrollbar-corner {
     background: transparent;
+  }
+
+  .Toastify__toast {
+    opacity: 95%;
+  }
+  .Toastify__toast--rtl {
+  }
+  .Toastify__toast--dark {
+  }
+  .Toastify__toast--default {
+  }
+  .Toastify__toast--info {
+    background-color: var(--ally-blue);
+  }
+  .Toastify__toast--success {
+  }
+  .Toastify__toast--warning {
+  }
+  .Toastify__toast--error {
+    background-color: var(--ally-red);
+  }
+  .Toastify__toast-body {
   }
 `;

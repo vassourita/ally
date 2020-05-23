@@ -28,13 +28,8 @@ export const UserImage = styled.div`
 `;
 
 export const Info = styled.div`
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
   padding: 20px;
   width: 100%;
-  button {
-    align-self: flex-end;
-  }
 `;
 
 export const UserAbout = styled.div`

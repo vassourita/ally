@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import api from '../../services/api';
-import Auth from '../../services/auth';
 
+import Button from '../../components/Button';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
@@ -23,7 +24,7 @@ import {
   UserInfo,
 } from './styles';
 
-function Vacancies({ hasJobId = true }) {
+function Vacancies() {
   const [jobs, setJobs] = useState([]);
   const [actualJob, setActualJob] = useState(null);
   const { id: jobId } = useParams();
@@ -31,21 +32,23 @@ function Vacancies({ hasJobId = true }) {
   useEffect(() => {
     (async () => {
       try {
-        const { status, data } = await api.get(`/jobs?user=${Auth.getUserId()}`);
+        const { status, data } = await api.get(`/jobs`);
 
         if (status === 200) {
-          setJobs(data.jobVacancies);
-          setActualJob(data.jobVacancies.find(j => j.id.toString() === jobId));
+          setJobs(data.jobs);
+          setActualJob(data.jobs.find(j => j.id.toString() === jobId));
         }
-      } catch {}
+      } catch {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
     })();
   }, [jobId]);
 
-  const getJobAmount = number => {
-    if (number === 1) {
+  const getJobAmount = amount => {
+    if (amount === 1) {
       return '1 vaga disponível';
     }
-    return `${number} vagas disponíveis`;
+    return `${amount} vagas disponíveis`;
   };
 
   return (
@@ -64,6 +67,11 @@ function Vacancies({ hasJobId = true }) {
               </NavLink>
             </NavItem>
           ))}
+          <NavItem>
+            <NavLink activeClassName="nav-link-active" to="/vacancies/new">
+              <Button>Criar nova vaga</Button>
+            </NavLink>
+          </NavItem>
         </NavList>
       </Nav>
       <Header>
@@ -71,7 +79,7 @@ function Vacancies({ hasJobId = true }) {
           <CardHeader
             title="Propostas"
             sub={
-              actualJob
+              jobId
                 ? `Visualize as propostas recebidas em sua ${actualJob?.name}`
                 : 'Selecione uma vaga para visualizar suas propostas'
             }
@@ -88,7 +96,8 @@ function Vacancies({ hasJobId = true }) {
             </UserName>
             <UserInfo></UserInfo>
           </ListItem>
-        ))}
+        )) ||
+          (jobId && <CardBox>Não há propostas para esta vaga ainda...</CardBox>)}
       </List>
     </Container>
   );

@@ -17,5 +17,6 @@ export const Container = styled.div`
   }
   svg {
     margin-right: 7px;
+    cursor: pointer;
   }
 `;
