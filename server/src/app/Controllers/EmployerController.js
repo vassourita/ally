@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 import UserRepository from '../Repositories/UserRepository';
+import RatingRepository from '../Repositories/RatingRepository';
 import JobVacancyRepository from '../Repositories/JobVacancyRepository';
 
 import cities from '../Data/cities';
@@ -20,6 +21,12 @@ export default class EmployerController {
           as: 'jobs',
           type: 'many',
         },
+        {
+          repo: RatingRepository,
+          on: { target_id: 'user.id' },
+          type: 'count',
+          as: 'likes',
+        },
       ],
     });
 
@@ -37,6 +44,12 @@ export default class EmployerController {
           on: { employer_id: 'user.id' },
           as: 'jobs',
           type: 'many',
+        },
+        {
+          repo: RatingRepository,
+          on: { target_id: 'user.id' },
+          type: 'count',
+          as: 'likes',
         },
       ],
     });
@@ -82,6 +95,24 @@ export default class EmployerController {
     });
 
     return res.status(201).json({ user });
+  }
+
+  static async update(req, res) {
+    const { userId } = req;
+    const { about } = req.body;
+
+    const updated = {};
+
+    if (about) {
+      updated.about = await UserRepository.update({
+        set: {
+          about,
+        },
+        where: { id: userId },
+      });
+    }
+
+    return res.status(200).json({ updated });
   }
 
   static async destroy(req, res) {

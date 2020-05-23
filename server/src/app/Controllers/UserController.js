@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 import UserRepository from '../Repositories/UserRepository';
+import RatingRepository from '../Repositories/RatingRepository';
 import KnowledgeRepository from '../Repositories/KnowledgeRepository';
 import KnowledgeTypeRepository from '../Repositories/KnowledgeTypeRepository';
 
@@ -29,6 +30,12 @@ export default class UserController {
             },
           ],
         },
+        {
+          repo: RatingRepository,
+          on: { target_id: 'user.id' },
+          type: 'count',
+          as: 'likes',
+        },
       ],
     });
 
@@ -54,6 +61,12 @@ export default class UserController {
               type: 'single',
             },
           ],
+        },
+        {
+          repo: RatingRepository,
+          on: { target_id: 'user.id' },
+          type: 'count',
+          as: 'likes',
         },
       ],
     });
@@ -99,6 +112,24 @@ export default class UserController {
     });
 
     return res.status(201).json({ user });
+  }
+
+  static async update(req, res) {
+    const { userId } = req;
+    const { about } = req.body;
+
+    const updated = {};
+
+    if (about) {
+      updated.about = await UserRepository.update({
+        set: {
+          about,
+        },
+        where: { id: userId },
+      });
+    }
+
+    return res.status(200).json({ updated });
   }
 
   static async destroy(req, res) {

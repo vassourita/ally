@@ -124,7 +124,7 @@ export default class Repository {
     const formattedWhere = Object.entries(where);
     const sql = `
       DELETE FROM ${this.tableName}
-      WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} ${operator} ${Database.escape(w[1])}`)}
+      WHERE ${formattedWhere.map(([key, value]) => `\n${this.tableName}.${key} ${operator} ${Database.escape(value)}`)}
     `;
     const rows = await this.db.query(sql, []);
     return rows.affectedRows;
@@ -136,7 +136,7 @@ export default class Repository {
     const sql = `
       UPDATE ${this.tableName}
       SET ${formattedSet.map(([key, value]) => ` ${this.tableName}.${key} = ${Database.escape(value)} `)}
-      WHERE ${formattedWhere.map(w => ` ${this.tableName}.${w[0]} ${operator} ${Database.escape(w[1])} `)}
+      WHERE ${formattedWhere.map(([key, value]) => ` ${this.tableName}.${key} ${operator} ${Database.escape(value)} `)}
     `;
     const rows = await this.db.query(sql, []);
     return rows.affectedRows;

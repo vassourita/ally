@@ -24,12 +24,12 @@ export default class Router {
 
     routes.get('/employers', EmployerController.index);
     routes.get('/employers/:id', EmployerController.show);
-    // routes.put('/employers', EmployerController.update);
+    routes.put('/employers', EmployerController.update);
     routes.delete('/employers/:id', EmployerController.show);
 
     routes.get('/users', UserController.index);
     routes.get('/users/:id', UserController.show);
-    // routes.put('/users', UserController.update);
+    routes.put('/users', UserController.update);
     routes.delete('/users/:id', UserController.destroy);
 
     routes.get('/jobs', JobVacancyController.index);

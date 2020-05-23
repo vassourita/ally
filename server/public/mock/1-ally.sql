@@ -109,7 +109,6 @@ CREATE TABLE rating (
   author_id INT NOT NULL,
   target_id INT NOT NULL,
   job_vacancy_id INT,
-  stars INT NOT NULL,
   created_at TIMESTAMP DEFAULT current_timestamp,
   CONSTRAINT fk_rating_job_vacancy
     FOREIGN KEY (job_vacancy_id)
