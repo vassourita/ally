@@ -8,10 +8,10 @@ const JobVacancyRepository = new Repository('job_vacancy', {
     returning: false,
   },
   name: {},
-  description: {},
+  local: {},
   amount: {},
   created_at: {},
-  region_only: {},
+  description: {},
 });
 
 export default JobVacancyRepository;

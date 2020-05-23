@@ -31,8 +31,7 @@ CREATE TABLE job_vacancy (
   name VARCHAR(50) NOT NULL,
   description TEXT NOT NULL,
   amount INT NOT NULL,
-  image_url VARCHAR(120),
-  region_only BOOLEAN NOT NULL,
+  local VARCHAR(10) NOT NULL,
   created_at TIMESTAMP DEFAULT current_timestamp,
   CONSTRAINT fk_job_vacancy_employer
     FOREIGN KEY (employer_id)
@@ -109,13 +108,13 @@ CREATE TABLE rating (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   author_id INT NOT NULL,
   target_id INT NOT NULL,
-  job_vacancy_id INT NOT NULL,
+  job_vacancy_id INT,
   stars INT NOT NULL,
   created_at TIMESTAMP DEFAULT current_timestamp,
   CONSTRAINT fk_rating_job_vacancy
     FOREIGN KEY (job_vacancy_id)
     REFERENCES job_vacancy (id)
-    ON DELETE NO ACTION,
+    ON DELETE SET NULL,
   CONSTRAINT fk_rating_author
     FOREIGN KEY (author_id)
     REFERENCES user (id)

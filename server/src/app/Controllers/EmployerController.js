@@ -1,9 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 import UserRepository from '../Repositories/UserRepository';
-import KnowledgeRepository from '../Repositories/KnowledgeRepository';
 import JobVacancyRepository from '../Repositories/JobVacancyRepository';
-import KnowledgeTypeRepository from '../Repositories/KnowledgeTypeRepository';
 
 import cities from '../Data/cities';
 
@@ -95,7 +93,7 @@ export default class EmployerController {
     }
 
     const deleted = await UserRepository.delete({
-      where: { id, employer: true },
+      where: { id: Number(id), employer: true },
     });
 
     return res.json({ deleted });

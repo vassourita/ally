@@ -32,7 +32,8 @@ export default class Router {
 
     routes.get('/jobs', JobVacancyController.index);
     routes.get('/jobs/:id', JobVacancyController.show);
-    // routes.put('/jobs', JobVacancyController.update);
+    routes.post('/jobs', JobVacancyController.store);
+    routes.put('/jobs/:id', JobVacancyController.update);
     routes.delete('/jobs/:id', JobVacancyController.destroy);
 
     routes.get('/opportunities', OpportunityController.index);

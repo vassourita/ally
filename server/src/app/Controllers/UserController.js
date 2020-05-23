@@ -65,7 +65,7 @@ export default class UserController {
     }
 
     const deleted = await UserRepository.delete({
-      where: { id, employer: false },
+      where: { id: Number(id), employer: false },
     });
 
     return res.status(200).json({ deleted });

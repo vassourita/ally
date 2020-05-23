@@ -1,4 +1,6 @@
+import KnowledgeRepository from '../Repositories/KnowledgeRepository';
 import JobVacancyRepository from '../Repositories/JobVacancyRepository';
+import KnowledgeTypeRepository from '../Repositories/KnowledgeTypeRepository';
 
 export default class JobVacancyController {
   static async index(req, res) {
@@ -6,6 +8,22 @@ export default class JobVacancyController {
 
     const jobs = await JobVacancyRepository.find({
       where: { employer_id: userId },
+      join: [
+        {
+          repo: KnowledgeRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'knowledges',
+          type: 'many',
+          join: [
+            {
+              repo: KnowledgeTypeRepository,
+              on: { id: 'knowledge.knowledge_type_id' },
+              as: 'type',
+              type: 'single',
+            },
+          ],
+        },
+      ],
     });
 
     return res.status(200).json({ jobs });
@@ -16,16 +34,142 @@ export default class JobVacancyController {
 
     const job = await JobVacancyRepository.findOne({
       where: { id },
+      join: [
+        {
+          repo: KnowledgeRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'knowledges',
+          type: 'many',
+          join: [
+            {
+              repo: KnowledgeTypeRepository,
+              on: { id: 'knowledge.knowledge_type_id' },
+              as: 'type',
+              type: 'single',
+            },
+          ],
+        },
+      ],
     });
 
     return res.status(200).json({ job });
+  }
+
+  static async store(req, res) {
+    const { userId } = req;
+    const { name, description, amount, local, knowledges } = req.body;
+
+    const newJob = await JobVacancyRepository.create({
+      name,
+      local,
+      amount,
+      description,
+      employer_id: userId,
+    });
+
+    knowledges.forEach(async knowledge => {
+      await KnowledgeRepository.create(
+        {
+          knowledge_type_id: knowledge.typeId,
+          name: knowledge.name,
+          differential: knowledge.differential,
+          job_vacancy_id: newJob.id,
+        },
+        false,
+      );
+    });
+
+    const job = await JobVacancyRepository.findOne({
+      where: { id: newJob.id },
+      join: [
+        {
+          repo: KnowledgeRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'knowledges',
+          type: 'many',
+          join: [
+            {
+              repo: KnowledgeTypeRepository,
+              on: { id: 'knowledge.knowledge_type_id' },
+              as: 'type',
+              type: 'single',
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.status(201).json({ job });
+  }
+
+  static async update(req, res) {
+    const { id } = req.params;
+    const { amount, local, removeKnowledge, addKnowledge } = req.body;
+
+    const updated = {};
+
+    if (amount) {
+      updated.amount = await JobVacancyRepository.update({
+        set: { amount },
+        where: { id },
+      });
+    }
+
+    if (local) {
+      updated.local = await JobVacancyRepository.update({
+        set: { local },
+        where: { id },
+      });
+    }
+
+    if (removeKnowledge) {
+      updated.removeKnowledge = await KnowledgeRepository.delete({
+        where: { id: Number(removeKnowledge) },
+      });
+    }
+
+    if (addKnowledge) {
+      updated.addKnowledge = addKnowledge.filter(async knowledge => {
+        return !!(await KnowledgeRepository.create(
+          {
+            knowledge_type_id: knowledge.typeId,
+            name: knowledge.name,
+            differential: knowledge.differential,
+            job_vacancy_id: id,
+          },
+          false,
+        ));
+      });
+    }
+
+    const job = await JobVacancyRepository.findOne({
+      where: { id },
+      join: [
+        {
+          repo: KnowledgeRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'knowledges',
+          type: 'many',
+          join: [
+            {
+              repo: KnowledgeTypeRepository,
+              on: { id: 'knowledge.knowledge_type_id' },
+              as: 'type',
+              type: 'single',
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.status(200).json({ job, updated });
   }
 
   static async destroy(req, res) {
     const { id } = req.params;
 
     const deleted = await JobVacancyRepository.delete({
-      where: { id },
+      where: { id: Number(id) },
     });
 
     return res.status(200).json({ deleted });
