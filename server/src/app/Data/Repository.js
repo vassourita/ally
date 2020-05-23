@@ -25,6 +25,27 @@ export default class Repository {
     }
   }
 
+  /**
+   *
+   * @param {{
+      attrs: string[],
+      limit: number,
+      offset: number,
+      where: {
+        [field: string]: string
+      },
+      join: [{
+        repo: Repository,
+        on: {
+          [field: string]: string
+        },
+        attrs: string[],
+        as: string,
+        type: "many" | "single" | "count",
+        side: "LEFT"| "RIGHT" | "INNER"
+      }]
+     }} Query
+   */
   async find({ attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = {}) {
     const formattedWhere = Object.entries(where);
 
@@ -51,7 +72,26 @@ export default class Repository {
 
     return results;
   }
-
+  /**
+   *
+   * @param {{
+    attrs: string[],
+    offset: number,
+    where: {
+      [field: string]: string
+    },
+    join: [{
+      repo: Repository,
+      on: {
+        [field: string]: string
+      },
+      attrs: string[],
+      as: string,
+      type: "many" | "single" | "count",
+      side: "LEFT"| "RIGHT" | "INNER"
+    }]
+  }} Query
+  */
   async findOne(query) {
     const results = await this.find({ ...query, limit: 1 });
     return results[0] || null;
@@ -62,6 +102,18 @@ export default class Repository {
     const sql = `
       DELETE FROM ${this.tableName}
       WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} ${operator} ${Database.escape(w[1])}`)}
+    `;
+    const rows = await this.db.query(sql, []);
+    return rows.affectedRows;
+  }
+
+  async update({ where, operator = '=', set }) {
+    const formattedWhere = Object.entries(where);
+    const formattedSet = Object.entries(set);
+    const sql = `
+      UPDATE ${this.tableName}
+      SET ${formattedSet.map(([key, value]) => ` ${this.tableName}.${key} = ${Database.escape(value)} `)}
+      WHERE ${formattedWhere.map(w => ` ${this.tableName}.${w[0]} ${operator} ${Database.escape(w[1])} `)}
     `;
     const rows = await this.db.query(sql, []);
     return rows.affectedRows;
@@ -98,10 +150,16 @@ export default class Repository {
           const getAttrs = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr}, `);
           const getObjectFields = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr} `);
           const getInnerJoins = j.join
-            ? j.join.map(
-                iJ => ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(j.join, j.repo).fields()} `,
-              )
+            ? j.join.map(iJ => ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(j.join, j.repo).fields()} `)
             : '';
+
+          if (j.type === 'count') {
+            return `
+              COUNT(
+                DISTINCT ${j.repo.tableName}.${j.repo.primaryFields[0]}
+              ) AS ${getJoinName},
+            `;
+          }
 
           if (j.type === 'many') {
             return `

@@ -29,7 +29,7 @@ export default class AllyApi {
       console.log('\x1b[0mSOCKET: \x1b[34mok\x1b[0m');
     });
     this.app.use((req, res, next) => {
-      req.webSocket = this.io;
+      req.webSocket = this.ws;
       next();
     });
   }
