@@ -24,8 +24,8 @@ export const ListItem = styled.li`
   a {
     padding: 8px 0 8px 34px;
     display: flex;
-    align-items: center;
     opacity: 60%;
+    align-items: center;
     transition: 0.3s ease-out;
     &.nav-link-active {
       opacity: 100%;

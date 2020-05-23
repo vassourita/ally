@@ -1,16 +1,41 @@
-import React, { useContext } from 'react';
-import { FiEdit, FiThumbsUp } from 'react-icons/fi';
+import React, { useContext, useState } from 'react';
+import { FiEdit, FiThumbsUp, FiCheckSquare, FiXSquare } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 
+import Button from '../../components/Button';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
-import Button from '../../components/Button';
 
 import UserContext from '../../contexts/UserContext';
+import api from '../../services/api';
 
-import { Grid, Header, UserAbout, UserImage, UserInfo, Info, Title, Content } from './styles';
+import { Grid, Header, UserAbout, UserImage, UserInfo, Info, Title, Content, EditInput, DoubleInput } from './styles';
 
 function Profile() {
-  const { user } = useContext(UserContext);
+  const [editMode, setEditMode] = useState(false);
+  const [editData, setEditData] = useState({
+    about: '',
+  });
+  const { user, setUser } = useContext(UserContext);
+
+  async function handleUpdate(e) {
+    e.preventDefault();
+
+    try {
+      const { data } = await api.put('/employers', editData);
+      if (data.updated.about) {
+        setUser({
+          ...user,
+          about: editData.about,
+        });
+      } else {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
+    } catch (error) {
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    }
+    setEditMode(!editMode);
+  }
 
   return (
     <Grid>
@@ -38,14 +63,34 @@ function Profile() {
             <Content>{user.email}</Content>
             <Content>{user.phone}</Content>
           </div>
-          <Button outlined text="Editar">
-            <FiEdit size="16" />
-          </Button>
+          {editMode ? (
+            <DoubleInput>
+              <Button style={{ borderColor: 'var(--ally-blue)' }} outlined onClick={handleUpdate}>
+                <FiCheckSquare color="var(--ally-blue)" />
+              </Button>
+              <Button style={{ borderColor: 'var(--ally-red)' }} outlined onClick={() => setEditMode(!editMode)}>
+                <FiXSquare color="var(--ally-red)" />
+              </Button>
+            </DoubleInput>
+          ) : (
+            <Button outlined text="Editar" onClick={() => setEditMode(!editMode)}>
+              <FiEdit size="16" />
+            </Button>
+          )}
         </Info>
       </UserInfo>
       <UserAbout className="modal-shadow">
         <Title>Sobre</Title>
-        <Content>{user.about || 'Não há descrição ainda'}</Content>
+        {editMode ? (
+          <EditInput
+            placeholder="Adicione uma descrição"
+            value={editData.about || user.about}
+            onChange={e => setEditData({ ...editData, about: e.target.value })}
+          />
+        ) : (
+          <Content>{user.about || 'Não há descrição ainda'}</Content>
+        )}
+
         <Title>Endereço</Title>
         <Content>{user.address}</Content>
         <Content>

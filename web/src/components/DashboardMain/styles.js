@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import img1 from '../../assets/background/dash-1.png';
+
 export const Container = styled.div`
   height: 100%;
   display: grid;
@@ -10,8 +12,10 @@ export const Container = styled.div`
 export const Page = styled.div`
   grid-row: 2/2;
   grid-column: 2/2;
-  background-image: url(${p => p.imgUrl});
   background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-image: url(${img1});
   width: 100%;
   max-height: 100%;
   overflow-y: auto;

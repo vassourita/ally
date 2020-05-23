@@ -39,7 +39,9 @@ function DashboardHeader() {
           {getGreetingBasedOnTime()}, <br />
           <strong>{user.name}</strong>
         </p>
-        <img src={user.image_url ? `${process.env.REACT_APP_FILES_URL}${user.image_url}` : null} alt="" className="imgUser" />
+        <Link to="/profile">
+          <img src={user.image_url ? `${process.env.REACT_APP_FILES_URL}${user.image_url}` : null} alt="" className="imgUser" />
+        </Link>
       </Greeting>
     </Container>
   );

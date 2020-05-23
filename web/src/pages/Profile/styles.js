@@ -41,6 +41,8 @@ export const UserAbout = styled.div`
   background-color: #fff;
   padding: 20px;
   grid-area: about;
+  max-height: 100%;
+  overflow-y: scroll;
 `;
 
 export const Title = styled.h5`
@@ -57,4 +59,21 @@ export const Content = styled.p`
   color: #888;
   margin-bottom: 5px;
   text-overflow: '...';
+`;
+
+export const EditInput = styled.textarea`
+  font-size: 14px;
+  width: 100%;
+  padding: 4px;
+  border-radius: 0px;
+  border: 1px solid #ccc;
+  color: #888;
+  margin-bottom: 7px;
+  resize: none;
+`;
+
+export const DoubleInput = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 `;

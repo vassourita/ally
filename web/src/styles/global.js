@@ -82,25 +82,35 @@ export const GlobalStyles = createGlobalStyle`
     background: transparent;
   }
 
+  .overlay-refactor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  .modal-refactor {
+    border-radius: none;
+    background: #fff;
+    max-width: 400px;
+    padding: 20px;
+    width: 100%;
+  }
+
   .Toastify__toast {
     opacity: 95%;
-  }
-  .Toastify__toast--rtl {
-  }
-  .Toastify__toast--dark {
-  }
-  .Toastify__toast--default {
+    border-radius: none;
   }
   .Toastify__toast--info {
     background-color: var(--ally-blue);
   }
-  .Toastify__toast--success {
-  }
-  .Toastify__toast--warning {
-  }
   .Toastify__toast--error {
     background-color: var(--ally-red);
-  }
-  .Toastify__toast-body {
   }
 `;

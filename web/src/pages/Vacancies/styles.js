@@ -42,6 +42,7 @@ export const NavItem = styled.li`
       border-right: 7px solid var(--ally-blue);
     }
     button {
+      opacity: 100%;
       margin-right: 35px;
     }
   }
@@ -72,6 +73,24 @@ export const Available = styled.span`
 export const Header = styled.div`
   padding: 40px 0 0 0;
   grid-area: head;
+  header {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: auto 40px;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: -50px;
+  }
+  h6 {
+    font-size: 15px;
+    margin: 15px 0 0 0;
+    font-weight: 400;
+    color: #333;
+  }
+  span {
+    font-size: 14px;
+    color: #555;
+  }
 `;
 
 export const List = styled.ul`
@@ -123,4 +142,27 @@ export const UserName = styled.div`
 
 export const UserInfo = styled.div`
   grid-area: info;
+`;
+
+export const JobInfo = styled.div`
+  padding-top: 25px;
+  font-size: 14px;
+  color: #555;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  section {
+    display: flex;
+    align-items: flex-end;
+    svg {
+      margin: 0 0 3px 7px;
+      cursor: pointer;
+    }
+  }
+`;
+
+export const DoubleInput = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 `;
