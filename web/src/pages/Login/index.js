@@ -1,10 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import UserContext from '../../contexts/UserContext';
+import * as UserActions from '../../store/modules/user/actions';
+import * as AuthActions from '../../store/modules/auth/actions';
 import api from '../../services/api';
-import Auth from '../../services/auth';
 
 import Button from '../../components/Button';
 import CheckBox from '../../components/CheckBox';
@@ -13,12 +14,12 @@ import OpaqueLink from '../../components/OpaqueLink';
 import CardHeader from '../../components/CardHeader';
 
 function Login() {
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [keepLogged, setKeepLogged] = useState(false);
   const [error, setError] = useState('');
-
-  const { setUser } = useContext(UserContext);
 
   const history = useHistory();
 
@@ -32,8 +33,8 @@ function Login() {
       });
 
       if (response.status === 200) {
-        Auth.login(response.data.token, response.data.user.id);
-        setUser(response.data.user);
+        dispatch(UserActions.setUser(response.data.user));
+        dispatch(AuthActions.login(response.data.token, response.data.user.id));
         return history.push('/profile');
       }
       if (response.status >= 300 && response.status < 500) setError(response.data.error.field);
@@ -41,6 +42,7 @@ function Login() {
     } catch (_) {
       toast.error('Ocorreu um erro inesperado em nosso servidor');
     }
+    dispatch(AuthActions.logoff());
   }
 
   return (

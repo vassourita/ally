@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FiAlertCircle } from 'react-icons/fi';
 import { toast } from 'react-toastify';
@@ -6,38 +7,38 @@ import { toast } from 'react-toastify';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
+import * as NotificationActions from '../../store/modules/notifications/actions';
 import api from '../../services/api';
 
 import { Container, ListContainer, List, ListItem, Name, Side, Date, LinkButton } from './styles';
 
 function Notifications() {
-  const [notifications, setNotifications] = useState([]);
+  const dispatch = useDispatch();
+  const notifications = useSelector(state => state.notifications);
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await api.get('/notifications');
 
-        if (data.notifications) return setNotifications(data.notifications);
+        if (data.notifications) return dispatch(NotificationActions.setNotifications(data.notifications));
         toast.error('Ocorreu um erro inesperado em nosso servidor');
       } catch {
         toast.error('Ocorreu um erro inesperado em nosso servidor');
       }
     })();
-  }, []);
+  }, [dispatch]);
 
   const handleSetRead = async id => {
     try {
       const { status } = await api.put(`/notifications/${id}`);
 
       if (status === 200) {
-        const index = notifications.findIndex(j => j.id === id);
-        const updatedNotifications = [...notifications];
-        updatedNotifications[index] = {
-          ...updatedNotifications[index],
-          is_read: true,
-        };
-        return setNotifications(updatedNotifications);
+        return dispatch(
+          NotificationActions.updateNotification(id, {
+            is_read: true,
+          }),
+        );
       }
       toast.error('Ocorreu um erro inesperado em nosso servidor');
     } catch {

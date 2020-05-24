@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useParams, useHistory } from 'react-router-dom';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
 import { FiTrash, FiCheckSquare, FiXSquare, FiEdit } from 'react-icons/fi';
 
+import * as JobActions from '../../store/modules/jobs/actions';
 import api from '../../services/api';
 
 import Button from '../../components/Button';
@@ -42,8 +44,11 @@ const options = [
 ];
 
 function Vacancies() {
+  const dispatch = useDispatch();
+  const jobs = useSelector(state => state.jobs);
+
   const { id: jobId } = useParams();
-  const [jobs, setJobs] = useState([]);
+
   const actualJob = jobs.find(j => j.id === Number(jobId));
   const [editData, setEditData] = useState({
     typeId: 0,
@@ -62,13 +67,13 @@ function Vacancies() {
         const { status, data } = await api.get('/jobs');
 
         if (status === 200) {
-          setJobs(data.jobs);
+          dispatch(JobActions.setJobs(data.jobs));
         }
       } catch {
         toast.error('Ocorreu um erro inesperado em nosso servidor');
       }
     })();
-  }, [jobId]);
+  }, [jobId, dispatch]);
 
   const getJobAmount = amount => {
     if (amount === 1) {
@@ -84,10 +89,7 @@ function Vacancies() {
       });
 
       if (data.updated.removeKnowledge) {
-        const index = jobs.findIndex(j => j.id === job.id);
-        const updatedJobs = [...jobs];
-        updatedJobs[index] = data.job;
-        return setJobs(updatedJobs);
+        return dispatch(JobActions.updateJob(job.id, data.job));
       }
 
       toast.error('Ocorreu um erro inesperado em nosso servidor');
@@ -109,11 +111,8 @@ function Vacancies() {
       });
 
       if (data.updated.addKnowledge) {
-        const index = jobs.findIndex(j => j.id === actualJob.id);
-        const updatedJobs = [...jobs];
-        updatedJobs[index] = data.job;
         setModalOpen(false);
-        return setJobs(updatedJobs);
+        return dispatch(JobActions.updateJob(actualJob.id, data.job));
       }
 
       toast.error('Ocorreu um erro inesperado em nosso servidor');
@@ -123,18 +122,14 @@ function Vacancies() {
     setModalOpen(false);
   };
 
-  const handleSelectChange = ({ label, value }) => setEditData({ ...editData, typeId: value });
-
   const handleDeleteJob = async e => {
     try {
       const { data } = await api.delete(`/jobs/${actualJob?.id}`);
 
       if (data.deleted) {
-        const index = jobs.findIndex(j => j.id === actualJob?.id);
-        const updatedJobs = jobs.filter((_, i) => i !== index);
         setModalDeleteOpen(false);
-        history.push('/vacancies');
-        return setJobs(updatedJobs);
+        dispatch(JobActions.removeJob(actualJob.id));
+        return history.push('/vacancies');
       }
 
       toast.error('Ocorreu um erro inesperado em nosso servidor');
@@ -151,11 +146,8 @@ function Vacancies() {
       });
 
       if (data.updated.amount) {
-        const index = jobs.findIndex(j => j.id === actualJob.id);
-        const updatedJobs = [...jobs];
-        updatedJobs[index] = data.job;
         setModalOpen(false);
-        return setJobs(updatedJobs);
+        return dispatch(JobActions.updateJob(actualJob.id, data.job));
       }
 
       toast.error('Ocorreu um erro inesperado em nosso servidor');
@@ -174,7 +166,11 @@ function Vacancies() {
               title={`Novo ${editData.differential ? 'diferencial' : 'requisito'}`}
               sub={`Escolha o tipo e nome do ${editData.differential ? 'diferencial' : 'requisito'} a ser adicionado`}
             />
-            <SelectBlock name="" onChange={handleSelectChange} label="Tipo" options={options}></SelectBlock>
+            <SelectBlock
+              onChange={({ label, value }) => setEditData({ ...editData, typeId: value })}
+              label="Tipo"
+              options={options}
+            ></SelectBlock>
             <InputBlock
               label="Nome"
               id="knowledge-name"

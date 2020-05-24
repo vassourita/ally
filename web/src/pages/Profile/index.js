@@ -1,22 +1,40 @@
-import React, { useContext, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { FiEdit, FiThumbsUp, FiCheckSquare, FiXSquare } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
+import * as UserActions from '../../store/modules/user/actions';
 import Button from '../../components/Button';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
-import UserContext from '../../contexts/UserContext';
 import api from '../../services/api';
 
 import { Grid, Header, UserAbout, UserImage, UserInfo, Info, Title, Content, EditInput, DoubleInput } from './styles';
 
 function Profile() {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+  const { id } = useSelector(state => state.auth);
+
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState({
     about: '',
   });
-  const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { status, data } = await api.get(`/employers/${id}`);
+
+        if (status === 200) {
+          dispatch(UserActions.setUser(data.user));
+        }
+      } catch {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
+    })();
+  }, [dispatch, id]);
 
   async function handleUpdate(e) {
     e.preventDefault();
@@ -24,10 +42,7 @@ function Profile() {
     try {
       const { data } = await api.put('/employers', editData);
       if (data.updated.about) {
-        setUser({
-          ...user,
-          about: editData.about,
-        });
+        dispatch(UserActions.updateUser(editData.about));
       } else {
         toast.error('Ocorreu um erro inesperado em nosso servidor');
       }

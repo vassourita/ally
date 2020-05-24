@@ -1,18 +1,19 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 
-import { UserProvider } from './contexts/UserContext';
+import store from './store';
 
 import { GlobalStyles } from './styles/global';
 import Routes from './routes';
 
 function App() {
   return (
-    <UserProvider>
+    <Provider store={store}>
       <GlobalStyles />
       <Routes />
       <ToastContainer autoClose={4000} hideProgressBar={true} position={'top-center'} />
-    </UserProvider>
+    </Provider>
   );
 }
 
