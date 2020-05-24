@@ -10,6 +10,7 @@ import SessionController from './app/Controllers/SessionController';
 import EmployerController from './app/Controllers/EmployerController';
 import JobVacancyController from './app/Controllers/JobVacancyController';
 import OpportunityController from './app/Controllers/OpportunityController';
+import NotificationController from './app/Controllers/NotificationController';
 
 export default class Router {
   constructor() {
@@ -39,6 +40,9 @@ export default class Router {
     routes.delete('/jobs/:id', JobVacancyController.destroy);
 
     routes.get('/opportunities', OpportunityController.index);
+
+    routes.get('/notifications', NotificationController.index);
+    routes.put('/notifications/:id', NotificationController.update);
 
     this.routes = routes;
   }
