@@ -28,9 +28,9 @@ function Notifications() {
 
   const handleSetRead = async id => {
     try {
-      const { data } = await api.put(`/notifications/${id}`);
+      const { status } = await api.put(`/notifications/${id}`);
 
-      if (data.updated) {
+      if (status === 200) {
         const index = notifications.findIndex(j => j.id === id);
         const updatedNotifications = [...notifications];
         updatedNotifications[index] = {
