@@ -76,7 +76,7 @@ export const Header = styled.div`
   header {
     display: grid;
     gap: 20px;
-    grid-template-columns: auto 40px;
+    grid-template-columns: auto 100px;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: -50px;
@@ -165,4 +165,9 @@ export const DoubleInput = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+`;
+
+export const ModalDivisor = styled.div`
+  display: grid;
+  grid-template-rows: 400px;
 `;

@@ -98,9 +98,22 @@ export const GlobalStyles = createGlobalStyle`
   .modal-refactor {
     border-radius: none;
     background: #fff;
-    max-width: 400px;
+    max-width: 500px;
     padding: 20px;
-    width: 100%;
+    width: 90%;
+  }
+
+  .ReactModal__Overlay {
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  .ReactModal__Overlay--after-open{
+      opacity: 1;
+  }
+
+  .ReactModal__Overlay--before-close{
+      opacity: 0;
   }
 
   .Toastify__toast {

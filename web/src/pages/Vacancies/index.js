@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, NavLink, useParams, useHistory } from 'react-router-dom';
 import Modal from 'react-modal';
-import { FiTrash, FiCheckSquare, FiXSquare, FiEdit } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import { FiTrash, FiCheckSquare, FiXSquare, FiEdit } from 'react-icons/fi';
 
 import api from '../../services/api';
 
 import Button from '../../components/Button';
 import CardBox from '../../components/CardBox';
+import CheckBox from '../../components/CheckBox';
 import InputBlock from '../../components/InputBlock';
 import CardHeader from '../../components/CardHeader';
+import SelectBlock from '../../components/SelectBlock';
 
 import {
   Container,
@@ -27,19 +29,32 @@ import {
   UserInfo,
   JobInfo,
   DoubleInput,
+  ModalDivisor,
 } from './styles';
 
+const options = [
+  { label: 'Especialização', value: 1 },
+  { label: 'Graduação', value: 2 },
+  { label: 'Certificação', value: 3 },
+  { label: 'Curso', value: 4 },
+  { label: 'Experiência', value: 5 },
+  { label: 'Conhecimento', value: 6 },
+];
+
 function Vacancies() {
+  const { id: jobId } = useParams();
   const [jobs, setJobs] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const actualJob = jobs.find(j => j.id === Number(jobId));
   const [editData, setEditData] = useState({
     typeId: 0,
     name: '',
     differential: false,
+    amount: actualJob?.amount,
   });
-  const { id: jobId } = useParams();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
 
-  const actualJob = useMemo(() => jobs[Number(jobId - 1)], [jobId, jobs]);
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -84,17 +99,20 @@ function Vacancies() {
   const handleAddKnowledge = async () => {
     try {
       const { data } = await api.put(`/jobs/${actualJob.id}`, {
-        addKnowledge: {
-          typeId: editData.typeId,
-          name: editData.name,
-          differential: editData.differential,
-        },
+        addKnowledge: [
+          {
+            typeId: editData.typeId,
+            name: editData.name,
+            differential: editData.differential,
+          },
+        ],
       });
 
       if (data.updated.addKnowledge) {
         const index = jobs.findIndex(j => j.id === actualJob.id);
         const updatedJobs = [...jobs];
         updatedJobs[index] = data.job;
+        setModalOpen(false);
         return setJobs(updatedJobs);
       }
 
@@ -102,34 +120,139 @@ function Vacancies() {
     } catch {
       toast.error('Ocorreu um erro inesperado em nosso servidor');
     }
+    setModalOpen(false);
+  };
+
+  const handleSelectChange = ({ label, value }) => setEditData({ ...editData, typeId: value });
+
+  const handleDeleteJob = async e => {
+    try {
+      const { data } = await api.delete(`/jobs/${actualJob?.id}`);
+
+      if (data.deleted) {
+        const index = jobs.findIndex(j => j.id === actualJob?.id);
+        const updatedJobs = jobs.filter((_, i) => i !== index);
+        setModalDeleteOpen(false);
+        history.push('/vacancies');
+        return setJobs(updatedJobs);
+      }
+
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    } catch {
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    }
+    setModalDeleteOpen(false);
+  };
+
+  const handleChangeAmount = async () => {
+    try {
+      const { data } = await api.put(`/jobs/${actualJob.id}`, {
+        amount: editData.amount,
+      });
+
+      if (data.updated.amount) {
+        const index = jobs.findIndex(j => j.id === actualJob.id);
+        const updatedJobs = [...jobs];
+        updatedJobs[index] = data.job;
+        setModalOpen(false);
+        return setJobs(updatedJobs);
+      }
+
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    } catch {
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    }
+    setModalOpen(false);
   };
 
   return (
     <Container>
       <Modal className="modal-refactor modal-shadow" overlayClassName="overlay-refactor" isOpen={modalOpen}>
-        <CardHeader
-          title={`Novo ${editData.differential ? 'diferencial' : 'requisito'}`}
-          sub={`Escolha o tipo e nome do ${editData.differential ? 'diferencial' : 'requisito'} a ser adicionado`}
-        />
-        <InputBlock
-          label="Nome"
-          id="knowledge-name"
-          value={editData.name}
-          onChange={e => setEditData({ ...editData, name: e.target.value })}
-        ></InputBlock>
+        <ModalDivisor>
+          <div>
+            <CardHeader
+              title={`Novo ${editData.differential ? 'diferencial' : 'requisito'}`}
+              sub={`Escolha o tipo e nome do ${editData.differential ? 'diferencial' : 'requisito'} a ser adicionado`}
+            />
+            <SelectBlock name="" onChange={handleSelectChange} label="Tipo" options={options}></SelectBlock>
+            <InputBlock
+              label="Nome"
+              id="knowledge-name"
+              value={editData.name}
+              onChange={e => setEditData({ ...editData, name: e.target.value })}
+            ></InputBlock>
+            <CheckBox
+              checked={editData.differential}
+              onChange={e => setEditData({ ...editData, differential: e.target.checked })}
+            >
+              Diferencial
+            </CheckBox>
+            <DoubleInput>
+              <Button
+                disabled={!editData.name || !editData.typeId}
+                style={{ borderColor: 'var(--ally-blue)' }}
+                outlined
+                onClick={handleAddKnowledge}
+              >
+                <FiCheckSquare color="var(--ally-blue)" />
+              </Button>
+              <Button
+                style={{ borderColor: 'var(--ally-red)' }}
+                outlined
+                onClick={() => {
+                  setEditData({ typeId: 0, name: '', differential: false });
+                  setModalOpen(false);
+                }}
+              >
+                <FiXSquare color="var(--ally-red)" />
+              </Button>
+            </DoubleInput>
+          </div>
+          <div>
+            <CardHeader
+              title="Alterar quantidade"
+              sub={`Altere a quantidade de vagas disponíveis. Atual: ${actualJob?.amount}`}
+            />
+            <InputBlock
+              type="number"
+              min="0"
+              label="Quantidade"
+              id="knowledge-amount"
+              value={editData.amount}
+              onChange={e => setEditData({ ...editData, amount: e.target.value })}
+            ></InputBlock>
+            <DoubleInput>
+              <Button
+                disabled={!editData.amount}
+                style={{ borderColor: 'var(--ally-blue)' }}
+                outlined
+                onClick={handleChangeAmount}
+              >
+                <FiCheckSquare color="var(--ally-blue)" />
+              </Button>
+              <Button
+                style={{ borderColor: 'var(--ally-red)' }}
+                outlined
+                onClick={() => {
+                  setEditData({ typeId: 0, name: '', differential: false, amount: actualJob.amount });
+                  setModalOpen(false);
+                }}
+              >
+                <FiXSquare color="var(--ally-red)" />
+              </Button>
+            </DoubleInput>
+          </div>
+        </ModalDivisor>
+      </Modal>
+
+      <Modal className="modal-refactor modal-shadow" overlayClassName="overlay-refactor" isOpen={modalDeleteOpen}>
+        <CardHeader title="Deletar vaga" sub={`Você está prestes a deletar a vaga: ${actualJob?.name}. Continuar?`} />
         <DoubleInput>
-          <Button style={{ borderColor: 'var(--ally-blue)' }} outlined onClick={handleAddKnowledge}>
-            <FiCheckSquare color="var(--ally-blue)" />
+          <Button outlined onClick={() => setModalDeleteOpen(false)}>
+            <span>Cancelar</span>
           </Button>
-          <Button
-            style={{ borderColor: 'var(--ally-red)' }}
-            outlined
-            onClick={() => {
-              setEditData({ typeId: 0, name: '' });
-              setModalOpen(false);
-            }}
-          >
-            <FiXSquare color="var(--ally-red)" />
+          <Button style={{ color: 'var(--ally-red)', borderColor: 'var(--ally-red)' }} outlined onClick={handleDeleteJob}>
+            <span>Deletar</span>
           </Button>
         </DoubleInput>
       </Modal>
@@ -159,24 +282,39 @@ function Vacancies() {
         <CardBox>
           <header>
             <CardHeader
-              title="Propostas"
+              title={jobId ? actualJob?.name : 'Propostas'}
               sub={
                 jobId
-                  ? `Visualize as propostas recebidas em sua ${actualJob?.name}`
+                  ? `Visualize as propostas recebidas em sua vaga e edite-a`
                   : 'Selecione uma vaga para visualizar suas propostas'
               }
             />
-            <Button outlined onClick={() => setModalOpen(true)}>
-              <FiEdit />
-            </Button>
+            {actualJob && (
+              <div style={{ display: 'flex' }}>
+                <Button outlined onClick={() => setModalOpen(true)}>
+                  <FiEdit />
+                </Button>
+                <Button
+                  style={{ borderColor: 'var(--ally-red', marginLeft: '20px' }}
+                  outlined
+                  onClick={() => setModalDeleteOpen(true)}
+                >
+                  <FiTrash color="var(--ally-red" />
+                </Button>
+              </div>
+            )}
           </header>
-          <Title style={{ marginTop: '30px' }}>Descrição:</Title>
-          <h6>{actualJob?.description}</h6>
+          {actualJob && (
+            <>
+              <Title style={{ marginTop: '30px' }}>Descrição:</Title>
+              <h6>{actualJob?.description}</h6>
+            </>
+          )}
           {actualJob?.name && (
             <JobInfo>
               <div>
                 <Title>Requisitos:</Title>
-                {actualJob?.knowledges?.length ? (
+                {actualJob?.knowledges.filter(k => !k.differential).length ? (
                   actualJob?.knowledges
                     ?.filter(k => !k.differential)
                     .map(knowledge => (
@@ -193,7 +331,7 @@ function Vacancies() {
               </div>
               <div>
                 <Title>Diferenciais:</Title>
-                {actualJob?.knowledges?.length ? (
+                {actualJob?.knowledges?.filter(k => k.differential).length ? (
                   actualJob?.knowledges
                     ?.filter(k => k.differential)
                     .map(knowledge => (
