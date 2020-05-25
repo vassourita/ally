@@ -129,6 +129,7 @@ function Vacancies() {
       if (data.deleted) {
         setModalDeleteOpen(false);
         dispatch(JobActions.removeJob(actualJob.id));
+        toast.info('Vaga deletada!');
         return history.push('/vacancies');
       }
 
