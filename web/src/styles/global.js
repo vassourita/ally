@@ -98,7 +98,7 @@ export const GlobalStyles = createGlobalStyle`
   .modal-refactor {
     border-radius: none;
     background: #fff;
-    max-width: 500px;
+    max-width: 400px;
     padding: 20px;
     width: 90%;
   }

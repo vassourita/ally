@@ -63,12 +63,12 @@ function Notifications() {
                 <p>{notification.description}</p>
               </Name>
               <Side>
-                <Link to={notification.link}>Ver</Link>
                 {!notification.is_read && (
                   <>
-                    - <LinkButton onClick={() => handleSetRead(notification.id)}>Marcar como lido</LinkButton>
+                    <LinkButton onClick={() => handleSetRead(notification.id)}>Marcar como lido</LinkButton> {' - '}
                   </>
                 )}
+                <Link to={notification.link}>Ver</Link>
                 <Date>{notification.date}</Date>
               </Side>
             </ListItem>
