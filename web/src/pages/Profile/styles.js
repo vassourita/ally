@@ -42,7 +42,12 @@ export const UserAbout = styled.div`
   padding: 20px;
   grid-area: about;
   max-height: 100%;
+  max-width: 100%;
   overflow-y: scroll;
+  word-break: break-all;
+  ::-webkit-scrollbar-track {
+    margin: 0;
+  }
 `;
 
 export const Title = styled.h5`

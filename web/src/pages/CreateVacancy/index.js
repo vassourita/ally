@@ -64,7 +64,7 @@ function CreateVacancy() {
       }
       dispatch(JobActions.addJob(response.data.job));
       setName('');
-      setLocal('');
+      setLocal(null);
       setAmount(0);
       setKnowledges([]);
       setDescription('');
