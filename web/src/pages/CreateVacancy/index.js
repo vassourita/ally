@@ -68,6 +68,8 @@ function CreateVacancy() {
       setAmount(0);
       setKnowledges([]);
       setDescription('');
+      toast.info('Vaga criada com sucesso!');
+      history.push(`/vacancies/${response.data.job.id}`);
     } catch (_) {
       toast.error('Ocorreu um erro inesperado em nosso servidor');
     }
