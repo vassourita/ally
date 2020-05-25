@@ -2,7 +2,7 @@ import React from 'react';
 import { FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import styled from 'styled-components';
 
-export default function InputBlock({ id, label, errors = [{}], isPass, type = 'text', value, ...rest }) {
+export default function TextAreaBlock({ id, label, errors = [{}], isPass, type = 'text', value, ...rest }) {
   const [passwordShown, setPasswordShown] = React.useState(false);
 
   const togglePasswordVisiblity = e => {
@@ -28,9 +28,9 @@ export default function InputBlock({ id, label, errors = [{}], isPass, type = 't
   }
 
   return (
-    <Container className="input-block">
+    <Container className="textarea-block">
       <InputContainer>
-        <input id={id} value={value || ''} type={getType()} {...rest} />
+        <textarea id={id} value={value || ''} type={getType()} {...rest} />
         {isPass &&
           (passwordShown ? (
             <FiEyeOff size="20" color="#777" onClick={togglePasswordVisiblity} />
@@ -66,14 +66,14 @@ const Container = styled.div`
 
 const InputContainer = styled.div`
   padding: 0 15px;
-  height: 42px;
+  height: 80px;
 
   display: flex;
   align-items: center;
   position: relative;
 
   border: 1px solid #aaa;
-  transition: all 0.4s ease;
+  transition: all 0.4s ease-out;
 
   svg {
     border: none;
@@ -84,7 +84,7 @@ const InputContainer = styled.div`
     padding: 0 14px;
     border: 2px solid var(--ally-blue);
     & > div {
-      bottom: 32px;
+      bottom: 70px;
       left: 14px;
     }
   }
@@ -93,29 +93,31 @@ const InputContainer = styled.div`
     position: absolute;
     display: flex;
     align-items: center;
-    bottom: 33px;
+    bottom: 71px;
     left: 15px;
 
     background-color: #fff;
-    transition: all 0.4s ease;
+    transition: all 0.4s ease-out;
 
     label {
       margin: 0 4px;
       color: #000;
       opacity: 60%;
       font-size: 16px;
-      transition: all 0.4s ease;
+      transition: all 0.4s ease-out;
       cursor: text;
     }
   }
 
-  input {
+  textarea {
     width: 100%;
+    height: 72%;
     font-size: 14px;
     border: none;
     color: #4f4f4f;
+    resize: none;
 
-    transition: all 0.4s ease;
+    transition: all 0.4s ease-out;
 
     &:focus + div {
       label {

@@ -19,7 +19,7 @@ export const Container = styled.button`
   font-size: 14px;
   font-weight: 500;
   border: ${p => (!p.outlined ? 'none' : '1px solid #666')};
-  transition: 0.3s ease-in;
+  transition: 0.4s ease-out;
   &:hover {
     ${p =>
       !p.outlined

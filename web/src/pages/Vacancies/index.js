@@ -291,11 +291,11 @@ function Vacancies() {
                   <FiEdit />
                 </Button>
                 <Button
-                  style={{ borderColor: 'var(--ally-red', marginLeft: '20px' }}
+                  style={{ borderColor: 'var(--ally-red)', marginLeft: '20px' }}
                   outlined
                   onClick={() => setModalDeleteOpen(true)}
                 >
-                  <FiTrash color="var(--ally-red" />
+                  <FiTrash color="var(--ally-red)" />
                 </Button>
               </div>
             )}

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export default function CheckBox({ children = 'Marque-me!', checked = false, ...rest }) {
   return (
-    <CheckBoxContainer checked={checked}>
+    <CheckBoxContainer className="checkbox-block" checked={checked}>
       <span>{children}</span>
       <input type="checkbox" checked={checked} {...rest} />
       <span className="checkmark"></span>
@@ -17,9 +17,9 @@ const CheckBoxContainer = styled.label`
   position: relative;
   padding-left: 40px;
   margin: 40px 0;
-  cursor: pointer;
   font-size: 22px;
   user-select: none;
+  cursor: pointer;
   span {
     font-size: 15px;
     color: #777;
@@ -27,9 +27,9 @@ const CheckBoxContainer = styled.label`
   input {
     position: absolute;
     opacity: 0;
-    cursor: pointer;
     height: 0;
     width: 0;
+    cursor: pointer;
   }
   .checkmark {
     position: absolute;
@@ -51,9 +51,11 @@ const CheckBoxContainer = styled.label`
     border: solid white;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
+    transition: all 0.2s ease;
   }
   input ~ .checkmark {
     background-color: ${props => (props.checked ? 'var(--ally-blue)' : '#fff')};
+    transition: all 0.2s ease;
   }
   input:checked ~ .checkmark:after {
     display: block;

@@ -26,11 +26,10 @@ function Profile() {
 
     try {
       const { data } = await api.put('/employers', editData);
-      if (data.updated.about) {
-        dispatch(UserActions.updateUser({ about: editData.about }));
-      } else {
+      if (!data.updated.about) {
         toast.error('Ocorreu um erro inesperado em nosso servidor');
       }
+      dispatch(UserActions.updateUser({ about: editData.about }));
     } catch (error) {
       toast.error('Ocorreu um erro inesperado em nosso servidor');
     }

@@ -16,9 +16,10 @@ export default function SelectBlock({ id, label, value, onChange, errors = [{}],
   }
 
   return (
-    <Container>
+    <Container className="select-block">
       <SelectContainer>
         <Select
+          menuPlacement="auto"
           placeholder=""
           value={value}
           onChange={onChange}
