@@ -2,11 +2,11 @@ import { createGlobalStyle } from 'styled-components';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import img1 from '../assets/background/img1.jpg';
-import img2 from '../assets/background/img2.jpg';
-import img3 from '../assets/background/img3.jpg';
-import img4 from '../assets/background/img4.jpg';
-import img5 from '../assets/background/img5.jpg';
+import img1 from '../assets/background/resize1.jpg';
+import img2 from '../assets/background/resize2.jpg';
+import img3 from '../assets/background/resize3.jpg';
+import img4 from '../assets/background/resize4.jpg';
+import img5 from '../assets/background/resize5.jpg';
 
 export const GlobalStyles = createGlobalStyle`
   :root {
@@ -30,31 +30,31 @@ export const GlobalStyles = createGlobalStyle`
     0% {
       background-image: url(${img1});
     }
-    12% {
+    17% {
       background-image: url(${img1});
     }
     20% {
       background-image: url(${img2});
     }
-    32% {
+    37% {
       background-image: url(${img2});
     }
     40% {
       background-image: url(${img3});
     }
-    52% {
+    57% {
       background-image: url(${img3});
     }
     60% {
       background-image: url(${img4});
     }
-    72% {
+    77% {
       background-image: url(${img4});
     }
     80% {
       background-image: url(${img5});
     }
-    92% {
+    97% {
       background-image: url(${img5});
     }
     100% {
