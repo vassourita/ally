@@ -19,22 +19,20 @@ function Dashboard() {
     <DashboardMain>
       <Route
         render={({ location }) => (
-          <>
-            <TransitionGroup>
-              <CSSTransition timeout={400} classNames="fade-roll" key={location.key}>
-                <Switch location={location}>
-                  <PrivateRoute path="/chat" component={Chat} />
-                  <PrivateRoute path="/rate" component={Rating} />
-                  <PrivateRoute path="/users/:id" component={User} />
-                  <PrivateRoute exact path="/profile" component={Profile} />
-                  <PrivateRoute exact path="/vacancies" component={Vacancies} />
-                  <PrivateRoute exact path="/vacancies/new" component={CreateVacancy} />
-                  <PrivateRoute path="/vacancies/:id" component={Vacancies} />
-                  <PrivateRoute path="/notifications" component={Notifications} />
-                </Switch>
-              </CSSTransition>
-            </TransitionGroup>
-          </>
+          <TransitionGroup>
+            <CSSTransition timeout={400} classNames="fade-roll" key={location.key}>
+              <Switch location={location}>
+                <PrivateRoute path="/chat" component={Chat} />
+                <PrivateRoute path="/rate" component={Rating} />
+                <PrivateRoute path="/users/:id" component={User} />
+                <PrivateRoute exact path="/profile" component={Profile} />
+                <PrivateRoute exact path="/vacancies" component={Vacancies} />
+                <PrivateRoute exact path="/vacancies/new" component={CreateVacancy} />
+                <PrivateRoute path="/vacancies/:id" component={Vacancies} />
+                <PrivateRoute path="/notifications" component={Notifications} />
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
         )}
       />
     </DashboardMain>

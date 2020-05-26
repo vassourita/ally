@@ -2,6 +2,12 @@ import { createGlobalStyle } from 'styled-components';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import img1 from '../assets/background/img1.jpg';
+import img2 from '../assets/background/img2.jpg';
+import img3 from '../assets/background/img3.jpg';
+import img4 from '../assets/background/img4.jpg';
+import img5 from '../assets/background/img5.jpg';
+
 export const GlobalStyles = createGlobalStyle`
   :root {
     --ally-red-l: #f1328e;
@@ -19,6 +25,41 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing:border-box;
     font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+  @keyframes HomeBackground {
+    0% {
+      background-image: url(${img1});
+    }
+    12% {
+      background-image: url(${img1});
+    }
+    20% {
+      background-image: url(${img2});
+    }
+    32% {
+      background-image: url(${img2});
+    }
+    40% {
+      background-image: url(${img3});
+    }
+    52% {
+      background-image: url(${img3});
+    }
+    60% {
+      background-image: url(${img4});
+    }
+    72% {
+      background-image: url(${img4});
+    }
+    80% {
+      background-image: url(${img5});
+    }
+    92% {
+      background-image: url(${img5});
+    }
+    100% {
+      background-image: url(${img1});
+    }
   }
   #root {
     height: 100vh;

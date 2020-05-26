@@ -9,7 +9,7 @@ function Routes() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path={['/', '/about', '/contact']} component={Home} />
         <Route path={['/login', '/register']} component={Account} />
         <Route
           path={['/profile', '/chat', '/vacancies', 'vacancies/:id', '/notifications', '/rate', '/users']}
