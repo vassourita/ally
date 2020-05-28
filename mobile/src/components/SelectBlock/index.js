@@ -1,58 +1,39 @@
 import React from 'react';
 import Select from 'react-select';
-import { FiAlertCircle } from 'react-icons/fi';
 import styled from 'styled-components';
 
-export default function SelectBlock({ id, label, value, onChange, errors = [{}], isPass, options, ...rest }) {
-  function getErrors() {
-    for (const error of errors) {
-      if (error.cond)
-        return (
-          <>
-            {error.text} <FiAlertCircle size={13} />
-          </>
-        );
-    }
-  }
-
+export default function SelectBlock({ id, label, onChange, errors = [{}], isPass, options = [], ...rest }) {
   return (
     <Container className="select-block">
       <SelectContainer>
         <Select
-          menuPlacement="auto"
-          placeholder=""
-          value={value}
-          onChange={onChange}
-          className="select-container"
           id={id}
+          placeholder=""
           options={options}
+          theme={theme => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary: 'var(--ally-red)',
+            },
+          })}
+          onChange={onChange}
+          menuPlacement="auto"
+          isSearchable={false}
+          className="select-container"
+          value={options.filter(option => option.label === 'Qualquer')}
           {...rest}
         ></Select>
         <div className="label-container">
           <label htmlFor={id}>{label}</label>
         </div>
       </SelectContainer>
-      <span>{getErrors()}</span>
     </Container>
   );
 }
 
 const Container = styled.div`
   margin: 10px 0;
-  position: relative;
-  span {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    color: #df5080;
-    position: absolute;
-    bottom: -16px;
-    right: 0;
-    text-align: right;
-    svg {
-      margin-left: 3px;
-    }
-  }
 `;
 
 const SelectContainer = styled.div`
@@ -73,7 +54,7 @@ const SelectContainer = styled.div`
 
   &:focus-within {
     padding: 0 0;
-    border: 2px solid var(--ally-blue);
+    border: 2px solid var(--ally-red);
     & > .label-container {
       bottom: 32px;
       left: 14px;

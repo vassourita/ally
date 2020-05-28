@@ -1,24 +1,16 @@
 .fade-roll-appear,
 .fade-roll-enter {
   opacity: 0;
-  position: fixed;
-  transform: translateX(-150%);
 }
 .fade-roll-appear-active,
 .fade-roll-enter.fade-roll-enter-active {
   opacity: 1;
-  position: fixed;
-  transform: translateX(0);
   transition: all 300ms ease-out;
 }
 .fade-roll-exit {
   opacity: 1;
-  position: fixed;
-  transform: translateX(0);
 }
 .fade-roll-exit.fade-roll-exit-active {
   opacity: 0;
-  position: fixed;
-  transform: translateX(150%);
   transition: all 250ms ease-in;
 }
