@@ -7,7 +7,7 @@ function Form1({ state, setState }) {
   return (
     <>
       <InputBlock
-        label="Nome da empresa"
+        label="Nome completo"
         id="name"
         value={state.name}
         onChange={e => setState({ ...state, name: e.target.value })}

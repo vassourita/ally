@@ -2,12 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import img1 from '../assets/background/resize1.jpg';
-import img2 from '../assets/background/resize2.jpg';
-import img3 from '../assets/background/resize3.jpg';
-import img4 from '../assets/background/resize4.jpg';
-import img5 from '../assets/background/resize5.jpg';
-
 export const GlobalStyles = createGlobalStyle`
   :root {
     --ally-red-l: #f1328e;
@@ -25,44 +19,16 @@ export const GlobalStyles = createGlobalStyle`
     box-sizing:border-box;
     font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
-  }
-  @keyframes HomeBackground {
-    0% {
-      background-image: url(${img1});
-    }
-    17% {
-      background-image: url(${img1});
-    }
-    20% {
-      background-image: url(${img2});
-    }
-    37% {
-      background-image: url(${img2});
-    }
-    40% {
-      background-image: url(${img3});
-    }
-    57% {
-      background-image: url(${img3});
-    }
-    60% {
-      background-image: url(${img4});
-    }
-    77% {
-      background-image: url(${img4});
-    }
-    80% {
-      background-image: url(${img5});
-    }
-    97% {
-      background-image: url(${img5});
-    }
-    100% {
-      background-image: url(${img1});
-    }
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-overflow-scrolling: auto;
   }
   #root {
-    height: 100vh;
+    min-height:100%;
+    height:100%;
+    width:100%;
+    position: absolute;
   }
   a {
     color: #fff;
@@ -80,6 +46,7 @@ export const GlobalStyles = createGlobalStyle`
   .modal-shadow {
     box-shadow: 0px 0px 8px rgba(34, 34, 34, 0.4);
   }
+
   input:-webkit-autofill,
   input:-webkit-autofill:hover, 
   input:-webkit-autofill:focus, 
@@ -89,38 +56,7 @@ export const GlobalStyles = createGlobalStyle`
   }
   
   ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-  }
-  ::-webkit-scrollbar-button {
     width: 0px;
-    height: 0px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #ffffff;
-    border: 0px none #ffffff;
-    border-radius: 0px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #e0e0e0;
-  }
-  ::-webkit-scrollbar-thumb:active {
-    background: #e0e0e0;
-  }
-  ::-webkit-scrollbar-track {
-    background: #ffffff00;
-    border: 0px none #ffffff00;
-    border-radius: 0px;
-    margin-bottom: 40px;
-  }
-  ::-webkit-scrollbar-track:hover {
-    background: #ffffff00;
-  }
-  ::-webkit-scrollbar-track:active {
-    background: #ffffff00;
-  }
-  ::-webkit-scrollbar-corner {
-    background: transparent;
   }
 
   .overlay-refactor {

@@ -30,7 +30,7 @@ export default function InputBlock({ id, label, errors = [{}], isPass, type = 't
   return (
     <Container className="input-block">
       <InputContainer>
-        <input id={id} value={value || ''} type={getType()} {...rest} />
+        <input autoComplete="off" id={id} value={value || ''} type={getType()} {...rest} />
         {isPass &&
           (passwordShown ? (
             <FiEyeOff size="20" color="#777" onClick={togglePasswordVisiblity} />
@@ -47,7 +47,8 @@ export default function InputBlock({ id, label, errors = [{}], isPass, type = 't
 }
 
 const Container = styled.div`
-  margin: 35px 0;
+  width: 100%;
+  margin: 0 0 35px;
   position: relative;
   span {
     display: flex;
@@ -66,7 +67,7 @@ const Container = styled.div`
 
 const InputContainer = styled.div`
   padding: 0 15px;
-  height: 42px;
+  height: 52px;
 
   display: flex;
   align-items: center;
@@ -82,9 +83,9 @@ const InputContainer = styled.div`
 
   &:focus-within {
     padding: 0 14px;
-    border: 2px solid var(--ally-blue);
+    border: 2px solid var(--ally-red);
     & > div {
-      bottom: 32px;
+      bottom: 41px;
       left: 14px;
     }
   }
@@ -93,7 +94,7 @@ const InputContainer = styled.div`
     position: absolute;
     display: flex;
     align-items: center;
-    bottom: 33px;
+    bottom: 42px;
     left: 15px;
 
     background-color: #fff;
@@ -103,7 +104,7 @@ const InputContainer = styled.div`
       margin: 0 4px;
       color: #000;
       opacity: 60%;
-      font-size: 16px;
+      font-size: 19px;
       transition: all 0.4s ease;
       cursor: text;
     }
@@ -111,7 +112,7 @@ const InputContainer = styled.div`
 
   input {
     width: 100%;
-    font-size: 14px;
+    font-size: 17px;
     border: none;
     color: #4f4f4f;
 
@@ -119,13 +120,13 @@ const InputContainer = styled.div`
 
     &:focus + div {
       label {
-        color: var(--ally-blue);
+        color: var(--ally-red);
         opacity: 100%;
       }
     }
     &:focus + svg + div {
       label {
-        color: var(--ally-blue);
+        color: var(--ally-red);
         opacity: 100%;
       }
     }

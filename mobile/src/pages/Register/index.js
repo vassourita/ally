@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import logo from '../../assets/logo/icon@3x.png';
+
 import isValidEmail from '../../utils/validators/isValidEmail';
 import isValidPhone from '../../utils/validators/isValidPhone';
 import isValidCpf from '../../utils/validators/isValidCpf';
 
-import CardHeader from '../../components/CardHeader';
 import Button from '../../components/Button';
-import OpaqueLink from '../../components/OpaqueLink';
 
 import api from '../../services/api';
 
-import { IndicatorContainer, Indicator, DoubleButtonContainer } from './styles';
+import { Container, Header, FormContainer, Footer, IndicatorContainer, Indicator, DoubleButtonContainer } from './styles';
 
 import Form1 from './form1';
 import Form2 from './form2';
@@ -70,7 +70,7 @@ function Register() {
     });
 
     try {
-      const response = await api.post('/employers', data);
+      const response = await api.post('/users', data);
       console.log(response.data.errors);
 
       switch (response.status) {
@@ -97,9 +97,14 @@ function Register() {
       if (index === i) {
         if (i === 0) {
           return (
-            <Button disabled={!requirements[index]} isLoading={loading} key={i} onClick={handleClick}>
-              Próximo
-            </Button>
+            <DoubleButtonContainer key={i}>
+              <Button onClick={() => history.push('/login')} outlined>
+                Login
+              </Button>
+              <Button disabled={!requirements[index]} isLoading={loading} key={i} onClick={handleClick}>
+                Próximo
+              </Button>
+            </DoubleButtonContainer>
           );
         }
         return (
@@ -117,21 +122,24 @@ function Register() {
   }
 
   return (
-    <>
-      <CardHeader title="Cadastro" sub="Crie uma conta e encontre os melhores profissionais" />
+    <Container>
+      <Header>
+        <img src={logo} alt="ally" />
+        <h1>Cadastro</h1>
+        <p>
+          Seja bem vindo!
+          <br />
+          Crie uma conta para ver as melhores vagas
+        </p>
+      </Header>
       <IndicatorContainer>
         {Forms.map((_, i) => (
           <Indicator key={i} active={i <= index} />
         ))}
       </IndicatorContainer>
-      <form>
-        {getCurrentForm()}
-        {getCurrentFormCommands()}
-        <OpaqueLink to="/login" text="Faça login">
-          Já tem uma conta?
-        </OpaqueLink>
-      </form>
-    </>
+      <FormContainer>{getCurrentForm()}</FormContainer>
+      <Footer>{getCurrentFormCommands()}</Footer>
+    </Container>
   );
 }
 

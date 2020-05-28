@@ -5,10 +5,10 @@ import InputBlock from '../../components/InputBlock';
 
 import { formatCpf, unformatCpf } from '../../utils/formatters/formatCpf';
 import { formatPhone, unformatPhone } from '../../utils/formatters/formatPhone';
-import isValidCnpj from '../../utils/validators/isValidCpf';
+import isValidCpf from '../../utils/validators/isValidCpf';
 import isValidPhone from '../../utils/validators/isValidPhone';
 
-import { FileInputContainer, DoubleButtonContainer, Title, Description } from './styles';
+import { FileInputContainer, FileContainer, Title, Description } from './styles';
 
 function Form2({ state, setState }) {
   const preview = useMemo(() => {
@@ -18,12 +18,12 @@ function Form2({ state, setState }) {
   return (
     <>
       <InputBlock
-        label="CNPJ"
-        id="cnpj"
-        maxLength="18"
-        value={formatCpf(state.cnpj) || state.cnpj}
-        onChange={e => setState({ ...state, cnpj: unformatCpf(e.target.value) })}
-        errors={[{ cond: state.cnpj && !isValidCnpj(state.cnpj), text: 'CNPJ inválido' }]}
+        label="CPF"
+        id="cpf"
+        maxLength="14"
+        value={formatCpf(state.cpf) || state.cpf}
+        onChange={e => setState({ ...state, cpf: unformatCpf(e.target.value) })}
+        errors={[{ cond: state.cpf && !isValidCpf(state.cpf), text: 'Cpf inválido' }]}
       />
       <InputBlock
         label="Telefone"
@@ -33,9 +33,10 @@ function Form2({ state, setState }) {
         onChange={e => setState({ ...state, phone: unformatPhone(e.target.value) })}
         errors={[{ cond: state.phone && !isValidPhone(formatPhone(state.phone)), text: 'Telefone inválido' }]}
       />
-      <DoubleButtonContainer>
+      <FileContainer>
         <FileInputContainer id="image" style={{ backgroundImage: `url(${preview})` }} className={state.image ? 'has-image' : ''}>
           <input
+            accept="image/x-png,image/jpeg,image/gif"
             type="file"
             onChange={e => {
               setState({ ...state, image: e.target.files[0] });
@@ -45,9 +46,9 @@ function Form2({ state, setState }) {
         </FileInputContainer>
         <div>
           <Title>Imagem</Title>
-          <Description>Insira uma imagem da sua empresa. Pode ser uma foto ou um logotipo.</Description>
+          <Description>Insira uma foto sua. Você poderá mudá-la mais tarde.</Description>
         </div>
-      </DoubleButtonContainer>
+      </FileContainer>
     </>
   );
 }

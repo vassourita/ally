@@ -1,6 +1,6 @@
 {
-  "short_name": "ally-web",
-  "name": "ally web app",
+  "short_name": "ally",
+  "name": "ally",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,18 +8,19 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "icon@3x.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "icon@3x.png",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
+  "orientation": "portrait",
+  "scope": ".",
   "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#3D73BF",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff"
 }

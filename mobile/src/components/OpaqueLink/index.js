@@ -13,12 +13,12 @@ function OpaqueLink({ to, children, text }) {
 
 const Container = styled.span`
   color: #666;
-  font-size: 12px;
+  font-size: 16px;
   text-align: center;
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 25px;
 
   a {
     margin-left: 3px;
