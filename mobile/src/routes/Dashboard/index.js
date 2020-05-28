@@ -5,7 +5,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import DashboardMain from '../../components/DashboardMain';
 
 import Chat from '../../pages/Chat';
-import User from '../../pages/User';
 import Rating from '../../pages/Rating';
 import Profile from '../../pages/Profile';
 import Jobs from '../../pages/Jobs';

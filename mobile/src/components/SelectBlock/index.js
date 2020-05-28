@@ -23,7 +23,7 @@ export default function SelectBlock({ id, label, value, onChange, errors = [{}],
           placeholder=""
           value={value}
           onChange={onChange}
-          className={'select-container'}
+          className="select-container"
           id={id}
           options={options}
           {...rest}
@@ -38,6 +38,7 @@ export default function SelectBlock({ id, label, value, onChange, errors = [{}],
 }
 
 const Container = styled.div`
+  margin: 10px 0;
   position: relative;
   span {
     display: flex;
