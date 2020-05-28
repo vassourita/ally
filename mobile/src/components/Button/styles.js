@@ -4,7 +4,7 @@ export const Container = styled.button`
   ${p =>
     p.disabled
       ? css`
-          opacity: 80%;
+          opacity: 50%;
         `
       : css`
           cursor: pointer;

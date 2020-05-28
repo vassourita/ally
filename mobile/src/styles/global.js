@@ -24,6 +24,10 @@ export const GlobalStyles = createGlobalStyle`
     -webkit-touch-callout: none;
     -webkit-overflow-scrolling: auto;
   }
+  html, body, #root {
+    overscroll-behavior-y: contain;
+  }
+
   #root {
     min-height:100%;
     height:100%;
