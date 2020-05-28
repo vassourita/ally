@@ -1,14 +1,7 @@
 import React from 'react';
 
-import CardBox from '../../components/CardBox';
-import CardHeader from '../../components/CardHeader';
-
 function Rating() {
-  return (
-    <CardBox>
-      <CardHeader title="Avaliar" />
-    </CardBox>
-  );
+  return <h1>Rating</h1>;
 }
 
 export default Rating;

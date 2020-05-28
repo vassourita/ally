@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import isValidEmail from '../../utils/validators/isValidEmail';
 import isValidPhone from '../../utils/validators/isValidPhone';
-import isValidCnpj from '../../utils/validators/isValidCnpj';
+import isValidCpf from '../../utils/validators/isValidCpf';
 
 import CardHeader from '../../components/CardHeader';
 import Button from '../../components/Button';
@@ -29,7 +29,7 @@ function Register() {
     name: '',
     password: '',
     confirm: '',
-    cnpj: '',
+    cpf: '',
     phone: '',
     image: null,
     isValidCep: false,
@@ -45,7 +45,7 @@ function Register() {
 
   const requirements = [
     state.name && state.email && state.password && state.password === state.confirm && isValidEmail(state.email),
-    state.cnpj && state.phone && state.image && isValidCnpj(state.cnpj) && isValidPhone(formatPhone(state.phone)),
+    state.cpf && state.phone && state.image && isValidCpf(state.cpf) && isValidPhone(formatPhone(state.phone)),
     state.isValidCep,
   ];
 

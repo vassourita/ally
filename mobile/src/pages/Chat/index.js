@@ -1,14 +1,7 @@
 import React from 'react';
 
-import CardBox from '../../components/CardBox';
-import CardHeader from '../../components/CardHeader';
-
 function Chat() {
-  return (
-    <CardBox>
-      <CardHeader title="Mensagens" />
-    </CardBox>
-  );
+  return <h1>Chat</h1>;
 }
 
 export default Chat;

@@ -3,9 +3,9 @@ import { FiCamera } from 'react-icons/fi';
 
 import InputBlock from '../../components/InputBlock';
 
-import { formatCnpj, unformatCnpj } from '../../utils/formatters/formatCnpj';
+import { formatCpf, unformatCpf } from '../../utils/formatters/formatCpf';
 import { formatPhone, unformatPhone } from '../../utils/formatters/formatPhone';
-import isValidCnpj from '../../utils/validators/isValidCnpj';
+import isValidCnpj from '../../utils/validators/isValidCpf';
 import isValidPhone from '../../utils/validators/isValidPhone';
 
 import { FileInputContainer, DoubleButtonContainer, Title, Description } from './styles';
@@ -21,8 +21,8 @@ function Form2({ state, setState }) {
         label="CNPJ"
         id="cnpj"
         maxLength="18"
-        value={formatCnpj(state.cnpj) || state.cnpj}
-        onChange={e => setState({ ...state, cnpj: unformatCnpj(e.target.value) })}
+        value={formatCpf(state.cnpj) || state.cnpj}
+        onChange={e => setState({ ...state, cnpj: unformatCpf(e.target.value) })}
         errors={[{ cond: state.cnpj && !isValidCnpj(state.cnpj), text: 'CNPJ inválido' }]}
       />
       <InputBlock
@@ -34,11 +34,7 @@ function Form2({ state, setState }) {
         errors={[{ cond: state.phone && !isValidPhone(formatPhone(state.phone)), text: 'Telefone inválido' }]}
       />
       <DoubleButtonContainer>
-        <FileInputContainer
-          id="image"
-          style={{ backgroundImage: `url(${preview})` }}
-          className={state.image ? 'has-image' : ''}
-        >
+        <FileInputContainer id="image" style={{ backgroundImage: `url(${preview})` }} className={state.image ? 'has-image' : ''}>
           <input
             type="file"
             onChange={e => {
