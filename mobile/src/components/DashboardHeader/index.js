@@ -16,10 +16,7 @@ function DashboardHeader() {
       profile: 'Perfil',
       rate: 'Avaliar',
     };
-    const title = location.pathname
-      .split('')
-      .filter(c => c !== '/')
-      .join('');
+    const title = location.pathname.replace(/\//g, '');
     return titles[title] || '404';
   }
 
