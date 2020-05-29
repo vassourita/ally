@@ -87,7 +87,6 @@ export const DoubleInputContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 30px;
-  margin: -35px 0;
   width: 100%;
 `;
 

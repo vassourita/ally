@@ -12,7 +12,15 @@ import Button from '../../components/Button';
 
 import api from '../../services/api';
 
-import { Container, Header, FormContainer, Footer, IndicatorContainer, Indicator, DoubleButtonContainer } from './styles';
+import {
+  Container,
+  Header,
+  FormContainer,
+  Footer,
+  IndicatorContainer,
+  Indicator,
+  DoubleButtonContainer,
+} from './styles';
 
 import Form1 from './form1';
 import Form2 from './form2';
