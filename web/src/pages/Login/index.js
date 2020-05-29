@@ -32,6 +32,8 @@ function Login() {
         password,
       });
 
+      setError('');
+
       if (response.status === 200) {
         dispatch(UserActions.setUser(response.data.user));
         dispatch(AuthActions.login(response.data.token, response.data.user.id));

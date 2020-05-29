@@ -71,7 +71,6 @@ function Register() {
 
     try {
       const response = await api.post('/employers', data);
-      console.log(response.data.errors);
 
       switch (response.status) {
         case 201:

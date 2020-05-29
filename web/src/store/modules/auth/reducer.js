@@ -3,8 +3,8 @@ const TOKEN_KEY = '@ally/authorization';
 const storage = localStorage.getItem(TOKEN_KEY);
 
 const INITIAL_STATE = {
-  id: JSON.parse(storage).id,
-  token: JSON.parse(storage).token,
+  id: JSON.parse(storage)?.id,
+  token: JSON.parse(storage)?.token,
   TOKEN_KEY,
 };
 
