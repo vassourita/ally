@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -13,9 +13,10 @@ import Button from '../../components/Button';
 import InputBlock from '../../components/InputBlock';
 import OpaqueLink from '../../components/OpaqueLink';
 
-import { Container, Header, Form, Footer } from './styles';
+import { Container, Header, LoginButton, Form, Footer } from './styles';
 
 function Login() {
+  const { user, auth } = useSelector(state => ({ user: state.user, auth: state.auth }));
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
@@ -46,6 +47,11 @@ function Login() {
     dispatch(AuthActions.logoff());
   }
 
+  async function handleKeepLogged(e) {
+    e.preventDefault();
+    return history.push('/jobs');
+  }
+
   return (
     <Container>
       <Header>
@@ -58,6 +64,14 @@ function Login() {
         </p>
       </Header>
       <Form>
+        {user.id === auth.id && auth.token ? (
+          <LoginButton onClick={handleKeepLogged}>
+            <img src={`${process.env.REACT_APP_FILES_URL}${user.image_url}`} alt="user" />
+            Continuar como {user.name}
+          </LoginButton>
+        ) : (
+          ''
+        )}
         <InputBlock
           label="Email"
           id="email"

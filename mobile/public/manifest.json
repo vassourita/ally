@@ -8,12 +8,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "icon@3x.png",
+      "src": "iconwhite192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "icon@3x.png",
+      "src": "iconwhite512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
@@ -21,6 +21,6 @@
   "orientation": "portrait",
   "scope": ".",
   "start_url": ".",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  "theme_color": "#A30B54",
+  "background_color": "#A30B54"
 }

@@ -28,6 +28,24 @@ export const Header = styled.header`
   }
 `;
 
+export const LoginButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 55px;
+  background-color: var(--ally-red);
+  border: none;
+  margin-bottom: 35px;
+  color: #fff;
+  img {
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+    margin-right: 15px;
+  }
+`;
+
 export const Form = styled.div`
   display: flex;
   flex-direction: column;

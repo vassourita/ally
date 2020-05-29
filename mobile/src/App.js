@@ -1,8 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import { ToastContainer } from 'react-toastify';
 
-import store from './store';
+import { store, persistor } from './store';
 
 import { GlobalStyles } from './styles/global';
 import Routes from './routes';
@@ -10,9 +11,11 @@ import Routes from './routes';
 function App() {
   return (
     <Provider store={store}>
-      <GlobalStyles />
-      <Routes />
-      <ToastContainer autoClose={4000} hideProgressBar={true} position={'top-center'} />
+      <PersistGate loading={null} persistor={persistor}>
+        <GlobalStyles />
+        <Routes />
+        <ToastContainer autoClose={4000} hideProgressBar={true} position={'top-center'} />
+      </PersistGate>
     </Provider>
   );
 }
