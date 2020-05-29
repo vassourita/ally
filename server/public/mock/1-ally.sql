@@ -1,4 +1,4 @@
-SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));
+-- SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 DROP SCHEMA IF EXISTS ally;
 
@@ -122,27 +122,6 @@ CREATE TABLE rating (
     FOREIGN KEY (target_id)
     REFERENCES user (id)
     ON DELETE CASCADE
-);
-
-CREATE TABLE report (
-  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  author_id INT NOT NULL,
-  target_id INT NOT NULL,
-  job_vacancy_id INT NOT NULL,
-  description TEXT NOT NULL,
-  created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  CONSTRAINT fk_report_job_vacancy
-    FOREIGN KEY (job_vacancy_id)
-    REFERENCES job_vacancy (id)
-    ON DELETE NO ACTION,
-  CONSTRAINT fk_report_author
-    FOREIGN KEY (author_id)
-    REFERENCES user (id)
-    ON DELETE NO ACTION,
-  CONSTRAINT fk_report_target
-    FOREIGN KEY (target_id)
-    REFERENCES user (id)
-    ON DELETE NO ACTION
 );
 
 CREATE TABLE proposal (
