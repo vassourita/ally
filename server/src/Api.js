@@ -45,7 +45,7 @@ export default class AllyApi {
     this.app.use(async (err, req, res, _next) => {
       if (process.env.NODE_ENV === 'development') {
         const error = await new Youch(err, req).toJSON();
-        console.log(error);
+        // console.log(error);
         return res.status(500).json({ error });
       }
 

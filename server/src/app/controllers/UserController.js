@@ -116,7 +116,7 @@ export default class UserController {
 
   static async update(req, res) {
     const { userId } = req;
-    const { about } = req.body;
+    const { about, removeKnowledge, addKnowledge } = req.body;
 
     const updated = {};
 
@@ -125,11 +125,56 @@ export default class UserController {
         set: {
           about,
         },
-        where: { id: userId },
+        where: { id: Number(userId) },
       });
     }
 
-    return res.status(200).json({ updated });
+    if (removeKnowledge) {
+      updated.removeKnowledge = await KnowledgeRepository.delete({
+        where: { id: Number(removeKnowledge) },
+      });
+    }
+
+    if (addKnowledge) {
+      updated.addKnowledge = addKnowledge.filter(async knowledge => {
+        return !!(await KnowledgeRepository.create(
+          {
+            knowledge_type_id: knowledge.typeId,
+            name: knowledge.name,
+            user_id: userId,
+          },
+          false,
+        ));
+      });
+    }
+
+    const user = await UserRepository.findOne({
+      where: { id: userId },
+      join: [
+        {
+          repo: KnowledgeRepository,
+          attrs: ['id', 'name'],
+          on: { user_id: 'user.id' },
+          type: 'many',
+          join: [
+            {
+              repo: KnowledgeTypeRepository,
+              on: { id: 'knowledge.knowledge_type_id' },
+              as: 'type',
+              type: 'single',
+            },
+          ],
+        },
+        {
+          repo: RatingRepository,
+          on: { target_id: 'user.id' },
+          type: 'count',
+          as: 'likes',
+        },
+      ],
+    });
+
+    return res.status(200).json({ user, updated });
   }
 
   static async destroy(req, res) {

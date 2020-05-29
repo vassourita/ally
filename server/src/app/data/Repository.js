@@ -56,6 +56,7 @@ export default class Repository {
         }]
       }]
      }} query
+     @returns {[]}
    */
   async find(query = {}) {
     const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
@@ -173,7 +174,9 @@ export default class Repository {
           const getAttrs = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr}, `);
           const getObjectFields = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr} `);
           const getInnerJoins = j.join
-            ? j.join.map(iJ => ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(j.join, j.repo).fields()} `)
+            ? j.join.map(
+                iJ => ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(j.join, j.repo).fields()} `,
+              )
             : '';
 
           if (j.type === 'count') {
