@@ -31,6 +31,7 @@ export default class AllyApi {
   }
 
   middlewares() {
+    this.app.set('base', '/v1');
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(morgan('dev'));
@@ -38,14 +39,14 @@ export default class AllyApi {
   }
 
   routes() {
-    this.app.use(new Router().routes);
+    this.app.use('/v1', new Router().routes);
   }
 
   exceptionHandler() {
     this.app.use(async (err, req, res, _next) => {
       if (process.env.NODE_ENV === 'development') {
         const error = await new Youch(err, req).toJSON();
-        // console.log(error);
+
         return res.status(500).json({ error });
       }
 

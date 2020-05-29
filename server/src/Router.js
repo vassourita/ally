@@ -14,7 +14,7 @@ import NotificationController from './app/controllers/NotificationController';
 
 export default class Router {
   constructor() {
-    const routes = express.Router();
+    const routes = express.Router({ caseSensitive: false });
 
     routes.post('/sessions', SessionStoreValidator.validate, SessionController.store);
 
