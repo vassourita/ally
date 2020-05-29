@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import authConfig from '../../config/auth';
-import UserRepository from '../Repositories/UserRepository';
-import RatingRepository from '../Repositories/RatingRepository';
+import UserRepository from '../repositories/UserRepository';
+import RatingRepository from '../repositories/RatingRepository';
 
 export default class SessionController {
   static async store(req, res) {

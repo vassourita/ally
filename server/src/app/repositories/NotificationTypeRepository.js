@@ -1,4 +1,4 @@
-import Repository from '../Data/Repository';
+import Repository from '../data/Repository';
 
 const NotificationTypeRepository = new Repository('notification_type', {
   id: {

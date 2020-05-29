@@ -1,16 +1,16 @@
 import express from 'express';
 
-import AuthMiddleware from './app/Middlewares/AuthMiddleware';
-import UploadMiddleware from './app/Middlewares/UploadMiddleware';
+import AuthMiddleware from './app/middlewares/AuthMiddleware';
+import UploadMiddleware from './app/middlewares/UploadMiddleware';
 
-import SessionStoreValidator from './app/Validators/SessionStoreValidator';
+import SessionStoreValidator from './app/validators/SessionStoreValidator';
 
-import UserController from './app/Controllers/UserController';
-import SessionController from './app/Controllers/SessionController';
-import EmployerController from './app/Controllers/EmployerController';
-import JobVacancyController from './app/Controllers/JobVacancyController';
-import OpportunityController from './app/Controllers/OpportunityController';
-import NotificationController from './app/Controllers/NotificationController';
+import UserController from './app/controllers/UserController';
+import SessionController from './app/controllers/SessionController';
+import EmployerController from './app/controllers/EmployerController';
+import JobVacancyController from './app/controllers/JobVacancyController';
+import OpportunityController from './app/controllers/OpportunityController';
+import NotificationController from './app/controllers/NotificationController';
 
 export default class Router {
   constructor() {

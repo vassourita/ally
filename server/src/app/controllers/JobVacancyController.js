@@ -1,6 +1,6 @@
-import KnowledgeRepository from '../Repositories/KnowledgeRepository';
-import JobVacancyRepository from '../Repositories/JobVacancyRepository';
-import KnowledgeTypeRepository from '../Repositories/KnowledgeTypeRepository';
+import KnowledgeRepository from '../repositories/KnowledgeRepository';
+import JobVacancyRepository from '../repositories/JobVacancyRepository';
+import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
 export default class JobVacancyController {
   static async index(req, res) {

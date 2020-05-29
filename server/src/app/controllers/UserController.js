@@ -1,25 +1,34 @@
 import bcrypt from 'bcryptjs';
 
-import UserRepository from '../Repositories/UserRepository';
-import RatingRepository from '../Repositories/RatingRepository';
-import JobVacancyRepository from '../Repositories/JobVacancyRepository';
+import UserRepository from '../repositories/UserRepository';
+import RatingRepository from '../repositories/RatingRepository';
+import KnowledgeRepository from '../repositories/KnowledgeRepository';
+import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
-import cities from '../Data/cities';
+import cities from '../data/cities';
 
-export default class EmployerController {
+export default class UserController {
   static async index(req, res) {
     const { page = 1 } = req.query;
 
     const users = await UserRepository.find({
-      where: { employer: true },
+      where: { employer: false },
       limit: 10 * page,
       offset: (page - 1) * 10,
       join: [
         {
-          repo: JobVacancyRepository,
-          on: { employer_id: 'user.id' },
-          as: 'jobs',
+          repo: KnowledgeRepository,
+          attrs: ['id', 'name'],
+          on: { user_id: 'user.id' },
           type: 'many',
+          join: [
+            {
+              repo: KnowledgeTypeRepository,
+              on: { id: 'knowledge.knowledge_type_id' },
+              as: 'type',
+              type: 'single',
+            },
+          ],
         },
         {
           repo: RatingRepository,
@@ -37,13 +46,21 @@ export default class EmployerController {
     const { id } = req.params;
 
     const user = await UserRepository.findOne({
-      where: { id, employer: true },
+      where: { id, employer: false },
       join: [
         {
-          repo: JobVacancyRepository,
-          on: { employer_id: 'user.id' },
-          as: 'jobs',
+          repo: KnowledgeRepository,
+          on: { user_id: 'user.id' },
           type: 'many',
+          attrs: ['id', 'name'],
+          join: [
+            {
+              repo: KnowledgeTypeRepository,
+              on: { id: 'knowledge.knowledge_type_id' },
+              as: 'type',
+              type: 'single',
+            },
+          ],
         },
         {
           repo: RatingRepository,
@@ -54,11 +71,11 @@ export default class EmployerController {
       ],
     });
 
-    return res.json({ user });
+    return res.status(200).json({ user });
   }
 
   static async store(req, res) {
-    const { name, email, password, cnpj, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
+    const { name, email, password, cpf, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
     const { filename } = req.file;
 
     const userExists = await UserRepository.findOne({
@@ -79,11 +96,11 @@ export default class EmployerController {
     const passwordHash = await bcrypt.hash(password, 8);
 
     const user = await UserRepository.create({
-      employer: true,
+      employer: false,
       name,
       email,
       password: passwordHash,
-      fiscal_code: cnpj,
+      fiscal_code: cpf,
       phone,
       image_url: filename,
       postal_code: postalCode,
@@ -119,13 +136,13 @@ export default class EmployerController {
     const { id } = req.params;
 
     if (id !== req.userId) {
-      return res.status(401).json({ error: { message: 'Operation not allowed', field: 'id' } });
+      return res.status(401).json({ error: 'Operation not allowed' });
     }
 
     const deleted = await UserRepository.delete({
-      where: { id: Number(id), employer: true },
+      where: { id: Number(id), employer: false },
     });
 
-    return res.json({ deleted });
+    return res.status(200).json({ deleted });
   }
 }

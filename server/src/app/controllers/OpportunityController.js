@@ -1,4 +1,4 @@
-import JobService from '../../Services/JobService';
+import JobService from '../../services/JobService';
 
 export default class OpportunitiesController {
   static async index(req, res) {

@@ -1,10 +1,12 @@
 /* eslint-disable operator-linebreak */
-import Database from '../app/Data/Database';
+import Database from '../app/data/Database';
 
 export default class JobService {
   static async filterJobs({ days, microregion, local, userId }) {
     const microregionFilter =
-      local === 'region' && microregion ? Database.escape(Number(microregion)) : 'ANY (SELECT DISTINCT microregion_id FROM user)';
+      local === 'region' && microregion
+        ? Database.escape(Number(microregion))
+        : 'ANY (SELECT DISTINCT microregion_id FROM user)';
 
     const sql = `
       SELECT

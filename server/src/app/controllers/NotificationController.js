@@ -1,5 +1,5 @@
-import NotificationRepository from '../Repositories/NotificationRepository';
-import NotificationTypeRepository from '../Repositories/NotificationTypeRepository';
+import NotificationRepository from '../repositories/NotificationRepository';
+import NotificationTypeRepository from '../repositories/NotificationTypeRepository';
 
 export default class NotificationController {
   static async index(req, res) {
