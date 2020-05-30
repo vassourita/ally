@@ -17,7 +17,6 @@ function Dashboard() {
       <Switch>
         <PrivateRoute path="/chat/:id" component={Chat} />
         <PrivateRoute exact path="/chat" component={Chat} />
-        <PrivateRoute path="/jobs/:id" component={Jobs} />
         <PrivateRoute exact path="/jobs" component={Jobs} />
         <PrivateRoute path="/rate" component={Rating} />
         <PrivateRoute exact path="/profile" component={Profile} />
