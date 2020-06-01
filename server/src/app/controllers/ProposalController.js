@@ -16,7 +16,7 @@ export default class ProposalController {
   }
 
   static async update(req, res) {
-    const { userId } = req;
+    const { employerId } = req.userId;
     const proposalId = req.params.id;
 
     const proposal = await ProposalRepository.findOne({
@@ -29,13 +29,13 @@ export default class ProposalController {
 
     if (!chat) {
       chat = await ChatRepository.create({
-        employer_id: userId,
+        employer_id: employerId,
         user_id: proposal.user_id,
       });
     }
 
     const message = await MessageRepository.create({
-      author_id: userId,
+      author_id: employerId,
       chat_id: chat.id,
       content,
     });

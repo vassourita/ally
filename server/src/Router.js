@@ -8,6 +8,7 @@ import SessionStoreValidator from './app/validators/SessionStoreValidator';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import MessageController from './app/controllers/MessageController';
+import ProposalController from './app/controllers/ProposalController';
 import EmployerController from './app/controllers/EmployerController';
 import JobVacancyController from './app/controllers/JobVacancyController';
 import OpportunityController from './app/controllers/OpportunityController';
@@ -47,6 +48,9 @@ export default class Router {
 
     routes.get('/messages', MessageController.index);
     routes.post('/messages', MessageController.store);
+
+    routes.post('/proposals', ProposalController.store);
+    routes.put('/proposals', ProposalController.update);
 
     this.routes = routes;
   }
