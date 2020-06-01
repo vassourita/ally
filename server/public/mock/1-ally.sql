@@ -39,20 +39,34 @@ CREATE TABLE job_vacancy (
     ON DELETE CASCADE
 );
 
+CREATE TABLE chat (
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  employer_id INT NOT NULL,
+  user_id INT NOT NULL,
+  CONSTRAINT fk_chat_employer
+    FOREIGN KEY (employer_id)
+    REFERENCES user (id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_chat_user
+    FOREIGN KEY (user_id)
+    REFERENCES user (id)
+    ON DELETE CASCADE
+);
+
 CREATE TABLE message (
   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   author_id INT NOT NULL,
-  target_id INT NOT NULL,
+  chat_id INT NOT NULL,
   content TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT current_timestamp,
-  CONSTRAINT fk_message_author_user
+  CONSTRAINT fk_message_author
     FOREIGN KEY (author_id)
     REFERENCES user (id)
-    ON DELETE NO ACTION,
-  CONSTRAINT fk_message_target_user
-    FOREIGN KEY (target_id)
-    REFERENCES user (id)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE,
+  CONSTRAINT fk_message_chat
+    FOREIGN KEY (chat_id)
+    REFERENCES chat (id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE knowledge_type (

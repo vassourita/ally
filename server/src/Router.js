@@ -7,6 +7,7 @@ import SessionStoreValidator from './app/validators/SessionStoreValidator';
 
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
+import MessageController from './app/controllers/MessageController';
 import EmployerController from './app/controllers/EmployerController';
 import JobVacancyController from './app/controllers/JobVacancyController';
 import OpportunityController from './app/controllers/OpportunityController';
@@ -43,6 +44,9 @@ export default class Router {
 
     routes.get('/notifications', NotificationController.index);
     routes.put('/notifications/:id', NotificationController.update);
+
+    routes.get('/messages', MessageController.index);
+    routes.post('/messages', MessageController.store);
 
     this.routes = routes;
   }
