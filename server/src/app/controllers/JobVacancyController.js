@@ -1,3 +1,4 @@
+import ProposalRepository from '../repositories/ProposalRepository';
 import KnowledgeRepository from '../repositories/KnowledgeRepository';
 import JobVacancyRepository from '../repositories/JobVacancyRepository';
 import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
@@ -9,6 +10,12 @@ export default class JobVacancyController {
     const jobs = await JobVacancyRepository.find({
       where: { employer_id: userId },
       join: [
+        {
+          repo: ProposalRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'proposals',
+          type: 'many',
+        },
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
@@ -35,6 +42,12 @@ export default class JobVacancyController {
     const job = await JobVacancyRepository.findOne({
       where: { id },
       join: [
+        {
+          repo: ProposalRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'proposals',
+          type: 'many',
+        },
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
@@ -82,6 +95,12 @@ export default class JobVacancyController {
     const job = await JobVacancyRepository.findOne({
       where: { id: newJob.id },
       join: [
+        {
+          repo: ProposalRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'proposals',
+          type: 'many',
+        },
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
@@ -145,6 +164,12 @@ export default class JobVacancyController {
     const job = await JobVacancyRepository.findOne({
       where: { id },
       join: [
+        {
+          repo: ProposalRepository,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          as: 'proposals',
+          type: 'many',
+        },
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
