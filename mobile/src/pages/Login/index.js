@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -22,8 +22,29 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [validSession, setValidSession] = useState(false);
 
   const history = useHistory();
+
+  useEffect(() => {
+    (async () => {
+      if (!(user.id === auth.id && auth.token)) {
+        return setValidSession(false);
+      }
+
+      const response = await api.get(`/users/${user.id}`);
+
+      if (!response.data.user) {
+        return setValidSession(false);
+      }
+
+      if (response.data.user.id !== auth.id) {
+        return setValidSession(false);
+      }
+
+      setValidSession(true);
+    })();
+  }, [user, auth]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -64,13 +85,11 @@ function Login() {
         </p>
       </Header>
       <Form>
-        {user.id === auth.id && auth.token ? (
+        {validSession && (
           <LoginButton onClick={handleKeepLogged}>
             <img src={`${process.env.REACT_APP_FILES_URL}${user.image_url}`} alt="user" />
             Continuar como {user.name}
           </LoginButton>
-        ) : (
-          ''
         )}
         <InputBlock
           label="Email"

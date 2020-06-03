@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async req => {
-  const storage = localStorage.getItem('@ally/authorization');
+  const storage = localStorage.getItem('@ally-mobile/authorization');
   if (storage) {
     req.headers.authorization = `Bearer ${JSON.parse(storage).token}`;
   }
