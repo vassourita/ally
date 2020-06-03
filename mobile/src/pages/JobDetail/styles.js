@@ -25,10 +25,61 @@ export const Body = styled.div`
   padding: 0 16px;
 `;
 
+export const Title = styled.h6`
+  color: #333;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+`;
+
+export const Text = styled.p`
+  color: #333;
+  font-size: 16px;
+  font-weight: 400;
+`;
+
 export const Employer = styled.div`
-  margin-top: 16px;
-  padding: 8px;
+  margin: 17px auto 27px;
+  padding: 14px;
   border: 1px solid #aaa;
+`;
+
+export const EmployerImage = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 27px 0;
+  img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+`;
+
+export const EmployerName = styled.p`
+  color: #333;
+  font-size: 17px;
+  font-weight: 500;
+  font-family: 'Quicksand';
+`;
+
+export const EmployerAddress = styled(Text)`
+  margin-top: 15px;
+  strong {
+    font-weight: 500;
+  }
+`;
+
+export const Counter = styled.div`
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  h4 {
+    color: #333;
+    font-size: 29px;
+    font-weight: 600;
+    font-family: 'Quicksand';
+  }
 `;
 
 export const Footer = styled.footer`
