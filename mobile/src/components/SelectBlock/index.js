@@ -19,8 +19,10 @@ export default function SelectBlock({
           id={id}
           placeholder=""
           options={options}
+          menuShouldBlockScroll={true}
           theme={theme => ({
             ...theme,
+            borderRadius: 0,
             colors: {
               ...theme.colors,
               primary: 'var(--ally-red)',
