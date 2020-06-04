@@ -24,9 +24,16 @@ const localOptions = [
   { label: 'Minha cidade', value: 'city' },
 ];
 
+const orderOptions = [
+  { label: 'Mais antigas', value: 'older' },
+  { label: 'Mais recentes', value: 'newer' },
+  { label: 'Requisitos', value: 'requirements' },
+];
+
 function Jobs() {
   const [local, setLocal] = useState('any');
   const [date, setDate] = useState('any');
+  const [order, setOrder] = useState('newer');
   const [loading, setLoading] = useState(true);
 
   const jobs = useSelector(state => state.jobs);
@@ -59,6 +66,23 @@ function Jobs() {
     return `a ${difference} dias`;
   }
 
+  function orderJobs(a, b) {
+    switch (order) {
+      case 'newer': {
+        return new Date(b.created_at) - new Date(a.created_at);
+      }
+      case 'older': {
+        return new Date(a.created_at) - new Date(b.created_at);
+      }
+      case 'requirements': {
+        return -1;
+      }
+      default: {
+        return 0;
+      }
+    }
+  }
+
   return (
     <Container>
       <Filters>
@@ -69,11 +93,17 @@ function Jobs() {
         <div>
           <SelectBlock onChange={({ value }) => setLocal(value)} label="Local" options={localOptions} />
           <SelectBlock onChange={({ value }) => setDate(value)} label="Data" options={dateOptions} />
+          <SelectBlock
+            onChange={({ value }) => setOrder(value)}
+            label="Ordem"
+            options={orderOptions}
+            defaultOption={1}
+          />
         </div>
       </Filters>
       <List>
         {!loading && !jobs.length && <NoVacancies>Não há nenhuma vaga disponível no momento</NoVacancies>}
-        {jobs.map(job => (
+        {jobs.sort(orderJobs).map(job => (
           <Card key={job.id}>
             <Image src={`${process.env.REACT_APP_FILES_URL}${job.employer.image_url}`} alt={job.employer.name}></Image>
             <Info>

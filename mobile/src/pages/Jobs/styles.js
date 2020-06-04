@@ -1,22 +1,30 @@
 import styled from 'styled-components';
 
-export const Container = styled.div``;
+export const Container = styled.main``;
 
 export const Filters = styled.div`
-  margin-bottom: 20px;
+  margin: 0 -15px 15px -15px;
   & > span {
     display: flex;
     align-items: center;
     color: #666;
-    margin-bottom: 10px;
+    margin: 0 0 10px 15px;
     svg {
       margin-right: 5px;
     }
   }
   & > div {
+    margin-bottom: 10px;
     display: grid;
-    grid-template-columns: 150px 150px;
+    grid-template-columns: 160px 150px 180px;
     gap: 20px;
+    overflow-x: auto;
+    .select-block:first-child {
+      margin-left: 15px;
+    }
+    .select-block:last-child {
+      padding-right: 15px;
+    }
   }
 `;
 

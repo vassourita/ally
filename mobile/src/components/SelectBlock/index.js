@@ -2,7 +2,16 @@ import React from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
 
-export default function SelectBlock({ id, label, onChange, errors = [{}], isPass, options = [], ...rest }) {
+export default function SelectBlock({
+  id,
+  defaultOption = 0,
+  label,
+  onChange,
+  errors = [{}],
+  isPass,
+  options = [],
+  ...rest
+}) {
   return (
     <Container className="select-block">
       <SelectContainer>
@@ -21,7 +30,8 @@ export default function SelectBlock({ id, label, onChange, errors = [{}], isPass
           menuPlacement="auto"
           isSearchable={false}
           className="select-container"
-          defaultValue={options[0]}
+          defaultValue={options[defaultOption]}
+          menuPortalTarget={document.querySelector('body')}
           {...rest}
         ></Select>
         <div className="label-container">
