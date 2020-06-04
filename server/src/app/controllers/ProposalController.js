@@ -1,3 +1,5 @@
+import ChatRepository from '../repositories/ChatRepository';
+import MessageRepository from '../repositories/MessageRepository';
 import ProposalRepository from '../repositories/ProposalRepository';
 
 import WebSocket from '../../WebSocket';
@@ -16,15 +18,16 @@ export default class ProposalController {
   }
 
   static async update(req, res) {
-    const { employerId } = req.userId;
+    const employerId = req.userId;
     const proposalId = req.params.id;
+    const { content } = req.body;
 
     const proposal = await ProposalRepository.findOne({
       where: { id: proposalId },
     });
 
     let chat = await ChatRepository.findOne({
-      where: { id: chatId },
+      where: { employer_id: employerId, user_id: proposal.user_id },
     });
 
     if (!chat) {

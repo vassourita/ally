@@ -37,6 +37,7 @@ export default class JobService {
           repo: UserRepository,
           on: { id: 'job_vacancy.employer_id', ...localFilter },
           type: 'single',
+          side: 'INNER',
           as: 'employer',
         },
         {
@@ -55,30 +56,32 @@ export default class JobService {
       ],
     });
 
-    const jobsFilteredByUser = jobs.filter(job => {
-      if (!job.knowledges.length) return true;
-      if (!job.knowledges.filter(k => !k.differential).length) return true;
+    return jobs;
 
-      const requiredKnowledges = job.knowledges.filter(k => !k.differential);
-      const matchedKnowledges = requiredKnowledges.filter(jobK => {
-        return !!user.knowledges.filter(userK => {
-          const sameName = userK.name.toLowerCase() === jobK.name.toLowerCase();
-          const sameType = userK.type.id <= jobK.type.id;
-          return sameName && sameType;
-        }).length;
-      });
+    // const jobsFilteredByUser = jobs.filter(job => {
+    //   if (!job.knowledges.length) return true;
+    //   if (!job.knowledges.filter(k => !k.differential).length) return true;
 
-      const hasMatchAllRequired = matchedKnowledges.length >= requiredKnowledges.length;
+    //   const requiredKnowledges = job.knowledges.filter(k => !k.differential);
+    //   const matchedKnowledges = requiredKnowledges.filter(jobK => {
+    //     return !!user.knowledges.filter(userK => {
+    //       const sameName = userK.name.toLowerCase() === jobK.name.toLowerCase();
+    //       const sameType = userK.type.id <= jobK.type.id;
+    //       return sameName && sameType;
+    //     }).length;
+    //   });
 
-      return hasMatchAllRequired;
-    });
+    //   const hasMatchAllRequired = matchedKnowledges.length >= requiredKnowledges.length;
 
-    if (!days) {
-      return jobsFilteredByUser;
-    }
+    //   return hasMatchAllRequired;
+    // });
 
-    return jobsFilteredByUser.filter(
-      job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date()), Number(days))),
-    );
+    // if (!days) {
+    //   return jobsFilteredByUser;
+    // }
+
+    // return jobsFilteredByUser.filter(
+    //   job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date()), Number(days))),
+    // );
   }
 }

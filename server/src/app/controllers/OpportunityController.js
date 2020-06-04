@@ -4,7 +4,7 @@ import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
 import JobService from '../../services/JobService';
 
-export default class OpportunitiesController {
+export default class OpportunityController {
   static async index(req, res) {
     const { days, local } = req.query;
 
