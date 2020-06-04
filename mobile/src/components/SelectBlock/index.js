@@ -21,7 +21,7 @@ export default function SelectBlock({ id, label, onChange, errors = [{}], isPass
           menuPlacement="auto"
           isSearchable={false}
           className="select-container"
-          value={options.filter(option => option.label === 'Qualquer')}
+          defaultValue={options[0]}
           {...rest}
         ></Select>
         <div className="label-container">

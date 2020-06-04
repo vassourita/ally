@@ -69,3 +69,10 @@ export const Bottom = styled.div`
     margin-left: 4px;
   }
 `;
+
+export const NoVacancies = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 400px);
+`;

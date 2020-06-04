@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { FiSearch, FiChevronRight } from 'react-icons/fi';
+import { differenceInDays } from 'date-fns';
+
+import * as JobActions from '../../store/modules/jobs/actions';
+import api from '../../services/api';
 
 import SelectBlock from '../../components/SelectBlock';
 
-import { Container, Filters, List, Card, Image, Info, Bottom } from './styles';
+import { Container, Filters, List, Card, Image, Info, Bottom, NoVacancies } from './styles';
 
 const dateOptions = [
   { label: 'Qualquer', value: 'any' },
@@ -20,7 +25,40 @@ const localOptions = [
 ];
 
 function Jobs() {
+  const [local, setLocal] = useState('any');
+  const [date, setDate] = useState('any');
+  const [loading, setLoading] = useState(true);
+
+  const jobs = useSelector(state => state.jobs);
+
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLoading(true);
+    api.get(`/opportunities?days=${date}&local=${local}`).then(response => {
+      if (response.data.jobs) {
+        dispatch(JobActions.setJobs(response.data.jobs));
+        console.log(response.data.jobs);
+      } else {
+        dispatch(JobActions.setJobs([]));
+      }
+      setLoading(false);
+    });
+  }, [dispatch, local, date]);
+
+  function getJobDate(jobDate) {
+    const difference = differenceInDays(new Date(jobDate), new Date());
+
+    if (difference === 0) {
+      return 'hoje';
+    }
+    if (difference === 1) {
+      return `ontem`;
+    }
+    return `a ${difference} dias`;
+  }
+
   return (
     <Container>
       <Filters>
@@ -29,68 +67,36 @@ function Jobs() {
           filtros
         </span>
         <div>
-          <SelectBlock options={localOptions} label="Local" />
-          <SelectBlock options={dateOptions} label="Data" />
+          <SelectBlock onChange={({ value }) => setLocal(value)} label="Local" options={localOptions} />
+          <SelectBlock onChange={({ value }) => setDate(value)} label="Data" options={dateOptions} />
         </div>
       </Filters>
       <List>
-        <Card>
-          <Image src="https://images.unsplash.com/photo-1549996647-190b679b33d7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"></Image>
-          <Info>
-            <h3>Vaga para Garçom</h3>
-            <p>
-              por <strong>Balzac's Restaurante</strong>
-            </p>
-            <p>
-              em <strong>Santos - SP</strong>
-            </p>
-            <p>
-              criado a <strong>3 dias</strong>
-            </p>
-          </Info>
-          <Bottom onClick={() => history.push('/jobs/1')}>
-            mais detalhes
-            <FiChevronRight />
-          </Bottom>
-        </Card>
-        <Card>
-          <Image src="https://images.unsplash.com/photo-1549996647-190b679b33d7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"></Image>
-          <Info>
-            <h3>Vaga para Garçom</h3>
-            <p>
-              por <strong>Balzac's Restaurante</strong>
-            </p>
-            <p>
-              em <strong>Santos - SP</strong>
-            </p>
-            <p>
-              criado a <strong>3 dias</strong>
-            </p>
-          </Info>
-          <Bottom onClick={() => history.push('/jobs/1')}>
-            mais detalhes
-            <FiChevronRight />
-          </Bottom>
-        </Card>
-        <Card>
-          <Image src="https://images.unsplash.com/photo-1549996647-190b679b33d7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"></Image>
-          <Info>
-            <h3>Vaga para Garçom</h3>
-            <p>
-              por <strong>Balzac's Restaurante</strong>
-            </p>
-            <p>
-              em <strong>Santos - SP</strong>
-            </p>
-            <p>
-              criado a <strong>3 dias</strong>
-            </p>
-          </Info>
-          <Bottom onClick={() => history.push('/jobs/1')}>
-            mais detalhes
-            <FiChevronRight />
-          </Bottom>
-        </Card>
+        {!loading && !jobs.length && <NoVacancies>Não há nenhuma vaga disponível no momento</NoVacancies>}
+        {jobs.map(job => (
+          <Card key={job.id}>
+            <Image src={`${process.env.REACT_APP_FILES_URL}${job.employer.image_url}`} alt={job.employer.name}></Image>
+            <Info>
+              <h3>{job.name}</h3>
+              <p>
+                por <strong>{job.employer.name}</strong>
+              </p>
+              <p>
+                em{' '}
+                <strong>
+                  {job.employer.city} - {job.employer.state}
+                </strong>
+              </p>
+              <p>
+                criado<strong> {getJobDate(job.created_at)}</strong>
+              </p>
+            </Info>
+            <Bottom onClick={() => history.push(`/jobs/${job.id}`)}>
+              mais detalhes
+              <FiChevronRight />
+            </Bottom>
+          </Card>
+        ))}
       </List>
     </Container>
   );
