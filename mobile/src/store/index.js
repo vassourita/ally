@@ -7,7 +7,7 @@ import rootReducer from './modules/rootReducer';
 const config = {
   key: '@ally-mobile/persisted-root',
   storage,
-  whitelist: ['auth', 'user'],
+  whitelist: ['auth', 'user', 'jobs'],
 };
 
 const persistedReducer = persistReducer(config, rootReducer);
