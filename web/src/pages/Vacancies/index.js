@@ -44,10 +44,11 @@ const options = [
 ];
 
 function Vacancies() {
+  const history = useHistory();
+  const { id: jobId } = useParams();
+
   const dispatch = useDispatch();
   const jobs = useSelector(state => state.jobs);
-
-  const { id: jobId } = useParams();
 
   const actualJob = jobs.find(j => j.id === Number(jobId));
   const [editData, setEditData] = useState({
@@ -58,8 +59,6 @@ function Vacancies() {
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
-
-  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -248,7 +247,11 @@ function Vacancies() {
           <Button outlined onClick={() => setModalDeleteOpen(false)}>
             <span>Cancelar</span>
           </Button>
-          <Button style={{ color: 'var(--ally-red)', borderColor: 'var(--ally-red)' }} outlined onClick={handleDeleteJob}>
+          <Button
+            style={{ color: 'var(--ally-red)', borderColor: 'var(--ally-red)' }}
+            outlined
+            onClick={handleDeleteJob}
+          >
             <span>Deletar</span>
           </Button>
         </DoubleInput>
