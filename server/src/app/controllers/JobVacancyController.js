@@ -1,3 +1,4 @@
+import UserRepository from '../repositories/UserRepository';
 import ProposalRepository from '../repositories/ProposalRepository';
 import KnowledgeRepository from '../repositories/KnowledgeRepository';
 import JobVacancyRepository from '../repositories/JobVacancyRepository';
@@ -15,6 +16,14 @@ export default class JobVacancyController {
           on: { job_vacancy_id: 'job_vacancy.id' },
           as: 'proposals',
           type: 'many',
+          join: [
+            {
+              repo: UserRepository,
+              on: { id: 'proposal.user_id' },
+              type: 'single',
+              as: 'user',
+            },
+          ],
         },
         {
           repo: KnowledgeRepository,
@@ -47,6 +56,14 @@ export default class JobVacancyController {
           on: { job_vacancy_id: 'job_vacancy.id' },
           as: 'proposals',
           type: 'many',
+          join: [
+            {
+              repo: UserRepository,
+              on: { id: 'proposal.user_id' },
+              type: 'single',
+              as: 'user',
+            },
+          ],
         },
         {
           repo: KnowledgeRepository,
