@@ -135,9 +135,9 @@ export default class Repository<T extends ITableSchema> {
   async create(schema: ITableColumns<T>, returning = true): Promise<number | ITableColumns<T>> {
     const sql = `
       INSERT INTO ${this.tableName}
-        (${Object.keys(schema).join(', ')})
+        (${Object.keys(schema)})
         VALUES
-        (${Database.escape(Object.values(schema).join(', '))});
+        (${Database.escape(Object.values(schema))});
     `;
     const { insertId } = await this.db.execute(sql, []);
 
