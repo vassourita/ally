@@ -21,13 +21,14 @@ export default class Database {
       if (err) throw err;
       console.log('\x1b[0mDATABASE: \x1b[34mok\x1b[0m');
     });
+    this.raw("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
   }
 
   static escape(value) {
     return mysql.escape(value);
   }
 
-  async raw(sql, params) {
+  async raw(sql, params = []) {
     const res = await promisify(this.client.query).bind(this.client)(sql, params);
     return res;
   }
@@ -35,7 +36,6 @@ export default class Database {
   async query(sql, params = []) {
     const fSql = sql
       .trim()
-      .replace(/(=.*),/g, '$1 AND ')
       .replace(/,\s*LEFT JOIN/g, ' LEFT JOIN')
       .replace(/,\s*RIGHT JOIN/g, ' RIGHT JOIN')
       .replace(/,\s*INNER JOIN/g, ' INNER JOIN')
