@@ -4,13 +4,16 @@ import Http from 'http';
 import path from 'path';
 import morgan from 'morgan';
 import Youch from 'youch';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 
 import Router from './Router';
 import WebSocket from './WebSocket';
 
 export default class AllyApi {
+  private app: express.Application;
+  private server: Http.Server;
+
   constructor() {
     this.app = express();
     this.app.disable('x-powered-by');
@@ -23,14 +26,14 @@ export default class AllyApi {
     this.exceptionHandler();
   }
 
-  setupWebSocket() {
-    WebSocket.getInstance().setup(this.server, err => {
+  private setupWebSocket() {
+    WebSocket.getInstance().setup(this.server, (err: Error) => {
       if (err) throw err;
       console.log('\x1b[0mSOCKET: \x1b[34mok\x1b[0m');
     });
   }
 
-  middlewares() {
+  private middlewares() {
     this.app.set('base', '/v1');
     this.app.use(cors());
     this.app.use(express.json());
@@ -38,12 +41,12 @@ export default class AllyApi {
     this.app.use('/files', express.static(path.resolve(__dirname, '..', 'public', 'uploads')));
   }
 
-  routes() {
+  private routes() {
     this.app.use('/v1', new Router().routes);
   }
 
-  exceptionHandler() {
-    this.app.use(async (err, req, res, _next) => {
+  private exceptionHandler() {
+    this.app.use(async (err: Error, req: Request, res: Response, _next: NextFunction) => {
       if (process.env.NODE_ENV === 'development') {
         const error = await new Youch(err, req).toJSON();
 
@@ -54,7 +57,7 @@ export default class AllyApi {
     });
   }
 
-  listen(port = process.env.PORT) {
+  public listen(port: string | number | undefined = process.env.PORT) {
     this.server.listen(port, () => console.log(`\x1b[0mSERVER: \x1b[34mhttp://localhost:${port}\x1b[0m`));
   }
 }

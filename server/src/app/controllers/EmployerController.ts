@@ -1,19 +1,21 @@
 import bcrypt from 'bcryptjs';
+import { Request, Response } from 'express';
 
+import IController from './IController';
 import UserRepository from '../repositories/UserRepository';
 import RatingRepository from '../repositories/RatingRepository';
 import JobVacancyRepository from '../repositories/JobVacancyRepository';
 
-import cities from '../data/cities';
+const cities: any[] = require('../data/cities.json');
 
-export default class EmployerController {
-  static async index(req, res) {
+export default class EmployerController extends IController {
+  async index(req: Request, res: Response) {
     const { page = 1 } = req.query;
 
     const users = await UserRepository.find({
       where: { employer: true },
-      limit: 10 * page,
-      offset: (page - 1) * 10,
+      limit: 10 * Number(page),
+      offset: (Number(page) - 1) * 10,
       join: [
         {
           repo: JobVacancyRepository,
@@ -30,10 +32,10 @@ export default class EmployerController {
       ],
     });
 
-    return res.json({ users });
+    res.json({ users });
   }
 
-  static async show(req, res) {
+  async show(req: Request, res: Response) {
     const { id } = req.params;
 
     const user = await UserRepository.findOne({
@@ -54,10 +56,10 @@ export default class EmployerController {
       ],
     });
 
-    return res.json({ user });
+    res.json({ user });
   }
 
-  static async store(req, res) {
+  async store(req: Request, res: Response) {
     const { name, email, password, cnpj, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
     const { filename } = req.file;
 
@@ -67,13 +69,15 @@ export default class EmployerController {
     });
 
     if (userExists) {
-      return res.status(400).json({ error: 'Email already in use', field: 'email' });
+      res.status(400).json({ error: 'Email already in use', field: 'email' });
+      return;
     }
 
     const microregion = cities.find(c => c.id.toString() === ibgeCode).microrregiao;
 
     if (!microregion) {
-      return res.status(400).json({ error: { message: 'City does not exists', field: 'ibgeCode' } });
+      res.status(400).json({ error: { message: 'City does not exists', field: 'ibgeCode' } });
+      return;
     }
 
     const passwordHash = await bcrypt.hash(password, 8);
@@ -94,14 +98,14 @@ export default class EmployerController {
       microregion_id: microregion.id,
     });
 
-    return res.status(201).json({ user });
+    res.status(201).json({ user });
   }
 
-  static async update(req, res) {
-    const { userId } = req;
+  async update(req: Request, res: Response) {
+    const { userId } = res.locals;
     const { about } = req.body;
 
-    const updated = {};
+    const updated: any = {};
 
     if (about) {
       updated.about = await UserRepository.update({
@@ -112,20 +116,22 @@ export default class EmployerController {
       });
     }
 
-    return res.status(200).json({ updated });
+    res.status(200).json({ updated });
   }
 
-  static async destroy(req, res) {
+  async destroy(req: Request, res: Response) {
+    const { userId } = res.locals;
     const { id } = req.params;
 
-    if (id !== req.userId) {
-      return res.status(401).json({ error: { message: 'Operation not allowed', field: 'id' } });
+    if (id !== userId) {
+      res.status(401).json({ error: { message: 'Operation not allowed', field: 'id' } });
+      return;
     }
 
     const deleted = await UserRepository.delete({
       where: { id: Number(id), employer: true },
     });
 
-    return res.json({ deleted });
+    res.json({ deleted });
   }
 }

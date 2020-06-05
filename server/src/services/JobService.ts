@@ -10,9 +10,15 @@ import KnowledgeTypeRepository from '../app/repositories/KnowledgeTypeRepository
 
 import Database from '../app/data/Database';
 
+interface IFilterQuery {
+  days: number;
+  local: string;
+  user: any;
+}
+
 export default class JobService {
-  static async filterJobs({ days, local, user }) {
-    const localFilter = {};
+  static async filterJobs({ days, local, user }: IFilterQuery) {
+    const localFilter: any = {};
 
     switch (local) {
       case 'region': {

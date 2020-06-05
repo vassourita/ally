@@ -1,12 +1,14 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { Secret } from 'jsonwebtoken';
+import { Request, Response } from 'express';
 
+import IController from './IController';
 import authConfig from '../../config/auth';
 import UserRepository from '../repositories/UserRepository';
 import RatingRepository from '../repositories/RatingRepository';
 
-export default class SessionController {
-  static async store(req, res) {
+export default class SessionController extends IController {
+  async store(req: Request, res: Response) {
     const { email, password } = req.body;
 
     const user = await UserRepository.findOne({
@@ -15,14 +17,16 @@ export default class SessionController {
     });
 
     if (!user) {
-      return res.status(404).json({ error: { message: 'User not found', field: 'email' } });
+      res.status(404).json({ error: { message: 'User not found', field: 'email' } });
+      return;
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ error: { message: 'Wrong password', field: 'password' } });
+      res.status(401).json({ error: { message: 'Wrong password', field: 'password' } });
+      return;
     }
 
-    const token = jwt.sign({ id: user.id }, authConfig.secret, {
+    const token = jwt.sign({ id: user.id }, authConfig.secret as Secret, {
       expiresIn: authConfig.expiresIn,
     });
 
@@ -38,7 +42,7 @@ export default class SessionController {
       ],
     });
 
-    return res.status(200).json({
+    res.status(200).json({
       user: loggedUser,
       token,
     });

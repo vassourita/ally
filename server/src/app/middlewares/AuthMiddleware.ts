@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
-import { promisify } from 'util';
+import { Request, Response, NextFunction } from 'express';
 
 import authConfig from '../../config/auth';
 
 export default class AuthMiddleware {
-  static async handle(req, res, next) {
+  public async handle(req: Request, res: Response, next: NextFunction) {
     const auth = req.headers.authorization;
 
     if (!auth) {
@@ -21,13 +21,11 @@ export default class AuthMiddleware {
       return res.status(401).json({ error: { message: 'Token malformatted' } });
     }
 
-    const promiseVerify = promisify(jwt.verify);
-
     try {
-      const decoded = await promiseVerify(token, authConfig.secret);
+      const payload = <any>jwt.verify(token, authConfig.secret as string);
 
-      const userId = decoded.id;
-      req.userId = userId;
+      const userId = payload.id;
+      res.locals.userId = userId;
 
       return next();
     } catch {

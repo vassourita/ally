@@ -1,28 +1,31 @@
+import { Request, Response } from 'express';
+
+import IController from './IController';
 import ChatRepository from '../repositories/ChatRepository';
 import MessageRepository from '../repositories/MessageRepository';
 
 import WebSocket from '../../WebSocket';
 
-export default class MessageController {
-  static async index(req, res) {
-    const { userId } = req;
+export default class MessageController extends IController {
+  async index(req: Request, res: Response) {
+    const { userId } = res.locals;
 
     const chats = await ChatRepository.find({
       where: { user_id: userId },
       join: [
         {
           repo: MessageRepository,
-          on: { chat_id: chat.id },
+          on: { chat_id: 'chat.id' },
           type: 'many',
         },
       ],
     });
 
-    return res.status(200).json({ chats });
+    res.status(200).json({ chats });
   }
 
-  static async store(req, res) {
-    const { userId } = req;
+  async store(req: Request, res: Response) {
+    const { userId } = res.locals;
     const { content, chatId } = req.body;
 
     const message = await MessageRepository.create({
@@ -39,12 +42,12 @@ export default class MessageController {
 
     const targetId = userId === chat.employer_id ? chat.user_id : chat.employer_id;
 
-    const target = ws.connectedUsers[targetId.toString()];
+    const target = targetId && ws.connectedUsers[targetId.toString()];
 
     if (target) {
       target.connection.emit('new_message', { message });
     }
 
-    return res.status(201).json({ message });
+    res.status(201).json({ message });
   }
 }

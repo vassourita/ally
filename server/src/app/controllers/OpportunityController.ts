@@ -1,15 +1,19 @@
+import { Request, Response } from 'express';
+
+import IController from './IController';
 import UserRepository from '../repositories/UserRepository';
 import KnowledgeRepository from '../repositories/KnowledgeRepository';
 import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
 import JobService from '../../services/JobService';
 
-export default class OpportunityController {
-  static async index(req, res) {
+export default class OpportunityController extends IController {
+  async index(req: Request, res: Response) {
+    const { userId } = res.locals;
     const { days, local } = req.query;
 
     const user = await UserRepository.findOne({
-      where: { id: req.userId },
+      where: { id: userId },
       join: [
         {
           repo: KnowledgeRepository,
@@ -27,8 +31,8 @@ export default class OpportunityController {
       ],
     });
 
-    const jobs = await JobService.filterJobs({ days, local, user });
+    const jobs = await JobService.filterJobs({ days: Number(days), local: String(local), user });
 
-    return res.status(200).json({ jobs });
+    res.status(200).json({ jobs });
   }
 }

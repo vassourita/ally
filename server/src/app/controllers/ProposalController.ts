@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 import ChatRepository from '../repositories/ChatRepository';
 import MessageRepository from '../repositories/MessageRepository';
 import ProposalRepository from '../repositories/ProposalRepository';
@@ -5,8 +7,8 @@ import ProposalRepository from '../repositories/ProposalRepository';
 import WebSocket from '../../WebSocket';
 
 export default class ProposalController {
-  static async store(req, res) {
-    const { userId } = req;
+  async store(req: Request, res: Response) {
+    const { userId } = res.locals;
     const { jobVacancyId } = req.body;
 
     const proposal = await ProposalRepository.create({
@@ -14,11 +16,11 @@ export default class ProposalController {
       job_vacancy_id: jobVacancyId,
     });
 
-    return res.status(201).json({ proposal });
+    res.status(201).json({ proposal });
   }
 
-  static async update(req, res) {
-    const employerId = req.userId;
+  async update(req: Request, res: Response) {
+    const employerId = res.locals.userId;
     const proposalId = req.params.id;
     const { content } = req.body;
 
@@ -26,7 +28,7 @@ export default class ProposalController {
       where: { id: proposalId },
     });
 
-    let chat = await ChatRepository.findOne({
+    let chat: any = await ChatRepository.findOne({
       where: { employer_id: employerId, user_id: proposal.user_id },
     });
 
@@ -55,6 +57,6 @@ export default class ProposalController {
       where: { id: proposalId },
     });
 
-    return res.status(201).json({ message });
+    res.status(201).json({ message });
   }
 }

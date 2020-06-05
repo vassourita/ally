@@ -1,7 +1,10 @@
 import * as Yup from 'yup';
+import { Request, Response, NextFunction } from 'express';
 
-export default class UserStoreValidator {
-  static async validate(req, res, next) {
+import { IValidator } from './IValidator';
+
+export default class UserStoreValidator implements IValidator {
+  async validate(req: Request, res: Response, next: NextFunction) {
     try {
       const schema = Yup.object().shape({
         email: Yup.string().email().required(),

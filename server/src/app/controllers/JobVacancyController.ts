@@ -1,12 +1,15 @@
+import { Request, Response } from 'express';
+
+import IController from './IController';
 import UserRepository from '../repositories/UserRepository';
 import ProposalRepository from '../repositories/ProposalRepository';
 import KnowledgeRepository from '../repositories/KnowledgeRepository';
 import JobVacancyRepository from '../repositories/JobVacancyRepository';
 import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
-export default class JobVacancyController {
-  static async index(req, res) {
-    const { userId } = req;
+export default class JobVacancyController extends IController {
+  async index(req: Request, res: Response) {
+    const { userId } = res.locals;
 
     const jobs = await JobVacancyRepository.find({
       where: { employer_id: userId },
@@ -42,10 +45,10 @@ export default class JobVacancyController {
       ],
     });
 
-    return res.status(200).json({ jobs });
+    res.status(200).json({ jobs });
   }
 
-  static async show(req, res) {
+  async show(req: Request, res: Response) {
     const { id } = req.params;
 
     const job = await JobVacancyRepository.findOne({
@@ -82,14 +85,14 @@ export default class JobVacancyController {
       ],
     });
 
-    return res.status(200).json({ job });
+    res.status(200).json({ job });
   }
 
-  static async store(req, res) {
-    const { userId } = req;
+  async store(req: Request, res: Response) {
+    const { userId } = res.locals;
     const { name, description, amount, local, knowledges } = req.body;
 
-    const newJob = await JobVacancyRepository.create({
+    const newJob: any = await JobVacancyRepository.create({
       name,
       local,
       amount,
@@ -97,7 +100,7 @@ export default class JobVacancyController {
       employer_id: userId,
     });
 
-    knowledges.forEach(async knowledge => {
+    knowledges.forEach(async (knowledge: any) => {
       await KnowledgeRepository.create(
         {
           knowledge_type_id: knowledge.typeId,
@@ -135,14 +138,14 @@ export default class JobVacancyController {
       ],
     });
 
-    return res.status(201).json({ job });
+    res.status(201).json({ job });
   }
 
-  static async update(req, res) {
+  async update(req: Request, res: Response) {
     const { id } = req.params;
     const { amount, local, removeKnowledge, addKnowledge } = req.body;
 
-    const updated = {};
+    const updated: any = {};
 
     if (amount) {
       updated.amount = await JobVacancyRepository.update({
@@ -165,13 +168,13 @@ export default class JobVacancyController {
     }
 
     if (addKnowledge) {
-      updated.addKnowledge = addKnowledge.filter(async knowledge => {
+      updated.addKnowledge = addKnowledge.filter(async (knowledge: any) => {
         return !!(await KnowledgeRepository.create(
           {
             knowledge_type_id: knowledge.typeId,
             name: knowledge.name,
             differential: knowledge.differential,
-            job_vacancy_id: id,
+            job_vacancy_id: Number(id),
           },
           false,
         ));
@@ -204,16 +207,16 @@ export default class JobVacancyController {
       ],
     });
 
-    return res.status(200).json({ job, updated });
+    res.status(200).json({ job, updated });
   }
 
-  static async destroy(req, res) {
+  async destroy(req: Request, res: Response) {
     const { id } = req.params;
 
     const deleted = await JobVacancyRepository.delete({
       where: { id: Number(id) },
     });
 
-    return res.status(200).json({ deleted });
+    res.status(200).json({ deleted });
   }
 }

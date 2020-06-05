@@ -8,10 +8,12 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 11,
+    "ecmaVersion": 2018,
     "sourceType": "module"
   },
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "indent": ["error", 2, { "flatTernaryExpressions": true }],
     "arrow-parens": ["error", "as-needed"],
@@ -26,7 +28,7 @@
     "no-underscore-dangle": "off",
     "object-curly-newline": ["error", { "consistent": true }],
     "object-curly-spacing": ["error", "always"],
-    "import/extensions": ["error", "never"],
+    "import/extensions": "off",
     "import/no-unresolved": "off",
     "implicit-arrow-linebreak": "off",
     "no-unused-vars": "off",

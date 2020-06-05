@@ -1,9 +1,12 @@
+import { Request, Response } from 'express';
+
+import IController from './IController';
 import NotificationRepository from '../repositories/NotificationRepository';
 import NotificationTypeRepository from '../repositories/NotificationTypeRepository';
 
-export default class NotificationController {
-  static async index(req, res) {
-    const { userId } = req;
+export default class NotificationController extends IController {
+  async index(req: Request, res: Response) {
+    const { userId } = res.locals;
 
     const notifications = await NotificationRepository.find({
       where: { user_id: userId },
@@ -17,10 +20,10 @@ export default class NotificationController {
       ],
     });
 
-    return res.status(200).json({ notifications });
+    res.status(200).json({ notifications });
   }
 
-  static async update(req, res) {
+  async update(req: Request, res: Response) {
     const { id } = req.params;
 
     const notifications = await NotificationRepository.update({
@@ -28,6 +31,6 @@ export default class NotificationController {
       where: { id },
     });
 
-    return res.status(200).json({ notifications });
+    res.status(200).json({ notifications });
   }
 }

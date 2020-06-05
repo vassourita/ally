@@ -6,8 +6,56 @@ import Database from './Database';
 import AllySqlRepositoryPrimaryKeyError from '../../helpers/errors/AllySqlRepositoryPrimaryKeyError';
 import AllySqlJoinTypeError from '../../helpers/errors/AllySqlJoinTypeError';
 
-export default class Repository {
-  constructor(tableName, tableSchema) {
+interface ITableSchema {
+  [fieldName: string]: {
+    returning?: boolean;
+    primary?: boolean;
+    required?: boolean;
+    type: any;
+  };
+}
+
+interface IJoin {
+  repo: Repository<any>;
+  on: IWhere;
+  attrs?: string[];
+  as?: string;
+  type: 'many' | 'single' | 'count';
+  side?: 'LEFT' | 'RIGHT' | 'INNER';
+  join?: IJoin[];
+  op?: string;
+}
+
+interface IWhere {
+  [field: string]: any;
+}
+
+interface IQuery<T extends ITableSchema> {
+  attrs?: Array<keyof T>;
+  limit?: number;
+  offset?: number;
+  where?: IWhere;
+  join?: IJoin[];
+}
+
+type ITableReturn<T extends ITableSchema> = {
+  [K in keyof T]: T[K]['type'];
+};
+
+type ITableColumns<T extends ITableSchema> = {
+  [K in keyof Partial<T>]: T[K]['type'];
+};
+
+export default class Repository<T extends ITableSchema> {
+  private db: Database;
+  public tableName: string;
+  public tableSchema: ITableSchema;
+  public fields: string[];
+  public returnFields: string[];
+  public primaryFields: string[];
+  public requiredFields: string[];
+
+  constructor(tableName: string, tableSchema: T) {
     this.db = Database.getInstance();
     this.tableName = tableName;
     this.tableSchema = tableSchema;
@@ -25,40 +73,7 @@ export default class Repository {
     }
   }
 
-  /**
-   *
-   * @param {{
-      attrs: string[],
-      limit: number,
-      offset: number,
-      where: {
-        [field: string]: string
-      },
-      join: [{
-        repo: Repository,
-        on: {
-          [field: string]: string
-        },
-        attrs: string[],
-        as: string,
-        type: "many" | "single" | "count",
-        side: "LEFT"| "RIGHT" | "INNER",
-        join: [{
-          repo: Repository,
-          on: {
-            [field: string]: string
-          },
-          attrs: string[],
-          as: string,
-          type: "many" | "single" | "count",
-          side: "LEFT"| "RIGHT" | "INNER"
-          join: []
-        }]
-      }]
-     }} query
-     @returns {[]}
-   */
-  async find(query = {}) {
+  async find(query: IQuery<T> = {}): Promise<ITableReturn<T>[]> {
     const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
     const formattedWhere = Object.entries(where);
 
@@ -81,47 +96,17 @@ export default class Repository {
       ${getOffset}
     `;
 
-    const results = this.db.query(sql, []);
+    const results = this.db.query<ITableReturn<T>>(sql, []);
 
     return results;
   }
-  /**
-   *
-   * @param {{
-    attrs: string[],
-    offset: number,
-    where: {
-      [field: string]: string
-    },
-    join: [{
-      repo: Repository,
-      on: {
-        [field: string]: string
-      },
-      attrs: string[],
-      as: string,
-      type: "many" | "single" | "count",
-      side: "LEFT"| "RIGHT" | "INNER",
-      join: [{
-        repo: Repository,
-        on: {
-          [field: string]: string
-        },
-        attrs: string[],
-        as: string,
-        type: "many" | "single" | "count",
-        side: "LEFT"| "RIGHT" | "INNER"
-        join: []
-      }]
-    }]
-  }} query
-  */
-  async findOne(query) {
+
+  async findOne(query: IQuery<T>) {
     const results = await this.find({ ...query, limit: 1 });
     return results[0] || null;
   }
 
-  async delete({ where, operator = '=' }) {
+  async delete({ where, operator = '=' }: { where: IWhere; operator?: string }) {
     const formattedWhere = Object.entries(where);
     const sql = `
       DELETE FROM ${this.tableName}
@@ -129,11 +114,11 @@ export default class Repository {
         .map(([key, value]) => `\n${this.tableName}.${key} ${operator} ${Database.escape(value)}`)
         .join(' AND ')}
     `;
-    const rows = await this.db.query(sql, []);
-    return rows.affectedRows;
+    const { affectedRows } = await this.db.execute(sql, []);
+    return affectedRows;
   }
 
-  async update({ where, operator = '=', set }) {
+  async update({ where, operator = '=', set }: { where: IWhere; operator?: string; set: IWhere }) {
     const formattedWhere = Object.entries(where);
     const formattedSet = Object.entries(set);
     const sql = `
@@ -143,43 +128,49 @@ export default class Repository {
         .map(([key, value]) => ` ${this.tableName}.${key} ${operator} ${Database.escape(value)} `)
         .join(' AND ')}
     `;
-    const rows = await this.db.query(sql, []);
-    return rows.affectedRows;
+    const { affectedRows } = await this.db.execute(sql, []);
+    return affectedRows;
   }
 
-  async create(schema, returning = true) {
+  async create(schema: ITableColumns<T>, returning = true): Promise<number | ITableColumns<T>> {
     const sql = `
       INSERT INTO ${this.tableName}
-        (${Object.keys(schema)})
+        (${Object.keys(schema).join(', ')})
         VALUES
-        (${Database.escape(Object.values(schema))});
+        (${Database.escape(Object.values(schema).join(', '))});
     `;
-    const { insertId } = await this.db.query(sql, []);
+    const { insertId } = await this.db.execute(sql, []);
 
-    if (returning) {
-      const res = await this.findOne({
-        where: { [this.primaryFields[0]]: insertId },
-      });
-      if (res) return res;
-
-      return this.findOne({
-        where: { [this.primaryFields[1]]: insertId },
-      });
+    if (!returning) {
+      return insertId;
     }
-    return insertId;
+
+    let res = await this.findOne({
+      where: { [this.primaryFields[0]]: insertId },
+    });
+    if (res) return res;
+
+    res = await this.findOne({
+      where: { [this.primaryFields[1]]: insertId },
+    });
+    return res;
   }
 
-  static getJoins(join, upperRepository) {
+  private static getJoins(join: IJoin[], upperRepository: Repository<any>) {
     return {
-      fields() {
+      fields(): string[] {
         return join.map(j => {
           const attrs = j.attrs || j.repo.returnFields;
           const getJoinName = j.as || pluralize(j.repo.tableName);
           const getAttrs = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr}, `);
           const getObjectFields = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr} `);
-          const getInnerJoins = j.join
+          const getInnerJoins: string[] | string = j.join
             ? j.join.map(
-                iJ => ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(j.join, j.repo).fields()} `,
+                iJ =>
+                  ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(
+                    j.join as IJoin[],
+                    j.repo,
+                  ).fields()} `,
               )
             : '';
 
@@ -216,11 +207,11 @@ export default class Repository {
           throw new AllySqlJoinTypeError();
         });
       },
-      joins() {
+      joins(): string[] | string {
         if (join) {
           return join.map(j => {
             const getOn =
-              j.on && `ON ${Object.entries(j.on).map(w => `\n${j.repo.tableName}.${w[0]} ${join.op || '='} ${w[1]}`)}`;
+              j.on && `ON ${Object.entries(j.on).map(([key, value]) => `\n${j.repo.tableName}.${key} = ${value}`)}`;
 
             const getInnerJoins = j.join && Repository.getJoins(j.join, j.repo).joins();
             return `
