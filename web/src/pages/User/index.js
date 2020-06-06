@@ -54,22 +54,15 @@ function User() {
           <Title>Contato</Title>
           <Content>{user.email}</Content>
           <Content>{user.phone}</Content>
-
-          <Title>Avaliação geral</Title>
-          <Content>
-            <FiThumbsUp /> {user.likes || 0}
-          </Content>
         </Info>
       </UserInfo>
       <UserAbout className="modal-shadow">
         <Title>Sobre</Title>
         <Content>{user.about || 'Não há descrição ainda'}</Content>
-        <Title>Endereço</Title>
-        <Content>{user.address}</Content>
+        <Title>Avaliação geral</Title>
         <Content>
-          {user.neighborhood}, {user.city} - {user.state}
+          <FiThumbsUp /> {user.likes || 0}
         </Content>
-        <Content>{user.postal_code}</Content>
       </UserAbout>
     </Grid>
   );
