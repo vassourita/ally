@@ -36,13 +36,14 @@ interface IQuery<T extends ITableSchema> {
   offset?: number;
   where?: IWhere;
   join?: IJoin[];
+  groupBy?: string[];
 }
 
-type ITableReturn<T extends ITableSchema> = {
+type IQueryReturn<T extends ITableSchema> = {
   [K in keyof T]: T[K]['type'];
 };
 
-type ITableColumns<T extends ITableSchema> = {
+type ICreateReturn<T extends ITableSchema> = {
   [K in keyof Partial<T>]: T[K]['type'];
 };
 
@@ -73,14 +74,24 @@ export default class Repository<T extends ITableSchema> {
     }
   }
 
-  async find(query: IQuery<T> = {}): Promise<ITableReturn<T>[]> {
-    const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
+  async find(query: IQuery<T> = {}): Promise<IQueryReturn<T>[]> {
+    const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [], groupBy = [] } = query;
     const formattedWhere = Object.entries(where);
 
     const getSelect = attrs.map(a => ` ${this.tableName}.${a} `);
-    const getWhere = formattedWhere[0]
-      ? `WHERE ${formattedWhere.map(w => `\n${this.tableName}.${w[0]} = ${Database.escape(w[1])}`).join(' AND ')}`
-      : '';
+    const getWhere =
+      formattedWhere.length > 0 &&
+      `WHERE ${formattedWhere
+        .map(([key, value]) => {
+          const parts: any[] = value.toString().split(/\s+(?=([^']*'[^']*')*[^']*$)/g);
+          if (parts.length > 1) {
+            return ` ${this.tableName}.${key} ${parts[0]} ${Database.escape(
+              parts.filter((p, i) => i !== 0).join(' '),
+            )} `;
+          }
+          return `\n${this.tableName}.${key} = ${Database.escape(value)}`;
+        })
+        .join(' AND ')}`;
     const getGroupBy = join.length ? ` GROUP BY ${this.tableName}.${this.primaryFields[0]} ` : '';
     const getLimit = limit ? ` LIMIT ${limit} ` : '';
     const getOffset = offset ? ` OFFSET ${offset} ` : '';
@@ -96,7 +107,7 @@ export default class Repository<T extends ITableSchema> {
       ${getOffset}
     `;
 
-    const results = this.db.query<ITableReturn<T>>(sql, []);
+    const results = this.db.query<IQueryReturn<T>>(sql, []);
 
     return results;
   }
@@ -132,7 +143,7 @@ export default class Repository<T extends ITableSchema> {
     return affectedRows;
   }
 
-  async create(schema: ITableColumns<T>, returning = true): Promise<number | ITableColumns<T>> {
+  async create(schema: ICreateReturn<T>, returning = true): Promise<number | IQueryReturn<T>> {
     const sql = `
       INSERT INTO ${this.tableName}
         (${Object.keys(schema)})

@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import mysql, { ConnectionConfig, OkPacket } from 'mysql';
 import { promisify } from 'util';
+import Ramda from 'ramda';
 
 import dbConfig from '../../config/database';
 
@@ -60,6 +61,9 @@ export default class Database {
         fields.forEach(([key, value]) => {
           try {
             result[key] = JSON.parse(value as string);
+            if (result[key] instanceof Array) {
+              result[key] = Ramda.uniqWith(Ramda.equals, result[key]);
+            }
           } catch {
             //
           }

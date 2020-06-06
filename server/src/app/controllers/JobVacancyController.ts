@@ -17,7 +17,6 @@ export default class JobVacancyController extends IController {
         {
           repo: ProposalRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'proposals',
           type: 'many',
           join: [
             {
@@ -31,7 +30,6 @@ export default class JobVacancyController extends IController {
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'knowledges',
           type: 'many',
           join: [
             {
@@ -57,7 +55,6 @@ export default class JobVacancyController extends IController {
         {
           repo: ProposalRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'proposals',
           type: 'many',
           join: [
             {
@@ -71,7 +68,6 @@ export default class JobVacancyController extends IController {
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'knowledges',
           type: 'many',
           join: [
             {
@@ -118,13 +114,19 @@ export default class JobVacancyController extends IController {
         {
           repo: ProposalRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'proposals',
           type: 'many',
+          join: [
+            {
+              repo: UserRepository,
+              on: { id: 'proposal.user_id' },
+              type: 'single',
+              as: 'user',
+            },
+          ],
         },
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'knowledges',
           type: 'many',
           join: [
             {
@@ -187,13 +189,19 @@ export default class JobVacancyController extends IController {
         {
           repo: ProposalRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'proposals',
           type: 'many',
+          join: [
+            {
+              repo: UserRepository,
+              on: { id: 'proposal.user_id' },
+              type: 'single',
+              as: 'user',
+            },
+          ],
         },
         {
           repo: KnowledgeRepository,
           on: { job_vacancy_id: 'job_vacancy.id' },
-          as: 'knowledges',
           type: 'many',
           join: [
             {
