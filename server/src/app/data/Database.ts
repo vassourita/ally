@@ -39,21 +39,21 @@ export default class Database {
   }
 
   public async execute(sql: string, params: any[] = []): Promise<OkPacket> {
-    const fSql = this.formatSql(sql);
+    const formattedSql = this.formatSql(sql);
 
-    console.log(`\x1b[36m${fSql}\x1b[0m`);
+    console.log(`\x1b[36m${formattedSql}\x1b[0m`);
 
-    const results = await this.raw<OkPacket>(fSql, params);
+    const results = await this.raw<OkPacket>(formattedSql, params);
 
     return results;
   }
 
   public async query<T>(sql: string, params: any[] = []): Promise<T[]> {
-    const fSql = this.formatSql(sql);
+    const formattedSql = this.formatSql(sql);
 
-    console.log(`\x1b[36m${fSql}\x1b[0m`);
+    console.log(`\x1b[36m${formattedSql}\x1b[0m`);
 
-    const r = await this.raw<T[]>(fSql, params);
+    const r = await this.raw<T[]>(formattedSql, params);
 
     function parseQueryResults(results: T[]) {
       return results.map((result: any) => {
