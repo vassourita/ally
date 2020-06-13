@@ -1,4 +1,4 @@
-import Repository from '../data/Repository';
+import Repository from './BaseRepository';
 
 const RatingRepository = new Repository('rating', {
   id: {

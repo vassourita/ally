@@ -1,5 +1,6 @@
 # production
 /build
+/dist
 
 # Logs
 logs
@@ -19,6 +20,8 @@ jspm_packages/
 # dotenv environment variables file
 .env
 .env.test
+.env.local
 
 # Upload files
 public/uploads/**
+!public/uploads/seed*

@@ -3,7 +3,7 @@ import mysql, { ConnectionConfig, OkPacket } from 'mysql';
 import { promisify } from 'util';
 import Ramda from 'ramda';
 
-import dbConfig from '../../config/database';
+import dbConfig from '../config/database';
 
 export default class Database {
   private static instance: Database;

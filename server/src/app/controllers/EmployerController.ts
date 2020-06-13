@@ -6,7 +6,7 @@ import UserRepository from '../repositories/UserRepository';
 import RatingRepository from '../repositories/RatingRepository';
 import JobVacancyRepository from '../repositories/JobVacancyRepository';
 
-const cities: any[] = require('../data/cities.json');
+const cities: any[] = require('../../database/cities.json');
 
 export default class EmployerController extends IController {
   async index(req: Request, res: Response) {

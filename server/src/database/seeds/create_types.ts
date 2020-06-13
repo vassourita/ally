@@ -6,12 +6,12 @@ export async function seed(knex: Knex): Promise<any> {
     .del()
     .then(() => {
       return knex('knowledge_type').insert([
-        { name: 'Especialização' },
-        { name: 'Graduação' },
-        { name: 'Certificação' },
-        { name: 'Curso' },
-        { name: 'Experiência' },
-        { name: 'Conhecimento' },
+        { id: 1, name: 'Especialização' },
+        { id: 2, name: 'Graduação' },
+        { id: 3, name: 'Certificação' },
+        { id: 4, name: 'Curso' },
+        { id: 5, name: 'Experiência' },
+        { id: 6, name: 'Conhecimento' },
       ]);
     });
 }

@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 import pluralize from 'pluralize';
 
-import Database from './Database';
+import Database from '../../database/Database';
 import AllySqlRepositoryPrimaryKeyError from '../../helpers/errors/AllySqlRepositoryPrimaryKeyError';
 import AllySqlJoinTypeError from '../../helpers/errors/AllySqlJoinTypeError';
 
@@ -16,7 +16,7 @@ interface ITableSchema {
 }
 
 interface IJoin {
-  repo: Repository<any>;
+  repo: BaseRepository<any>;
   on: IWhere;
   attrs?: string[];
   as?: string;
@@ -47,7 +47,7 @@ type ICreateReturn<T extends ITableSchema> = {
   [K in keyof Partial<T>]: T[K]['type'];
 };
 
-export default class Repository<T extends ITableSchema> {
+export default class BaseRepository<T extends ITableSchema> {
   private db: Database;
   public tableName: string;
   public tableSchema: ITableSchema;
@@ -98,9 +98,9 @@ export default class Repository<T extends ITableSchema> {
 
     const sql = `
       SELECT ${getSelect}
-      ,${Repository.getJoins(join, this).fields()}
+      ,${BaseRepository.getJoins(join, this).fields()}
       FROM ${this.tableName}
-      ${Repository.getJoins(join, this).joins()}
+      ${BaseRepository.getJoins(join, this).joins()}
       ${getWhere}
       ${getGroupBy}
       ${getLimit}
@@ -167,7 +167,7 @@ export default class Repository<T extends ITableSchema> {
     return res;
   }
 
-  private static getJoins(join: IJoin[], upperRepository: Repository<any>) {
+  private static getJoins(join: IJoin[], upperBaseRepository: BaseRepository<any>) {
     return {
       fields(): string[] {
         return join.map(j => {
@@ -178,7 +178,7 @@ export default class Repository<T extends ITableSchema> {
           const getInnerJoins: string[] | string = j.join
             ? j.join.map(
                 iJ =>
-                  ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${Repository.getJoins(
+                  ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${BaseRepository.getJoins(
                     j.join as IJoin[],
                     j.repo,
                   ).fields()} `,
@@ -224,7 +224,7 @@ export default class Repository<T extends ITableSchema> {
             const getOn =
               j.on && `ON ${Object.entries(j.on).map(([key, value]) => `\n${j.repo.tableName}.${key} = ${value}`)}`;
 
-            const getInnerJoins = j.join && Repository.getJoins(j.join, j.repo).joins();
+            const getInnerJoins = j.join && BaseRepository.getJoins(j.join, j.repo).joins();
             return `
               ${j.side || 'LEFT'} JOIN
                 ${j.repo.tableName} 

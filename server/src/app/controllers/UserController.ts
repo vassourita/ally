@@ -7,7 +7,7 @@ import RatingRepository from '../repositories/RatingRepository';
 import KnowledgeRepository from '../repositories/KnowledgeRepository';
 import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
-const cities: any[] = require('../data/cities.json');
+const cities: any[] = require('../../database/cities.json');
 
 export default class UserController extends IController {
   async index(req: Request, res: Response) {

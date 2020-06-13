@@ -1,12 +1,12 @@
 import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTableIfNotExists('knowledge_type', table => {
-    table.increments('id').primary().notNullable();
+  return knex.schema.createTable('knowledge_type', table => {
+    table.integer('id').unsigned().primary().notNullable();
     table.string('name', 24).notNullable();
   });
 }
 
 export async function down(knex: Knex): Promise<any> {
-  return knex.schema.dropTableIfExists('knowledge_type');
+  return knex.schema.dropTable('knowledge_type');
 }

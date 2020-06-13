@@ -8,7 +8,7 @@ import KnowledgeRepository from '../app/repositories/KnowledgeRepository';
 import JobVacancyRepository from '../app/repositories/JobVacancyRepository';
 import KnowledgeTypeRepository from '../app/repositories/KnowledgeTypeRepository';
 
-import Database from '../app/data/Database';
+import Database from '../database/Database';
 
 interface IFilterQuery {
   days: number;
@@ -38,6 +38,7 @@ export default class JobService {
     }
 
     const jobs = await JobVacancyRepository.find({
+      where: { amount: '> 0' },
       join: [
         {
           repo: UserRepository,

@@ -1,4 +1,4 @@
-import Repository from '../data/Repository';
+import Repository from './BaseRepository';
 
 const KnowledgeTypeRepository = new Repository('knowledge_type', {
   id: {

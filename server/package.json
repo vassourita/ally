@@ -4,10 +4,11 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "dev:server": "ts-node-dev src/index.ts",
+    "server:dev": "ts-node-dev src/index.ts",
+    "server:start": "ts-node src/index.ts",
     "db:migrate": "knex migrate:latest",
-    "db:seed": "knex seed:run",
-    "db:rollback": "knex migrate:rollback"
+    "db:migrate:rollback": "knex migrate:rollback",
+    "db:seed": "knex seed:run"
   },
   "keywords": [],
   "author": "Vinicius Vassão",
