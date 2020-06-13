@@ -5,8 +5,17 @@ const ChatRepository = new Repository('proposal', {
     primary: true,
     type: Number(),
   },
-  user_id: { type: Number() },
-  job_vacancy_id: { type: Number() },
+  status: {
+    type: String(),
+  },
+  user_id: {
+    type: Number(),
+    returning: false,
+  },
+  job_vacancy_id: {
+    type: Number(),
+    returning: false,
+  },
 });
 
 export default ChatRepository;

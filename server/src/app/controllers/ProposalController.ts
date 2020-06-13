@@ -1,13 +1,24 @@
 import { Request, Response } from 'express';
 
+import { IController } from './IController';
 import ChatRepository from '../repositories/ChatRepository';
 import MessageRepository from '../repositories/MessageRepository';
 import ProposalRepository from '../repositories/ProposalRepository';
 
 import WebSocket from '../../WebSocket';
 
-export default class ProposalController {
-  async store(req: Request, res: Response) {
+export default class ProposalController implements IController {
+  async index(req: Request, res: Response): Promise<void> {
+    const { userId } = res.locals;
+
+    const proposal = await ProposalRepository.find({
+      where: { user_id: userId },
+    });
+
+    res.status(200).json({ proposal });
+  }
+
+  async store(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
     const { jobVacancyId } = req.body;
 
@@ -19,7 +30,7 @@ export default class ProposalController {
     res.status(201).json({ proposal });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const employerId = res.locals.userId;
     const proposalId = req.params.id;
     const { content } = req.body;

@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 
-import IController from './IController';
+import { IController } from './IController';
 import ChatRepository from '../repositories/ChatRepository';
 import MessageRepository from '../repositories/MessageRepository';
 
 import WebSocket from '../../WebSocket';
 
-export default class MessageController extends IController {
-  async index(req: Request, res: Response) {
+export default class MessageController implements IController {
+  async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
     const chats = await ChatRepository.find({
@@ -24,7 +24,7 @@ export default class MessageController extends IController {
     res.status(200).json({ chats });
   }
 
-  async store(req: Request, res: Response) {
+  async store(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
     const { content, chatId } = req.body;
 

@@ -1,15 +1,14 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 
-import IController from './IController';
+import { IController } from './IController';
 import UserRepository from '../repositories/UserRepository';
-import RatingRepository from '../repositories/RatingRepository';
 import JobVacancyRepository from '../repositories/JobVacancyRepository';
 
 const cities: any[] = require('../../database/cities.json');
 
-export default class EmployerController extends IController {
-  async index(req: Request, res: Response) {
+export default class EmployerController implements IController {
+  async index(req: Request, res: Response): Promise<void> {
     const { page = 1 } = req.query;
 
     const users = await UserRepository.find({
@@ -23,19 +22,13 @@ export default class EmployerController extends IController {
           as: 'jobs',
           type: 'many',
         },
-        {
-          repo: RatingRepository,
-          on: { target_id: 'user.id' },
-          type: 'count',
-          as: 'likes',
-        },
       ],
     });
 
     res.json({ users });
   }
 
-  async show(req: Request, res: Response) {
+  async show(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
     const user = await UserRepository.findOne({
@@ -47,19 +40,13 @@ export default class EmployerController extends IController {
           as: 'jobs',
           type: 'many',
         },
-        {
-          repo: RatingRepository,
-          on: { target_id: 'user.id' },
-          type: 'count',
-          as: 'likes',
-        },
       ],
     });
 
     res.json({ user });
   }
 
-  async store(req: Request, res: Response) {
+  async store(req: Request, res: Response): Promise<void> {
     const { name, email, password, cnpj, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
     const { filename } = req.file;
 
@@ -73,7 +60,7 @@ export default class EmployerController extends IController {
       return;
     }
 
-    const microregion = cities.find(c => c.id.toString() === ibgeCode).microrregiao;
+    const microregion = cities.find((c: any) => c.id.toString() === ibgeCode).microrregiao;
 
     if (!microregion) {
       res.status(400).json({ error: { message: 'City does not exists', field: 'ibgeCode' } });
@@ -101,7 +88,7 @@ export default class EmployerController extends IController {
     res.status(201).json({ user });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
     const { about } = req.body;
 
@@ -119,7 +106,7 @@ export default class EmployerController extends IController {
     res.status(200).json({ updated });
   }
 
-  async destroy(req: Request, res: Response) {
+  async destroy(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
     const { id } = req.params;
 

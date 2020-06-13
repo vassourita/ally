@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-export default abstract class IController {
+export interface IController {
   index?(req: Request, res: Response): Promise<void>;
 
   show?(req: Request, res: Response): Promise<void>;

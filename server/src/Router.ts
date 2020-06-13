@@ -62,6 +62,7 @@ export default class Router {
     routes.get('/messages', message.index);
     routes.post('/messages', message.store);
 
+    routes.get('/proposals', proposal.index);
     routes.post('/proposals', proposal.store);
     routes.put('/proposals', proposal.update);
 

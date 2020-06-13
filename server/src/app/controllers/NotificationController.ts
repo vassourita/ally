@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 
-import IController from './IController';
+import { IController } from './IController';
 import NotificationRepository from '../repositories/NotificationRepository';
 import NotificationTypeRepository from '../repositories/NotificationTypeRepository';
 
-export default class NotificationController extends IController {
-  async index(req: Request, res: Response) {
+export default class NotificationController implements IController {
+  async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
     const notifications = await NotificationRepository.find({
@@ -23,7 +23,7 @@ export default class NotificationController extends IController {
     res.status(200).json({ notifications });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
     const notifications = await NotificationRepository.update({

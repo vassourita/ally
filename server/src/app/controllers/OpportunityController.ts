@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
-import IController from './IController';
+import { IController } from './IController';
 import UserRepository from '../repositories/UserRepository';
 import KnowledgeRepository from '../repositories/KnowledgeRepository';
 import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
 import JobService from '../../services/JobService';
 
-export default class OpportunityController extends IController {
-  async index(req: Request, res: Response) {
+export default class OpportunityController implements IController {
+  async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
     const { days, local } = req.query;
 
@@ -31,7 +31,8 @@ export default class OpportunityController extends IController {
       ],
     });
 
-    const jobs = await JobService.filterJobs({ days: Number(days), local: String(local), user });
+    const jobService = new JobService();
+    const jobs = await jobService.filterJobs({ days: Number(days), local: String(local), user });
 
     res.status(200).json({ jobs });
   }

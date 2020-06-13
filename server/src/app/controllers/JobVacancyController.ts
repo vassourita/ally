@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
-import IController from './IController';
+import { IController } from './IController';
 import UserRepository from '../repositories/UserRepository';
 import ProposalRepository from '../repositories/ProposalRepository';
 import KnowledgeRepository from '../repositories/KnowledgeRepository';
 import JobVacancyRepository from '../repositories/JobVacancyRepository';
 import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
 
-export default class JobVacancyController extends IController {
-  async index(req: Request, res: Response) {
+export default class JobVacancyController implements IController {
+  async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
     const jobs = await JobVacancyRepository.find({
@@ -46,7 +46,7 @@ export default class JobVacancyController extends IController {
     res.status(200).json({ jobs });
   }
 
-  async show(req: Request, res: Response) {
+  async show(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
     const job = await JobVacancyRepository.findOne({
@@ -84,7 +84,7 @@ export default class JobVacancyController extends IController {
     res.status(200).json({ job });
   }
 
-  async store(req: Request, res: Response) {
+  async store(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
     const { name, description, amount, local, knowledges } = req.body;
 
@@ -104,7 +104,7 @@ export default class JobVacancyController extends IController {
           differential: knowledge.differential,
           job_vacancy_id: newJob.id,
         },
-        false,
+        false
       );
     });
 
@@ -143,7 +143,7 @@ export default class JobVacancyController extends IController {
     res.status(201).json({ job });
   }
 
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const { amount, local, removeKnowledge, addKnowledge } = req.body;
 
@@ -178,7 +178,7 @@ export default class JobVacancyController extends IController {
             differential: knowledge.differential,
             job_vacancy_id: Number(id),
           },
-          false,
+          false
         ));
       });
     }
@@ -218,7 +218,7 @@ export default class JobVacancyController extends IController {
     res.status(200).json({ job, updated });
   }
 
-  async destroy(req: Request, res: Response) {
+  async destroy(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
     const deleted = await JobVacancyRepository.delete({

@@ -2,12 +2,11 @@ import bcrypt from 'bcryptjs';
 import jwt, { Secret } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
-import IController from './IController';
+import { IController } from './IController';
 import authConfig from '../../config/auth';
 import UserRepository from '../repositories/UserRepository';
-import RatingRepository from '../repositories/RatingRepository';
 
-export default class SessionController extends IController {
+export default class SessionController implements IController {
   async store(req: Request, res: Response) {
     const { email, password } = req.body;
 
@@ -32,14 +31,6 @@ export default class SessionController extends IController {
 
     const loggedUser = await UserRepository.findOne({
       where: { id: user.id },
-      join: [
-        {
-          repo: RatingRepository,
-          on: { target_id: 'user.id' },
-          type: 'count',
-          as: 'likes',
-        },
-      ],
     });
 
     res.status(200).json({

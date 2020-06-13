@@ -17,7 +17,7 @@ interface IFilterQuery {
 }
 
 export default class JobService {
-  static async filterJobs({ days, local, user }: IFilterQuery) {
+  async filterJobs({ days, local, user }: IFilterQuery) {
     const localFilter: any = {};
 
     switch (local) {
