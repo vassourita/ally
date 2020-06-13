@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import AllyApi from './Api';
 
 const api = new AllyApi();

@@ -29,7 +29,7 @@ export default class WebSocket {
         console.log(`\x1b[0m${this.connectedUsers[socket.id].id}: \x1b[32mconnected\x1b[0m`);
 
         socket.on('disconnection', () => {
-          delete this.connectedUsers[socket.id];
+          delete this.connectedUsers[socket.handshake.query.userId.toString()];
           console.log(`\x1b[0m${this.connectedUsers[socket.id].id}: \x1b[31mmdisconnected\x1b[0m`);
         });
       });
