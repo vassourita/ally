@@ -32,7 +32,7 @@ export default class OpportunityController implements IController {
     });
 
     const jobService = new JobService();
-    const jobs = await jobService.filterJobs({ days: Number(days), local: String(local), user });
+    const jobs = await jobService.filterJobs({ days: days as string, local: local as string, user });
 
     res.status(200).json({ jobs });
   }

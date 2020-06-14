@@ -80,18 +80,17 @@ export default class BaseRepository<T extends ITableSchema> {
 
     const getSelect = attrs.map(a => ` ${this.tableName}.${a} `);
     const getWhere =
-      formattedWhere.length > 0 &&
-      `WHERE ${formattedWhere
-        .map(([key, value]) => {
-          const parts: any[] = value.toString().split(/\s+(?=([^']*'[^']*')*[^']*$)/g);
-          if (parts.length > 1) {
-            return ` ${this.tableName}.${key} ${parts[0]} ${Database.escape(
-              parts.filter((p, i) => i !== 0).join(' '),
-            )} `;
-          }
-          return `\n${this.tableName}.${key} = ${Database.escape(value)}`;
-        })
-        .join(' AND ')}`;
+      formattedWhere.length > 0
+        ? `WHERE ${formattedWhere
+            .map(([key, value]) => {
+              const parts: any[] = value.toString().split(/\s+(?=([^']*'[^']*')*[^']*$)/g);
+              if (parts.length > 1) {
+                return ` ${this.tableName}.${key} ${parts.join(' ')} `;
+              }
+              return `\n${this.tableName}.${key} = ${Database.escape(value)}`;
+            })
+            .join(' AND ')}`
+        : '';
     const getGroupBy = join.length ? ` GROUP BY ${this.tableName}.${this.primaryFields[0]} ` : '';
     const getLimit = limit ? ` LIMIT ${limit} ` : '';
     const getOffset = offset ? ` OFFSET ${offset} ` : '';
@@ -222,7 +221,10 @@ export default class BaseRepository<T extends ITableSchema> {
         if (join) {
           return join.map(j => {
             const getOn =
-              j.on && `ON ${Object.entries(j.on).map(([key, value]) => `\n${j.repo.tableName}.${key} = ${value}`)}`;
+              j.on &&
+              `ON ${Object.entries(j.on)
+                .map(([key, value]) => `\n${j.repo.tableName}.${key} = ${value}`)
+                .join(' AND ')}`;
 
             const getInnerJoins = j.join && BaseRepository.getJoins(j.join, j.repo).joins();
             return `
