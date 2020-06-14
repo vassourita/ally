@@ -14,7 +14,7 @@ function DashboardHeader() {
       jobs: 'Vagas',
       chat: 'Mensagens',
       profile: 'Perfil',
-      rate: 'Avaliar',
+      proposals: 'Propostas',
     };
     const title = location.pathname.replace(/\//g, '');
     return titles[title] || '404';

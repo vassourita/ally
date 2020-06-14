@@ -12,7 +12,10 @@ function Routes() {
         <Route exact path="/" component={() => <Redirect to="/login" />} />
         <Route path={['/login', '/register']} component={Account} />
         <Route path="/jobs/:id" component={DetailPages} />
-        <Route path={['/profile', '/chat', '/chat/:id', '/jobs', '/notifications', '/rate']} component={Dashboard} />
+        <Route
+          path={['/profile', '/chat', '/chat/:id', '/jobs', '/notifications', '/proposals']}
+          component={Dashboard}
+        />
       </Switch>
     </BrowserRouter>
   );

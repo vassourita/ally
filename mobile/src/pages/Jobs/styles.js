@@ -81,6 +81,7 @@ export const Bottom = styled.div`
 export const NoVacancies = styled.span`
   display: flex;
   align-items: center;
+  text-align: center;
   justify-content: center;
   height: calc(100vh - 400px);
 `;

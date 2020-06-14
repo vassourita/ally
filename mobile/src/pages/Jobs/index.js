@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { FiSearch, FiChevronRight } from 'react-icons/fi';
-import { differenceInDays } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 
 import * as JobActions from '../../store/modules/jobs/actions';
 import api from '../../services/api';
@@ -46,7 +46,6 @@ function Jobs() {
     api.get(`/opportunities?days=${date}&local=${local}`).then(response => {
       if (response.data.jobs) {
         dispatch(JobActions.setJobs(response.data.jobs));
-        console.log(response.data.jobs);
       } else {
         dispatch(JobActions.setJobs([]));
       }
@@ -55,15 +54,15 @@ function Jobs() {
   }, [dispatch, local, date]);
 
   function getJobDate(jobDate) {
-    const difference = differenceInDays(new Date(jobDate), new Date());
+    const difference = differenceInCalendarDays(new Date(jobDate), new Date());
 
     if (difference === 0) {
       return 'hoje';
     }
-    if (difference === 1) {
+    if (difference === -1) {
       return `ontem`;
     }
-    return `a ${difference} dias`;
+    return `a ${-difference} dias`;
   }
 
   function orderJobs(a, b) {

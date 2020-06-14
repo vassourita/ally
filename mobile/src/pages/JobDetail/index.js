@@ -34,10 +34,15 @@ function JobDetail() {
       })
       .then(response => {
         if (response.data.proposal) {
-          toast.info('Proposta enviada! Você receberá uma mensagem se a proposta for aceita');
+          toast.info('Proposta enviada! Você receberá uma mensagem se a proposta for aceita', {
+            onClick: () => history.push('/proposals'),
+          });
           history.goBack(-1);
+        } else {
+          toast.error('Ocorreu um erro inesperado em nosso servidor');
         }
-      });
+      })
+      .catch(e => toast.error('Ocorreu um erro inesperado em nosso servidor'));
   }
 
   return (
