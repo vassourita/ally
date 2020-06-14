@@ -67,19 +67,6 @@ function Proposals() {
     }
   }
 
-  function handleDeleteProposal(id) {
-    api
-      .delete(`/proposals/${id}`)
-      .then(response => {
-        if (response.data.deleted) {
-          dispatch(ProposalActions.removeProposal(id));
-        } else {
-          toast.error('Ocorreu um erro inesperado em nosso servidor');
-        }
-      })
-      .catch(e => toast.error('Ocorreu um erro inesperado em nosso servidor'));
-  }
-
   return (
     <Container>
       <List>
@@ -99,10 +86,7 @@ function Proposals() {
               <p>
                 proposta enviada<strong> {getProposalDate(proposal.created_at)}</strong>
               </p>
-              <div>
-                {getStatus(proposal.status)}
-                <span onClick={() => handleDeleteProposal(proposal.id)}>EXCLUIR</span>
-              </div>
+              <div>{getStatus(proposal.status)}</div>
             </Card>
           ))
         ) : (
