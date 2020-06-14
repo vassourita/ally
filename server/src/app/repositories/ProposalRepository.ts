@@ -14,6 +14,9 @@ const ChatRepository = new Repository('proposal', {
   job_vacancy_id: {
     type: Number(),
   },
+  created_at: {
+    type: String(),
+  },
 });
 
 export default ChatRepository;

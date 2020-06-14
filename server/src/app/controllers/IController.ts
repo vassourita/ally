@@ -9,5 +9,5 @@ export interface IController {
 
   update?(req: Request, res: Response): Promise<void>;
 
-  delete?(req: Request, res: Response): Promise<void>;
+  destroy?(req: Request, res: Response): Promise<void>;
 }

@@ -166,14 +166,13 @@ export default class BaseRepository<T extends ITableSchema> {
     return res;
   }
 
-  private static getJoins(join: IJoin[], upperBaseRepository: BaseRepository<any>) {
+  private static getJoins(join: IJoin[], upperRepository: BaseRepository<any>) {
     return {
       fields(): string[] {
         return join.map(j => {
           const attrs = j.attrs || j.repo.returnFields;
           const getJoinName = j.as || pluralize(j.repo.tableName);
           const getAttrs = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr}, `);
-          const getObjectFields = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr} `);
           const getInnerJoins: string[] | string = j.join
             ? j.join.map(
                 iJ =>
@@ -209,7 +208,8 @@ export default class BaseRepository<T extends ITableSchema> {
           if (j.type === 'single') {
             return `
               JSON_OBJECT(
-                ${getObjectFields}
+                ${getAttrs}
+                ${getInnerJoins}
               ) AS ${getJoinName},
             `;
           }

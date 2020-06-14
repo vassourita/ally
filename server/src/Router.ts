@@ -44,7 +44,7 @@ export default class Router {
     routes.get('/employers', employer.index);
     routes.get('/employers/:id', employer.show);
     routes.put('/employers', employer.update);
-    routes.delete('/employers/:id', employer.show);
+    routes.delete('/employers/:id', employer.destroy);
 
     routes.get('/users', user.index);
     routes.get('/users/:id', user.show);
@@ -68,6 +68,7 @@ export default class Router {
     routes.get('/proposals', proposal.index);
     routes.post('/proposals', proposal.store);
     routes.put('/proposals', proposal.update);
+    routes.delete('/proposals', proposal.destroy);
 
     routes.get('/report', report.index);
     routes.post('/report', report.store);

@@ -16,40 +16,27 @@ export default class ProposalController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
-    const proposal = await ProposalRepository.find({
+    const proposals = await ProposalRepository.find({
       where: { user_id: userId },
       join: [
-        {
-          repo: UserRepository,
-          on: { id: 'proposal.employer_id' },
-          type: 'single',
-          as: 'employer',
-        },
         {
           repo: JobVacancyRepository,
           on: { id: 'proposal.job_vacancy_id' },
           type: 'single',
+          as: 'job',
           join: [
             {
-              repo: KnowledgeRepository,
-              on: { job_vacancy_id: 'job_vacancy.id' },
-              type: 'many',
-              as: 'job',
-              join: [
-                {
-                  repo: KnowledgeTypeRepository,
-                  on: { id: 'knowledge.knowledge_type_id' },
-                  as: 'type',
-                  type: 'single',
-                },
-              ],
+              repo: UserRepository,
+              on: { id: 'job_vacancy.employer_id' },
+              type: 'single',
+              as: 'employer',
             },
           ],
         },
       ],
     });
 
-    res.status(200).json({ proposal });
+    res.status(200).json({ proposals });
   }
 
   async store(req: Request, res: Response): Promise<void> {
@@ -82,7 +69,7 @@ export default class ProposalController implements IController {
     });
 
     const notification = await NotificationRepository.create({
-      user_id: proposal.job.employer_id,
+      user_id: proposal.job.user_id,
       title: `Nova proposta em '${proposal.job.name}'`,
       description: `Você recebeu uma nova proposta de ${user.name} em sua vaga '${proposal.job.name}'`,
       link: `/vacancies/${proposal.job.id}`,
@@ -109,16 +96,18 @@ export default class ProposalController implements IController {
       where: { id: proposalId },
       join: [
         {
-          repo: UserRepository,
-          on: { id: 'proposal.employer_id' },
-          type: 'single',
-          as: 'employer',
-        },
-        {
           repo: JobVacancyRepository,
           on: { id: 'proposal.job_vacancy_id' },
           type: 'single',
           as: 'job',
+          join: [
+            {
+              repo: UserRepository,
+              on: { id: 'job_vacancy.employer_id' },
+              type: 'single',
+              as: 'employer',
+            },
+          ],
         },
       ],
     });
@@ -138,34 +127,44 @@ export default class ProposalController implements IController {
       return;
     }
 
-    let chat = await ChatRepository.findOne({
-      where: { employer_id: employerId, user_id: proposal.user_id },
-    });
-
-    if (!chat) {
-      chat = await ChatRepository.create({
-        employer_id: employerId,
-        user_id: proposal.user_id,
-      });
-    }
-
-    const message = await MessageRepository.create({
-      author_id: employerId,
-      chat_id: chat.id,
-      content,
-    });
+    let message: any;
 
     let title: string;
     let text: string;
     let link: string;
     if (status === true) {
       title = 'Proposta aceita';
-      text = `Sua proposta para ${proposal.job.name} foi aceita! A empresa ${proposal.employer.name} entrará em contato.`;
+      text = `Sua proposta para ${proposal.job.name} foi aceita! A empresa ${proposal.job.employer.name} entrará em contato.`;
       link = `/proposals/${proposalId}`;
+      await ProposalRepository.update({
+        set: { status: 'accepted' },
+        where: { id: proposalId },
+      });
+
+      let chat = await ChatRepository.findOne({
+        where: { employer_id: employerId, user_id: proposal.user_id },
+      });
+
+      if (!chat) {
+        chat = await ChatRepository.create({
+          employer_id: employerId,
+          user_id: proposal.user_id,
+        });
+      }
+
+      message = await MessageRepository.create({
+        author_id: employerId,
+        chat_id: chat.id,
+        content,
+      });
     } else {
       title = 'Proposta negada';
       text = `Sua proposta para ${proposal.job.name} foi negada.`;
       link = `/proposals/${proposalId}`;
+      await ProposalRepository.update({
+        set: { status: 'denied' },
+        where: { id: proposalId },
+      });
     }
 
     const notification = await NotificationRepository.create({
@@ -181,10 +180,22 @@ export default class ProposalController implements IController {
     const target = ws.connectedUsers[proposal.user_id.toString()];
 
     if (target) {
-      target.connection.emit('new_message', { message });
+      if (message) {
+        target.connection.emit('new_message', { message });
+      }
       target.connection.emit('new_notification', { notification });
     }
 
     res.status(201).json({ message });
+  }
+
+  async destroy(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+
+    const deleted = await ProposalRepository.delete({
+      where: { id },
+    });
+
+    res.status(200).json({ deleted });
   }
 }
