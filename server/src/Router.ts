@@ -6,6 +6,7 @@ import UploadMiddleware from './app/middlewares/UploadMiddleware';
 import SessionStoreValidator from './app/validators/SessionStoreValidator';
 
 import UserController from './app/controllers/UserController';
+import ReportController from './app/controllers/ReportController';
 import SessionController from './app/controllers/SessionController';
 import MessageController from './app/controllers/MessageController';
 import ProposalController from './app/controllers/ProposalController';
@@ -19,17 +20,19 @@ export default class Router {
 
   constructor() {
     const routes = express.Router({ caseSensitive: false });
+
     const upload = new UploadMiddleware();
     const auth = new AuthMiddleware();
 
-    const session = new SessionController();
     const user = new UserController();
+    const report = new ReportController();
+    const message = new MessageController();
+    const session = new SessionController();
+    const proposal = new ProposalController();
     const employer = new EmployerController();
     const jobVacancy = new JobVacancyController();
     const opportunity = new OpportunityController();
     const notification = new NotificationController();
-    const message = new MessageController();
-    const proposal = new ProposalController();
 
     routes.post('/sessions', new SessionStoreValidator().validate, session.store);
 
@@ -65,6 +68,9 @@ export default class Router {
     routes.get('/proposals', proposal.index);
     routes.post('/proposals', proposal.store);
     routes.put('/proposals', proposal.update);
+
+    routes.get('/report', report.index);
+    routes.post('/report', report.store);
 
     this.routes = routes;
   }
