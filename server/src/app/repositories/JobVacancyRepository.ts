@@ -5,10 +5,7 @@ const JobVacancyRepository = new Repository('job_vacancy', {
     primary: true,
     type: Number(),
   },
-  employer_id: {
-    returning: false,
-    type: Number(),
-  },
+  employer_id: { type: Number() },
   name: { type: String() },
   local: { type: String() },
   amount: { type: Number() },

@@ -56,11 +56,46 @@ export default class ProposalController implements IController {
     const { userId } = res.locals;
     const { jobVacancyId } = req.body;
 
-    const proposal = await ProposalRepository.create({
-      user_id: userId,
-      job_vacancy_id: jobVacancyId,
-      status: 'awaiting',
+    const user = await UserRepository.findOne({
+      where: { id: userId },
     });
+
+    const insertId = await ProposalRepository.create(
+      {
+        user_id: userId,
+        job_vacancy_id: jobVacancyId,
+        status: 'awaiting',
+      },
+      false,
+    );
+
+    const proposal = await ProposalRepository.findOne({
+      where: { id: insertId },
+      join: [
+        {
+          repo: JobVacancyRepository,
+          on: { id: 'proposal.job_vacancy_id' },
+          type: 'single',
+          as: 'job',
+        },
+      ],
+    });
+
+    const notification = await NotificationRepository.create({
+      user_id: proposal.job.employer_id,
+      title: `Nova proposta em '${proposal.job.name}'`,
+      description: `Você recebeu uma nova proposta de ${user.name} em sua vaga '${proposal.job.name}'`,
+      link: `/vacancies/${proposal.job.id}`,
+      is_read: false,
+    });
+
+    const ws = WebSocket.getInstance();
+
+    const target = ws.connectedUsers[proposal.job.employer_id.toString()];
+
+    if (target) {
+      target.connection.emit('new_notification', { notification });
+    }
 
     res.status(201).json({ proposal });
   }

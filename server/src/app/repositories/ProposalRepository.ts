@@ -10,11 +10,9 @@ const ChatRepository = new Repository('proposal', {
   },
   user_id: {
     type: Number(),
-    returning: false,
   },
   job_vacancy_id: {
     type: Number(),
-    returning: false,
   },
 });
 
