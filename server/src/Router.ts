@@ -68,7 +68,7 @@ export default class Router {
     routes.get('/proposals', proposal.index);
     routes.post('/proposals', proposal.store);
     routes.put('/proposals', proposal.update);
-    routes.delete('/proposals', proposal.destroy);
+    routes.delete('/proposals/:id', proposal.destroy);
 
     routes.get('/report', report.index);
     routes.post('/report', report.store);

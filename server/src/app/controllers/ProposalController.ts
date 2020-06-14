@@ -69,7 +69,7 @@ export default class ProposalController implements IController {
     });
 
     const notification = await NotificationRepository.create({
-      user_id: proposal.job.user_id,
+      user_id: proposal.job.employer_id,
       title: `Nova proposta em '${proposal.job.name}'`,
       description: `Você recebeu uma nova proposta de ${user.name} em sua vaga '${proposal.job.name}'`,
       link: `/vacancies/${proposal.job.id}`,
