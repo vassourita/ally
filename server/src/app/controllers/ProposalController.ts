@@ -90,7 +90,7 @@ export default class ProposalController implements IController {
   async update(req: Request, res: Response): Promise<void> {
     const employerId = res.locals.userId;
     const proposalId = req.params.id;
-    const { content, status } = req.body;
+    const { status } = req.body;
 
     const proposal = await ProposalRepository.findOne({
       where: { id: proposalId },
@@ -127,7 +127,16 @@ export default class ProposalController implements IController {
       return;
     }
 
-    let message: any;
+    let chat = await ChatRepository.findOne({
+      where: { employer_id: employerId, user_id: proposal.user_id },
+    });
+
+    if (!chat) {
+      chat = await ChatRepository.create({
+        employer_id: employerId,
+        user_id: proposal.user_id,
+      });
+    }
 
     let title: string;
     let text: string;
@@ -139,23 +148,6 @@ export default class ProposalController implements IController {
       await ProposalRepository.update({
         set: { status: 'accepted' },
         where: { id: proposalId },
-      });
-
-      let chat = await ChatRepository.findOne({
-        where: { employer_id: employerId, user_id: proposal.user_id },
-      });
-
-      if (!chat) {
-        chat = await ChatRepository.create({
-          employer_id: employerId,
-          user_id: proposal.user_id,
-        });
-      }
-
-      message = await MessageRepository.create({
-        author_id: employerId,
-        chat_id: chat.id,
-        content,
       });
     } else {
       title = 'Proposta negada';
@@ -180,13 +172,10 @@ export default class ProposalController implements IController {
     const target = ws.connectedUsers[proposal.user_id.toString()];
 
     if (target) {
-      if (message) {
-        target.connection.emit('new_message', { message });
-      }
       target.connection.emit('new_notification', { notification });
     }
 
-    res.status(201).json({ message });
+    res.status(201).json({ updated: true, chat });
   }
 
   async destroy(req: Request, res: Response): Promise<void> {

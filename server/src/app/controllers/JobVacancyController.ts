@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import Database from '../../database/Database';
 import { IController } from './IController';
 import UserRepository from '../repositories/UserRepository';
 import ProposalRepository from '../repositories/ProposalRepository';
@@ -16,7 +17,7 @@ export default class JobVacancyController implements IController {
       join: [
         {
           repo: ProposalRepository,
-          on: { job_vacancy_id: 'job_vacancy.id' },
+          on: { job_vacancy_id: 'job_vacancy.id', status: Database.escape('awaiting') },
           type: 'many',
           join: [
             {
@@ -104,7 +105,7 @@ export default class JobVacancyController implements IController {
           differential: knowledge.differential,
           job_vacancy_id: newJob.id,
         },
-        false
+        false,
       );
     });
 
@@ -178,7 +179,7 @@ export default class JobVacancyController implements IController {
             differential: knowledge.differential,
             job_vacancy_id: Number(id),
           },
-          false
+          false,
         ));
       });
     }
