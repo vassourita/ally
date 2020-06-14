@@ -6,16 +6,14 @@ const NotificationRepository = new Repository('notification', {
     type: Number(),
   },
   description: { type: String() },
-  notification_type_id: {
-    returning: false,
-    type: Number(),
-  },
+  title: { type: String() },
+  link: { type: String() },
   user_id: {
     returning: false,
     type: Number(),
   },
   is_read: { type: Boolean() },
-  date: { type: String() },
+  created_at: { type: String() },
 });
 
 export default NotificationRepository;

@@ -15,11 +15,11 @@ export default class UploadMiddleware {
     });
   }
 
-  private single(name: string) {
+  public single(name: string) {
     return multer({ storage: this.config }).single(name);
   }
 
-  private array(name: string) {
+  public array(name: string) {
     return multer({ storage: this.config }).array(name);
   }
 }
