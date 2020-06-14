@@ -18,6 +18,14 @@ function jobs(state = INITIAL_STATE, { type, data }) {
       };
       return clone;
     }
+    case 'REMOVE_JOB_PROPOSAL': {
+      const clone = [...state];
+      clone[data.index] = {
+        ...clone[data.index],
+        proposals: clone[data.index].proposals.filter(p => p.id !== data.id),
+      };
+      return clone;
+    }
     case 'SET_JOBS': {
       return data.jobs;
     }

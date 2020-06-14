@@ -25,3 +25,10 @@ export const addJob = job => {
     data: { job },
   };
 };
+
+export const RemoveJobProposal = (index, id) => {
+  return {
+    type: 'REMOVE_JOB_PROPOSAL',
+    data: { index, id },
+  };
+};

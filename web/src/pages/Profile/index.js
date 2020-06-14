@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiEdit, FiThumbsUp, FiCheckSquare, FiXSquare } from 'react-icons/fi';
+import { FiEdit, FiCheckSquare, FiXSquare } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 import * as UserActions from '../../store/modules/user/actions';
@@ -96,10 +96,6 @@ function Profile() {
           {user.neighborhood}, {user.city} - {user.state}
         </Content>
         <Content>CEP {user.postal_code}</Content>
-        <Title>Avaliação geral</Title>
-        <Content>
-          <FiThumbsUp /> {user.likes || 0}
-        </Content>
       </UserAbout>
     </Grid>
   );

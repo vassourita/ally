@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { FiArrowLeft, FiThumbsUp } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
@@ -59,10 +59,6 @@ function User() {
       <UserAbout className="modal-shadow">
         <Title>Sobre</Title>
         <Content>{user.about || 'Não há descrição ainda'}</Content>
-        <Title>Avaliação geral</Title>
-        <Content>
-          <FiThumbsUp /> {user.likes || 0}
-        </Content>
       </UserAbout>
     </Grid>
   );

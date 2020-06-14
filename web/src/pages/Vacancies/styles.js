@@ -96,8 +96,6 @@ export const Header = styled.div`
 export const List = styled.ul`
   grid-area: list;
   overflow-y: auto;
-  overflow-x: hidden;
-  /* margin: 0 0 40px 0; */
 `;
 
 export const ListItem = styled.li`
@@ -108,7 +106,7 @@ export const ListItem = styled.li`
   grid-template-columns: 300px auto;
   grid-template-rows: 300px;
   grid-template-areas: 'img info';
-  margin: 0 30px 40px 0;
+  margin: 0 0px 40px 0;
 `;
 
 export const UserImg = styled.img`
@@ -118,6 +116,7 @@ export const UserImg = styled.img`
   width: 300px;
   object-fit: cover;
   transition: 0.5s ease-in;
+  cursor: pointer;
   &:hover {
     filter: brightness(100%);
   }
@@ -142,6 +141,9 @@ export const UserName = styled.div`
 
 export const UserInfo = styled.div`
   grid-area: info;
+  padding: 20px;
+  display: grid;
+  grid-template-rows: auto 1fr;
 `;
 
 export const JobInfo = styled.div`
@@ -170,4 +172,61 @@ export const DoubleInput = styled.div`
 export const ModalDivisor = styled.div`
   display: grid;
   grid-template-rows: 400px;
+`;
+
+export const Counter = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: 'stat1 data1' 'stat2 data2';
+  gap: 20px;
+  div.stat-top {
+    grid-area: stat1;
+  }
+  div.stat-bottom {
+    grid-area: stat2;
+  }
+  div.data-top {
+    grid-area: data1;
+  }
+  div.data-bottom {
+    grid-area: data2;
+  }
+  section span {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    svg {
+      margin-left: 5px;
+    }
+  }
+  h4 {
+    border-right: 1px solid #888;
+    color: #333;
+    font-size: 29px;
+    font-weight: 600;
+    font-family: 'Quicksand';
+  }
+  p {
+    border-right: 1px solid #888;
+    color: #333;
+    font-size: 16px;
+    font-weight: 400;
+    padding-right: 15px;
+  }
+`;
+
+export const Inputs = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 20px;
+  align-self: flex-end;
+  button {
+    display: flex;
+    align-items: center;
+    svg {
+      margin-left: 5px;
+    }
+  }
 `;

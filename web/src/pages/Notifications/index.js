@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FiAlertCircle } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import { formatRelative } from 'date-fns';
+import pt_BR from 'date-fns/locale/pt-BR';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
@@ -46,6 +48,10 @@ function Notifications() {
     }
   };
 
+  function getNotificationDate(timestamp) {
+    return formatRelative(new window.Date(timestamp), new window.Date(), { locale: pt_BR });
+  }
+
   return (
     <Container>
       <CardBox>
@@ -58,7 +64,7 @@ function Notifications() {
             <ListItem key={notification.id}>
               <Name>
                 <h4>
-                  {notification.type.name} {!notification.is_read && <FiAlertCircle size="14" color="#df8020" />}
+                  {notification.title} {!notification.is_read && <FiAlertCircle size="14" color="#df8020" />}
                 </h4>
                 <p>{notification.description}</p>
               </Name>
@@ -69,7 +75,7 @@ function Notifications() {
                   </>
                 )}
                 <Link to={notification.link}>Ver</Link>
-                <Date>{notification.date}</Date>
+                <Date>{getNotificationDate(notification.created_at)}</Date>
               </Side>
             </ListItem>
           ))}

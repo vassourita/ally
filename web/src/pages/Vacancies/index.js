@@ -32,6 +32,8 @@ import {
   JobInfo,
   DoubleInput,
   ModalDivisor,
+  Counter,
+  Inputs,
 } from './styles';
 
 const options = [
@@ -51,6 +53,7 @@ function Vacancies() {
   const jobs = useSelector(state => state.jobs);
 
   const actualJob = jobs.find(j => j.id === Number(jobId));
+  const actualJobIndex = jobs.findIndex(j => j.id === Number(jobId));
   const [editData, setEditData] = useState({
     typeId: 0,
     name: '',
@@ -155,6 +158,27 @@ function Vacancies() {
       toast.error('Ocorreu um erro inesperado em nosso servidor');
     }
     setModalOpen(false);
+  };
+
+  const handleUpdateProposal = async (id, status, name) => {
+    try {
+      const response = await api.put(`/proposals/${id}`, { status });
+
+      if (response.data.updated) {
+        if (status === true) {
+          toast.info(`Proposta aceita! Envie uma mensagem para ${name}`);
+          history.push(`/chat/${response.data.chat.id}`);
+        } else {
+          toast.info(`A proposta feita por ${name} foi rejeitada`);
+          dispatch(JobActions.RemoveJobProposal(actualJobIndex, id));
+        }
+      } else {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    }
   };
 
   return (
@@ -353,12 +377,65 @@ function Vacancies() {
       <List>
         {actualJob?.proposals?.map(proposal => (
           <ListItem key={proposal.id} className="modal-shadow">
-            <UserImg src={`${process.env.REACT_APP_FILES_URL}${proposal.user.image_url}`} alt={proposal.user.name} />
+            <UserImg
+              onClick={() => history.push(`/users/${proposal.user.id}`)}
+              src={`${process.env.REACT_APP_FILES_URL}${proposal.user.image_url}`}
+              alt={proposal.user.name}
+            />
             <UserName>
               <h3>{proposal.user.name}</h3>
               <Link to={`/users/${proposal.user.id}`}>Clique para ver o perfil</Link>
             </UserName>
-            <UserInfo></UserInfo>
+            <UserInfo>
+              <Counter>
+                <div className="stat-top">
+                  <h4>0%</h4>
+                  <p>dos requisitos</p>
+                </div>
+                <div className="stat-bottom">
+                  <h4>0%</h4>
+                  <p>dos diferenciais</p>
+                </div>
+                <div className="data-top">
+                  {actualJob?.knowledges
+                    ?.filter(k => !k.differential)
+                    .map(knowledge => (
+                      <section key={knowledge.id}>
+                        <span>
+                          {knowledge.type.name} - {knowledge.name} <FiCheckSquare />
+                        </span>
+                      </section>
+                    ))}
+                </div>
+                <div className="data-bottom">
+                  {actualJob?.knowledges
+                    ?.filter(k => k.differential)
+                    .map(knowledge => (
+                      <section key={knowledge.id}>
+                        <span>
+                          {knowledge.type.name} - {knowledge.name} <FiCheckSquare />
+                        </span>
+                      </section>
+                    ))}
+                </div>
+              </Counter>
+              <Inputs>
+                <Button
+                  onClick={() => handleUpdateProposal(proposal.id, true, proposal.user.name)}
+                  outlined
+                  style={{ color: 'var(--ally-blue)', borderColor: 'var(--ally-blue)' }}
+                >
+                  Aceitar <FiCheckSquare />
+                </Button>
+                <Button
+                  onClick={() => handleUpdateProposal(proposal.id, false, proposal.user.name)}
+                  outlined
+                  style={{ color: 'var(--ally-red)', borderColor: 'var(--ally-red)' }}
+                >
+                  Rejeitar <FiXSquare />
+                </Button>
+              </Inputs>
+            </UserInfo>
           </ListItem>
         )) ||
           (jobId && <CardBox>Não há propostas para esta vaga ainda...</CardBox>)}
