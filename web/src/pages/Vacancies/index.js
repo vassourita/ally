@@ -389,11 +389,11 @@ function Vacancies() {
             <UserInfo>
               <Counter>
                 <div className="stat-top">
-                  <h4>0%</h4>
+                  <h4>100%</h4>
                   <p>dos requisitos</p>
                 </div>
                 <div className="stat-bottom">
-                  <h4>0%</h4>
+                  <h4>100%</h4>
                   <p>dos diferenciais</p>
                 </div>
                 <div className="data-top">

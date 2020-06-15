@@ -74,11 +74,11 @@ function JobDetail() {
         <Text>Você cumpre:</Text>
         <Counter>
           <div>
-            <h4>0%</h4>
+            <h4>100%</h4>
             <Text>dos requisitos</Text>
           </div>
           <div>
-            <h4>0%</h4>
+            <h4>100%</h4>
             <Text>dos diferenciais</Text>
           </div>
         </Counter>
