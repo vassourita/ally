@@ -74,7 +74,7 @@ export default class BaseRepository<T extends ITableSchema> {
     }
   }
 
-  async find(query: IQuery<T> = {}): Promise<IQueryReturn<T>[] | any[]> {
+  async find(query: IQuery<T> = {}): Promise<IQueryReturn<T>[] & any[]> {
     const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [], groupBy = [] } = query;
     const formattedWhere = Object.entries(where);
 

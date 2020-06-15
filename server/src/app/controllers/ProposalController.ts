@@ -167,12 +167,17 @@ export default class ProposalController implements IController {
       is_read: false,
     });
 
+    const updatedProposal = await ProposalRepository.findOne({
+      where: { id: proposalId },
+    });
+
     const ws = WebSocket.getInstance();
 
     const target = ws.connectedUsers[proposal.user_id.toString()];
 
     if (target) {
       target.connection.emit('new_notification', { notification });
+      target.connection.emit('update_proposal', { proposal: updatedProposal });
     }
 
     res.status(201).json({ updated: true, chat });
