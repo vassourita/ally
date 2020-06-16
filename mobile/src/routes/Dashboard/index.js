@@ -18,9 +18,9 @@ function Dashboard() {
         <PrivateRoute path="/chat/:id" component={Chat} />
         <PrivateRoute exact path="/chat" component={Chat} />
         <PrivateRoute exact path="/jobs" component={Jobs} />
-        <PrivateRoute path="/proposals" component={Proposals} />
+        <PrivateRoute exact path="/proposals" component={Proposals} />
         <PrivateRoute exact path="/profile" component={Profile} />
-        <PrivateRoute path="/notifications" component={Notifications} />
+        <PrivateRoute exact path="/notifications" component={Notifications} />
       </Switch>
     </DashboardMain>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiBell } from 'react-icons/fi';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import logo from '../../assets/logo/icon@3x.png';
 
@@ -8,6 +8,7 @@ import { Container, Left, Right } from './styles';
 
 function DashboardHeader() {
   const location = useLocation();
+  const history = useHistory();
 
   function getTitle() {
     const titles = {
@@ -15,6 +16,7 @@ function DashboardHeader() {
       chat: 'Mensagens',
       profile: 'Perfil',
       proposals: 'Propostas',
+      notifications: 'Notificações',
     };
     const title = location.pathname.replace(/\//g, '');
     return titles[title] || '404';
@@ -27,7 +29,11 @@ function DashboardHeader() {
         <h1>{getTitle()}</h1>
       </Left>
       <Right>
-        <FiBell size={30} />
+        <FiBell
+          color={location.pathname.replace(/\//g, '') === 'notifications' ? 'var(--ally-red)' : '#111'}
+          onClick={() => history.push('/notifications')}
+          size={30}
+        />
       </Right>
     </Container>
   );

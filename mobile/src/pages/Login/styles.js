@@ -38,6 +38,7 @@ export const LoginButton = styled.button`
   border: none;
   margin-bottom: 35px;
   color: #fff;
+  font-size: 15px;
   img {
     border-radius: 50%;
     height: 35px;
