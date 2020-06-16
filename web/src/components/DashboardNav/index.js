@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiUser, FiBriefcase, FiMessageSquare, FiBell, FiStar } from 'react-icons/fi';
+import { FiUser, FiBriefcase, FiMessageSquare, FiBell } from 'react-icons/fi';
 
 import { Container, Title, List, ListItem, PageName } from './styles';
 
@@ -31,12 +31,6 @@ function DashboardNav() {
           <NavLink activeClassName="nav-link-active" to="/notifications">
             <FiBell size="20" />
             <PageName>Notificações</PageName>
-          </NavLink>
-        </ListItem>
-        <ListItem>
-          <NavLink activeClassName="nav-link-active" to="/rate">
-            <FiStar size="20" />
-            <PageName>Avaliar</PageName>
           </NavLink>
         </ListItem>
       </List>
