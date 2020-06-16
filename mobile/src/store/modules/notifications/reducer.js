@@ -5,7 +5,7 @@ function notifications(state = INITIAL_STATE, { type, data }) {
     case 'ADD_NOTIFICATION': {
       return [data.notification, ...state];
     }
-    case 'UPDATE_NOTIFICATIONS': {
+    case 'UPDATE_NOTIFICATION': {
       const clone = [...state];
       const index = state.findIndex(j => j.id === data.id);
       clone[index] = {

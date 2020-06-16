@@ -10,6 +10,7 @@ import api from '../../services/api';
 import SelectBlock from '../../components/SelectBlock';
 
 import { Container, Filters, List, Card, Image, Info, Bottom, NoVacancies } from './styles';
+import { toast } from 'react-toastify';
 
 const dateOptions = [
   { label: 'Qualquer', value: 'any' },
@@ -43,14 +44,22 @@ function Jobs() {
 
   useEffect(() => {
     setLoading(true);
-    api.get(`/opportunities?days=${date}&local=${local}`).then(response => {
-      if (response.data.jobs) {
-        dispatch(JobActions.setJobs(response.data.jobs));
-      } else {
+    api
+      .get(`/opportunities?days=${date}&local=${local}`)
+      .then(response => {
+        if (response.data.jobs) {
+          dispatch(JobActions.setJobs(response.data.jobs));
+        } else {
+          dispatch(JobActions.setJobs([]));
+          toast.error('Ocorreu um erro inesperado em nosso servidor');
+        }
+        setLoading(false);
+      })
+      .catch(() => {
         dispatch(JobActions.setJobs([]));
-      }
-      setLoading(false);
-    });
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+        setLoading(false);
+      });
   }, [dispatch, local, date]);
 
   function getJobDate(jobDate) {

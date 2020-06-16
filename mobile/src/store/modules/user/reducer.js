@@ -5,7 +5,6 @@ const INITIAL_STATE = {
   phone: 0,
   fiscal_code: 0,
   image_url: '',
-  likes: 0,
   about: '',
   postal_code: 0,
   state: '',
@@ -13,7 +12,6 @@ const INITIAL_STATE = {
   address: '',
   neighborhood: '',
   microregion_id: 0,
-  birth: '',
   created_at: '',
 };
 
