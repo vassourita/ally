@@ -11,7 +11,7 @@ function Routes() {
       <Switch>
         <Route exact path="/" component={() => <Redirect to="/login" />} />
         <Route path={['/login', '/register']} component={Account} />
-        <Route path="/jobs/:id" component={DetailPages} />
+        <Route path={['/jobs/:id', '/proposals/:id']} component={DetailPages} />
         <Route
           path={['/profile', '/chat', '/chat/:id', '/jobs', '/notifications', '/proposals']}
           component={Dashboard}

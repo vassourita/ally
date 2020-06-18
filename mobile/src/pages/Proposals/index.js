@@ -51,7 +51,7 @@ function Proposals() {
     }
     if (status === 'denied') {
       return (
-        <span>
+        <span style={{ color: 'var(--ally-red)' }}>
           rejeitado
           <FiXCircle />
         </span>
@@ -59,7 +59,7 @@ function Proposals() {
     }
     if (status === 'accepted') {
       return (
-        <span>
+        <span style={{ color: 'var(--ally-blue)' }}>
           aceito
           <FiCheckCircle />
         </span>
