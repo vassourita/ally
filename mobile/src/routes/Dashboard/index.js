@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Switch } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import * as socket from '../../services/socket';
+import * as NotificationActions from '../../store/modules/notifications/actions';
 
 import DashboardMain from '../../components/DashboardMain';
 
@@ -12,6 +17,21 @@ import Notifications from '../../pages/Notifications';
 import PrivateRoute from '../PrivateRoute';
 
 function Dashboard() {
+  const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket.connect(auth.id);
+    socket.subscribeToNotifications(data => {
+      if (data.notification.status === 'denied') {
+        toast.error(data.notification.description);
+      } else {
+        toast.info(data.notification.description);
+      }
+      dispatch(NotificationActions.addNotification(data.notification));
+    });
+  }, [auth.id]);
+
   return (
     <DashboardMain>
       <Switch>
