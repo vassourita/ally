@@ -1,10 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiUser, FiBriefcase, FiMessageSquare, FiBell } from 'react-icons/fi';
+import { useDispatch } from 'react-redux';
+import { FiUser, FiBriefcase, FiMessageSquare, FiBell, FiLogOut } from 'react-icons/fi';
 
-import { Container, Title, List, ListItem, PageName } from './styles';
+import * as AuthActions from '../../store/modules/auth/actions';
+
+import { Container, Title, List, ListItem, PageName, Logoff } from './styles';
 
 function DashboardNav() {
+  const dispatch = useDispatch();
+
+  function handleLogoff() {
+    dispatch(AuthActions.logoff());
+  }
+
   return (
     <Container>
       <Title>Menu</Title>
@@ -34,6 +43,9 @@ function DashboardNav() {
           </NavLink>
         </ListItem>
       </List>
+      <Logoff onClick={handleLogoff}>
+        <FiLogOut /> Sair
+      </Logoff>
     </Container>
   );
 }

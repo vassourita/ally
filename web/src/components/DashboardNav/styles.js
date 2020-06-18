@@ -5,6 +5,8 @@ export const Container = styled.div`
   grid-column: 1/2;
   background-color: var(--ally-blue);
   color: #fff;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 `;
 
 export const Title = styled.h3`
@@ -41,4 +43,17 @@ export const PageName = styled.span`
   font-size: 15px;
   margin-left: 15px;
   font-weight: 500;
+`;
+
+export const Logoff = styled.div`
+  font-size: 16px;
+  margin-bottom: 35px;
+  padding: 34px 34px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  svg {
+    margin-right: 7px;
+  }
 `;

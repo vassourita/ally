@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import Account from './Account';
 import Dashboard from './Dashboard';
+import PrivateRoute from './PrivateRoute';
 
 function Routes() {
   return (
@@ -11,7 +12,7 @@ function Routes() {
       <Switch>
         <Route exact path={['/', '/about', '/contact']} component={Home} />
         <Route path={['/login', '/register']} component={Account} />
-        <Route
+        <PrivateRoute
           path={['/profile', '/chat', '/vacancies', 'vacancies/:id', '/notifications', '/users']}
           component={Dashboard}
         />
