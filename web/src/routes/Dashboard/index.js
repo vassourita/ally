@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { toast } from 'react-toastify';
 
-import { connect, subscribeToNotifications } from '../../services/socket';
+import * as socket from '../../services/socket';
 
 import Chat from '../../pages/Chat';
 import User from '../../pages/User';
@@ -21,9 +21,9 @@ function Dashboard() {
   const auth = useSelector(state => state.auth);
 
   useEffect(() => {
-    connect(auth.id);
-    subscribeToNotifications(data => toast.info(data.notification.description));
-  }, []);
+    socket.connect(auth.id);
+    socket.subscribeToNotifications(data => toast.info(data.notification.description));
+  }, [auth.id]);
 
   return (
     <DashboardMain>
