@@ -70,6 +70,9 @@ function Vacancies() {
 
         if (status === 200) {
           dispatch(JobActions.setJobs(data.jobs));
+        } else {
+          dispatch(JobActions.setJobs([]));
+          toast.error('Ocorreu um erro inesperado em nosso servidor');
         }
       } catch {
         toast.error('Ocorreu um erro inesperado em nosso servidor');

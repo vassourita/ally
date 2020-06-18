@@ -34,7 +34,7 @@ export const ListItem = styled.li`
       border-right: 7px solid #fff;
     }
   }
-  &:hover {
+  :hover {
     background-color: var(--ally-blue-d);
   }
 `;
@@ -48,11 +48,17 @@ export const PageName = styled.span`
 export const Logoff = styled.div`
   font-size: 16px;
   margin-bottom: 35px;
-  padding: 34px 34px 0;
+  padding: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 80%;
   cursor: pointer;
+  transition: 0.3s ease-out;
+  :hover {
+    opacity: 100%;
+    background-color: var(--ally-blue-d);
+  }
   svg {
     margin-right: 7px;
   }

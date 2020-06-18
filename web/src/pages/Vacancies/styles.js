@@ -79,7 +79,7 @@ export const Header = styled.div`
     grid-template-columns: auto 100px;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: -50px;
+    margin-bottom: -45px;
   }
   h6 {
     font-size: 15px;

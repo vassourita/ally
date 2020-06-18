@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import user from './user/reducer';
 import auth from './auth/reducer';
 import jobs from './jobs/reducer';
+import chats from './chats/reducer';
 import notifications from './notifications/reducer';
 
 export default combineReducers({
@@ -10,4 +11,5 @@ export default combineReducers({
   auth,
   jobs,
   notifications,
+  chats,
 });
