@@ -27,7 +27,17 @@ export const Right = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
+  position: relative;
   svg {
-    margin-bottom: 2px;
+    margin-bottom: 5px;
   }
+`;
+
+export const Point = styled.div`
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background-color: var(--ally-red);
+  position: absolute;
+  bottom: 23px;
 `;

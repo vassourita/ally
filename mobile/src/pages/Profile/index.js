@@ -17,7 +17,7 @@ function Profile() {
         dispatch(UserActions.setUser(response.data.user));
       }
     });
-  });
+  }, []);
 
   return (
     <Container>

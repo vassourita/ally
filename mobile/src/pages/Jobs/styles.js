@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.main``;
 
 export const Filters = styled.div`
-  margin: 0 -15px 15px -15px;
+  margin: 0 -15px;
   & > span {
     display: flex;
     align-items: center;

@@ -27,22 +27,24 @@ function JobDetail() {
   const history = useHistory();
   const job = useSelector(state => state.jobs.find(job => job.id === Number(id)));
 
-  function handleSendProposal() {
-    api
-      .post('/proposals', {
+  async function handleSendProposal(e) {
+    e.preventDefault();
+    try {
+      const response = await api.post('/proposals', {
         jobVacancyId: job.id,
-      })
-      .then(response => {
-        if (response.data.proposal) {
-          toast.info('Proposta enviada! Você receberá uma mensagem se a proposta for aceita', {
-            onClick: () => history.push('/proposals'),
-          });
-          history.goBack(-1);
-        } else {
-          toast.error('Ocorreu um erro inesperado em nosso servidor');
-        }
-      })
-      .catch(e => toast.error('Ocorreu um erro inesperado em nosso servidor'));
+      });
+
+      if (response.data.proposal) {
+        toast.info('Proposta enviada! Você receberá uma mensagem se a proposta for aceita', {
+          onClick: () => history.push('/proposals'),
+        });
+        history.push('/jobs');
+      } else {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
+    } catch (error) {
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    }
   }
 
   return (

@@ -98,6 +98,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   .Toastify__toast {
+    padding: 20px;
     opacity: 95%;
     border-radius: none;
   }

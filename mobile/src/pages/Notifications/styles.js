@@ -55,3 +55,11 @@ export const LinkButton = styled.button`
     color: var(--ally-blue);
   }
 `;
+
+export const NoNotifications = styled.span`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  height: calc(100vh - 280px);
+`;

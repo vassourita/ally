@@ -14,7 +14,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <GlobalStyles />
         <Routes />
-        <ToastContainer autoClose={4000} hideProgressBar={true} position={'top-center'} />
+        <ToastContainer closeButton={false} autoClose={4000} hideProgressBar={true} position={'top-center'} />
       </PersistGate>
     </Provider>
   );

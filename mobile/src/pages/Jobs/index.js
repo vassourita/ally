@@ -112,7 +112,7 @@ function Jobs() {
       <List>
         {!loading && !jobs.length && <NoVacancies>Não há nenhuma vaga disponível no momento</NoVacancies>}
         {jobs.sort(orderJobs).map(job => (
-          <Card key={job.id}>
+          <Card onClick={() => history.push(`/jobs/${job.id}`)} key={job.id}>
             <Image src={`${process.env.REACT_APP_FILES_URL}${job.employer.image_url}`} alt={job.employer.name}></Image>
             <Info>
               <h3>{job.name}</h3>
