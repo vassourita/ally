@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { toast } from 'react-toastify';
 
 import * as socket from '../../services/socket';
+import * as NotificationActions from '../../store/modules/notifications/actions';
 
 import Chat from '../../pages/Chat';
 import User from '../../pages/User';
@@ -19,10 +20,14 @@ import PrivateRoute from '../PrivateRoute';
 
 function Dashboard() {
   const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     socket.connect(auth.id);
-    socket.subscribeToNotifications(data => toast.info(data.notification.description));
+    socket.subscribeToNotifications(data => {
+      toast.info(data.notification.description);
+      dispatch(NotificationActions.addNotification(data.notification));
+    });
   }, [auth.id]);
 
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FiAlertCircle } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { formatRelative } from 'date-fns';
@@ -17,6 +17,8 @@ import { Container, ListContainer, List, ListItem, Name, Side, Date, LinkButton 
 function Notifications() {
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notifications);
+
+  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -61,7 +63,13 @@ function Notifications() {
         <List>
           {!notifications.length && <h6>Não há notificações...</h6>}
           {notifications.map(notification => (
-            <ListItem key={notification.id}>
+            <ListItem
+              onClick={() => {
+                history.push(notification.link);
+                handleSetRead(notification.id);
+              }}
+              key={notification.id}
+            >
               <Name>
                 <h4>
                   {notification.title} {!notification.is_read && <FiAlertCircle size="14" color="#df8020" />}
@@ -70,11 +78,8 @@ function Notifications() {
               </Name>
               <Side>
                 {!notification.is_read && (
-                  <>
-                    <LinkButton onClick={() => handleSetRead(notification.id)}>Marcar como lido</LinkButton> {' - '}
-                  </>
+                  <LinkButton onClick={() => handleSetRead(notification.id)}>Marcar como lido</LinkButton>
                 )}
-                <Link to={notification.link}>Ver</Link>
                 <Date>{getNotificationDate(notification.created_at)}</Date>
               </Side>
             </ListItem>

@@ -21,6 +21,8 @@ export const List = styled.ul`
 export const ListItem = styled.li`
   padding: 17px 0;
   border-top: 1px solid #ccc;
+  cursor: pointer;
+
   :first-child {
     border-top: none;
     padding-top: 0;
