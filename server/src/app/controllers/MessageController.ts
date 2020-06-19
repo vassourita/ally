@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { IController } from './IController';
 import ChatRepository from '../repositories/ChatRepository';
 import MessageRepository from '../repositories/MessageRepository';
+import UserRepository from '../repositories/UserRepository';
 
 import WebSocket from '../../WebSocket';
 
@@ -10,13 +11,27 @@ export default class MessageController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
+    const user = await UserRepository.findOne({
+      attrs: ['employer'],
+      where: { id: userId },
+    });
+
+    const idFilter = user.employer ? 'employer_id' : 'user_id';
+    const userJoinFilter = user.employer ? 'user_id' : 'employer_id';
+
     const chats = await ChatRepository.find({
-      where: { user_id: userId },
+      where: { [idFilter]: userId },
       join: [
         {
           repo: MessageRepository,
           on: { chat_id: 'chat.id' },
           type: 'many',
+          as: 'messages',
+        },
+        {
+          repo: UserRepository,
+          on: { [userJoinFilter]: `chat.${userJoinFilter}` },
+          type: 'single',
         },
       ],
     });
