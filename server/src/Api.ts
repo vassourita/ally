@@ -9,6 +9,8 @@ import 'express-async-errors';
 import Router from '@root/Router';
 import WebSocket from '@root/WebSocket';
 
+import Logger from '@helpers/Logger';
+
 export default class AllyApi {
   private app: express.Application;
   private server: Http.Server;
@@ -28,7 +30,7 @@ export default class AllyApi {
   private setupWebSocket() {
     WebSocket.getInstance().setup(this.server, (err: Error) => {
       if (err) throw err;
-      console.log('\x1b[0mSOCKET: \x1b[34mok\x1b[0m');
+      Logger.info('Socket ok');
     });
   }
 
@@ -57,6 +59,7 @@ export default class AllyApi {
   }
 
   public listen(port: string | number | undefined = process.env.PORT) {
-    this.server.listen(port, () => console.log(`\x1b[0mSERVER: \x1b[34mhttp://localhost:${port}\x1b[0m`));
+    this.server.listen(port, () =>
+      Logger.info('Server ok'));
   }
 }

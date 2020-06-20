@@ -15,7 +15,6 @@ import UploadMiddleware from '@middlewares/UploadMiddleware';
 
 import SessionStoreValidator from '@validators/SessionStoreValidator';
 
-
 export default class Router {
   public routes: express.Router;
 

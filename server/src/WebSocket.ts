@@ -1,6 +1,8 @@
 import { Server } from 'http';
 import io from 'socket.io';
 
+import Logger from '@helpers/Logger';
+
 interface ISocketConnection {
   [userId: string]: {
     id: number;
@@ -26,15 +28,11 @@ export default class WebSocket {
           id: socket.handshake.query.userId,
           connection: socket,
         };
-        console.log(
-          `\x1b[0m${this.connectedUsers[socket.handshake.query.userId.toString()].id}: \x1b[32mconnected\x1b[0m`,
-        );
+        Logger.success(`${this.connectedUsers[socket.handshake.query.userId.toString()].id} connected`);
 
         socket.on('disconnection', () => {
           delete this.connectedUsers[socket.handshake.query.userId.toString()];
-          console.log(
-            `\x1b[0m${this.connectedUsers[socket.handshake.query.userId.toString()].id}: \x1b[31mmdisconnected\x1b[0m`,
-          );
+          Logger.error(`${this.connectedUsers[socket.handshake.query.userId.toString()].id} disconnected`);
         });
       });
 

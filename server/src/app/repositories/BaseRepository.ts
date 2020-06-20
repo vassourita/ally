@@ -1,7 +1,7 @@
 import pluralize from 'pluralize';
 
-import AllySqlJoinTypeError from '@root/helpers/errors/AllySqlJoinTypeError';
-import AllySqlRepositoryPrimaryKeyError from '@root/helpers/errors/AllySqlRepositoryPrimaryKeyError';
+import AllySqlJoinTypeError from '@helpers/errors/AllySqlJoinTypeError';
+import AllySqlRepositoryPrimaryKeyError from '@helpers/errors/AllySqlRepositoryPrimaryKeyError';
 
 import Database from '@database/Database';
 

@@ -1,6 +1,6 @@
 import { formatRFC3339, isBefore, subDays, parseISO } from 'date-fns';
 
-import Database from '../database/Database';
+import Database from '@database/Database';
 
 interface IFilterQuery {
   days: string;

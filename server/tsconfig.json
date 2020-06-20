@@ -18,6 +18,7 @@
     "paths": {
       "@root/*": ["./src/*"],
       "@config/*": ["./src/config/*"],
+      "@helpers/*": ["./src/helpers/*"],
       "@database/*": ["./src/database/*"],
       "@services/*": ["./src/services/*"],
       "@validators/*": ["./src/app/validators/*"],
@@ -26,5 +27,6 @@
       "@repositories/*": ["./src/app/repositories/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

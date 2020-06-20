@@ -4,6 +4,8 @@ import { promisify } from 'util';
 
 import dbConfig from '@config/database';
 
+import Logger from '@helpers/Logger';
+
 export default class Database {
   private static instance: Database;
   private client: mysql.Connection;
@@ -23,7 +25,7 @@ export default class Database {
   private connect() {
     this.client.connect(err => {
       if (err) throw err;
-      console.log('\x1b[0mDATABASE: \x1b[34mok\x1b[0m');
+      Logger.info('Database ok');
     });
     this.raw("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
   }
