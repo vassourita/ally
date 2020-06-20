@@ -4,6 +4,7 @@ import Repository from '@repositories/BaseRepository';
 
 const KnowledgeTypeRepository = new Repository<KnowledgeType>('knowledge_type', {
   id: { primary: true, },
+  name: { },
 });
 
 export default KnowledgeTypeRepository;
