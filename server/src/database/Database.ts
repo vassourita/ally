@@ -85,6 +85,7 @@ export default class Database {
       .replace(/,\s*RIGHT JOIN/g, ' RIGHT JOIN')
       .replace(/,\s*INNER JOIN/g, ' INNER JOIN')
       .replace(/undefined/g, '')
+      .replace(/\[object Object]/g, '')
       .replace(/,\s*FROM/g, ' FROM')
       .replace(/\n/g, ' ')
       .replace(/,\s*,/g, ', ')

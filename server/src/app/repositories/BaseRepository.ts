@@ -76,35 +76,41 @@ export default class BaseRepository<T extends ITableSchema> {
   async find(query: IQuery<T> = {}): Promise<IQueryReturn<T>[] & any[]> {
     const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
     const formattedWhere = Object.entries(where);
-
+    const params = [];
     const getSelect = attrs.map(a => ` ${this.tableName}.${a} `);
-    const getWhere = formattedWhere.length > 0
-      ? `WHERE ${formattedWhere
+    let getWhere = '';
+    if (formattedWhere.length > 0) {
+      getWhere = `WHERE ${formattedWhere
         .map(([key, value]) => {
-          const parts: any[] = value.toString().split(/\s+(?=([^']*'[^']*')*[^']*$)/g);
-          if (parts.length > 1) {
-            return ` ${this.tableName}.${key} ${parts.join(' ')} `;
+          if (typeof value === 'string') {
+            if (value.split('')[0] === '*' && value.split('')[1] === '*') {
+              return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
+            }
+            if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+              return ` ${this.tableName}.${key} = ${value} `;
+            }
           }
-          return `\n${this.tableName}.${key} = ${Database.escape(value)}`;
+          params.push(value);
+          return ` ${this.tableName}.${key} = ? `;
         })
-        .join(' AND ')}`
-      : '';
+        .join(' AND ')}`;
+    }
     const getGroupBy = join.length ? ` GROUP BY ${this.tableName}.${this.primaryFields[0]} ` : '';
     const getLimit = limit ? ` LIMIT ${limit} ` : '';
     const getOffset = offset ? ` OFFSET ${offset} ` : '';
+    const getJoins = BaseRepository.getJoins(join, this).joins();
 
     const sql = `
       SELECT ${getSelect}
       ,${BaseRepository.getJoins(join, this).fields()}
       FROM ${this.tableName}
-      ${BaseRepository.getJoins(join, this).joins()}
+      ${getJoins.sql}
       ${getWhere}
       ${getGroupBy}
       ${getLimit}
       ${getOffset}
     `;
-
-    const results = this.db.query<IQueryReturn<T>>(sql, []);
+    const results = this.db.query<IQueryReturn<T>>(sql, [...getJoins.params, ...params]);
 
     return results;
   }
@@ -114,29 +120,60 @@ export default class BaseRepository<T extends ITableSchema> {
     return results[0] || null;
   }
 
-  async delete({ where, operator = '=' }: { where: IWhere; operator?: string }) {
+  async delete({ where }: { where: IWhere }) {
     const formattedWhere = Object.entries(where);
+    const params = [];
+    let getWhere = '';
+    if (formattedWhere.length > 0) {
+      getWhere = `WHERE ${formattedWhere
+        .map(([key, value]) => {
+          if (typeof value === 'string') {
+            if (value.split('')[0] === '*' && value.split('')[1] === '*') {
+              return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
+            }
+          }
+          params.push(value);
+          return ` \n${this.tableName}.${key} = ? `;
+        })
+        .join(' AND ')}`;
+    }
     const sql = `
       DELETE FROM ${this.tableName}
-      WHERE ${formattedWhere
-    .map(([key, value]) => `\n${this.tableName}.${key} ${operator} ${Database.escape(value)}`)
-    .join(' AND ')}
+      ${getWhere}
     `;
-    const { affectedRows } = await this.db.execute(sql, []);
+    const { affectedRows } = await this.db.execute(sql, params);
     return affectedRows;
   }
 
-  async update({ where, operator = '=', set }: { where: IWhere; operator?: string; set: IWhere }) {
+  async update({ where, set }: { where: IWhere; set: IWhere }) {
     const formattedWhere = Object.entries(where);
     const formattedSet = Object.entries(set);
+    const params = [];
+    const getSet = ` SET ${formattedSet.map(([key]) => ` ${this.tableName}.${key} = ? `)} `;
+    formattedSet.forEach(([, value]) => params.push(value));
+    let getWhere = '';
+    if (formattedWhere.length > 0) {
+      getWhere = `WHERE ${formattedWhere
+        .map(([key, value]) => {
+          if (typeof value === 'string') {
+            if (value.split('')[0] === '*' && value.split('')[1] === '*') {
+              return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
+            }
+            if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+              return ` ${this.tableName}.${key} = ${value} `;
+            }
+          }
+          params.push(value);
+          return `\n${this.tableName}.${key} = ?`;
+        })
+        .join(' AND ')}`;
+    }
     const sql = `
       UPDATE ${this.tableName}
-      SET ${formattedSet.map(([key, value]) => ` ${this.tableName}.${key} = ${Database.escape(value)} `)}
-      WHERE ${formattedWhere
-    .map(([key, value]) => ` ${this.tableName}.${key} ${operator} ${Database.escape(value)} `)
-    .join(' AND ')}
+      ${getSet}
+      ${getWhere}
     `;
-    const { affectedRows } = await this.db.execute(sql, []);
+    const { affectedRows } = await this.db.execute(sql, params);
     return affectedRows;
   }
 
@@ -145,9 +182,9 @@ export default class BaseRepository<T extends ITableSchema> {
       INSERT INTO ${this.tableName}
         (${Object.keys(schema)})
         VALUES
-        (${Database.escape(Object.values(schema))});
+        (${Object.values(schema).map(() => ' ? ').join(' , ')});
     `;
-    const { insertId } = await this.db.execute(sql, []);
+    const { insertId } = await this.db.execute(sql, Object.values(schema));
 
     if (!returning) {
       return insertId;
@@ -166,7 +203,7 @@ export default class BaseRepository<T extends ITableSchema> {
 
   private static getJoins(join: IJoin[], _upperRepository: BaseRepository<any>) {
     return {
-      fields(): string[] {
+      fields() {
         return join.map(j => {
           const attrs = j.attrs || j.repo.returnFields;
           const getJoinName = j.as || pluralize(j.repo.tableName);
@@ -215,24 +252,48 @@ export default class BaseRepository<T extends ITableSchema> {
           throw new AllySqlJoinTypeError();
         });
       },
-      joins(): string[] | string {
-        if (join) {
-          return join.map(j => {
-            const getOn = j.on
-              && `ON ${Object.entries(j.on)
-                .map(([key, value]) => `\n${j.repo.tableName}.${key} = ${value}`)
-                .join(' AND ')}`;
-
-            const getInnerJoins = j.join && BaseRepository.getJoins(j.join, j.repo).joins();
-            return `
-              ${j.side || 'LEFT'} JOIN
-                ${j.repo.tableName} 
-                  ${getOn}
-                ${getInnerJoins}
+      joins() {
+        const params = [];
+        const sql = join.map(j => {
+          let getOn = '';
+          if (j.on) {
+            getOn = ` ON ${Object.entries(j.on)
+              .map(([key, value]) => {
+                if (value.split('')[0] === '*' && value.split('')[1] === '*') {
+                  return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
+                }
+                if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+                  return ` ${j.repo.tableName}.${key} = ${value} `;
+                }
+                params.push(value);
+                return ` ${j.repo.tableName}.${key} = ? `;
+              })
+              .join(' AND ')} 
             `;
-          });
+          }
+
+          const getInnerJoins = j.join ? BaseRepository.getJoins(j.join, j.repo).joins() : '';
+          if (getInnerJoins.params) {
+            params.push(...getInnerJoins.params);
+          }
+
+          return `
+            ${j.side || 'LEFT'} JOIN
+              ${j.repo.tableName} 
+                ${getOn}
+              ${getInnerJoins.sql}
+          `;
+        }).join(' ');
+        if (join) {
+          return {
+            sql,
+            params
+          };
         }
-        return '';
+        return {
+          sql: '',
+          params
+        };
       },
     };
   }

@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 
-import Database from '@database/Database';
-
 import { IController } from '@controllers/IController';
 
 import JobVacancyRepository from '@repositories/JobVacancyRepository';
@@ -19,7 +17,7 @@ export default class JobVacancyController implements IController {
       join: [
         {
           repo: ProposalRepository,
-          on: { job_vacancy_id: 'job_vacancy.id', status: Database.escape('awaiting') },
+          on: { job_vacancy_id: 'job_vacancy.id', status: 'awaiting' },
           type: 'many',
           join: [
             {
