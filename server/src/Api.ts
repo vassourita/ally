@@ -30,7 +30,7 @@ export default class AllyApi {
   private setupWebSocket() {
     WebSocket.getInstance().setup(this.server, (err: Error) => {
       if (err) throw err;
-      Logger.info('Socket ok');
+      Logger.info('Socket', 'ok');
     });
   }
 
@@ -60,6 +60,6 @@ export default class AllyApi {
 
   public listen(port: string | number | undefined = process.env.PORT) {
     this.server.listen(port, () =>
-      Logger.info('Server ok'));
+      Logger.info('Server', 'ok'));
   }
 }

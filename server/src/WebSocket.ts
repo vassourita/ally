@@ -28,11 +28,11 @@ export default class WebSocket {
           id: socket.handshake.query.userId,
           connection: socket,
         };
-        Logger.success(`${this.connectedUsers[socket.handshake.query.userId.toString()].id} connected`);
+        Logger.success('Socket', `${this.connectedUsers[socket.handshake.query.userId.toString()].id} connected`);
 
         socket.on('disconnection', () => {
           delete this.connectedUsers[socket.handshake.query.userId.toString()];
-          Logger.error(`${this.connectedUsers[socket.handshake.query.userId.toString()].id} disconnected`);
+          Logger.error('Socket', `${this.connectedUsers[socket.handshake.query.userId.toString()].id} disconnected`);
         });
       });
 

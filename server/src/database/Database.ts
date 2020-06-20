@@ -25,7 +25,7 @@ export default class Database {
   private connect() {
     this.client.connect(err => {
       if (err) throw err;
-      Logger.info('Database ok');
+      Logger.info('Database', 'ok');
     });
     this.raw("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
   }
@@ -42,7 +42,7 @@ export default class Database {
   public async execute(sql: string, params: any[] = []): Promise<OkPacket> {
     const formattedSql = this.formatSql(sql);
 
-    console.log(`\x1b[36m${formattedSql}\x1b[0m`);
+    Logger.info('Database:executing', formattedSql);
 
     const results = await this.raw<OkPacket>(formattedSql, params);
 
@@ -52,7 +52,7 @@ export default class Database {
   public async query<T>(sql: string, params: any[] = []): Promise<T[]> {
     const formattedSql = this.formatSql(sql);
 
-    console.log(`\x1b[36m${formattedSql}\x1b[0m`);
+    Logger.info('Database:querying', formattedSql);
 
     const r = await this.raw<T[]>(formattedSql, params);
 
