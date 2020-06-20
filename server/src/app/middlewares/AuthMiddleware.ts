@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-import authConfig from '../../config/auth';
+import authConfig from '@config/auth';
 
 export default class AuthMiddleware {
   public async handle(req: Request, res: Response, next: NextFunction) {

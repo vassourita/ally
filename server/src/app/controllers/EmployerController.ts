@@ -1,11 +1,11 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 
-import { IController } from './IController';
-import UserRepository from '../repositories/UserRepository';
-import JobVacancyRepository from '../repositories/JobVacancyRepository';
+import { IController } from '@controllers/IController';
+import UserRepository from '@repositories/UserRepository';
+import JobVacancyRepository from '@repositories/JobVacancyRepository';
 
-const cities: any[] = require('../../database/cities.json');
+import cities from '@database/cities.json';
 
 export default class EmployerController implements IController {
   async index(req: Request, res: Response): Promise<void> {

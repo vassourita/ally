@@ -2,9 +2,9 @@
 /* eslint-disable indent */
 import pluralize from 'pluralize';
 
-import Database from '../../database/Database';
-import AllySqlRepositoryPrimaryKeyError from '../../helpers/errors/AllySqlRepositoryPrimaryKeyError';
-import AllySqlJoinTypeError from '../../helpers/errors/AllySqlJoinTypeError';
+import Database from '@database/Database';
+import AllySqlRepositoryPrimaryKeyError from '@root/helpers/errors/AllySqlRepositoryPrimaryKeyError';
+import AllySqlJoinTypeError from '@root/helpers/errors/AllySqlJoinTypeError';
 
 interface ITableSchema {
   [fieldName: string]: {

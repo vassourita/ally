@@ -2,9 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt, { Secret } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
-import { IController } from './IController';
-import authConfig from '../../config/auth';
-import UserRepository from '../repositories/UserRepository';
+import authConfig from '@config/auth';
+import { IController } from '@controllers/IController';
+import UserRepository from '@repositories/UserRepository';
 
 export default class SessionController implements IController {
   async store(req: Request, res: Response) {

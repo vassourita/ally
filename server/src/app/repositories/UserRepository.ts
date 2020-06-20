@@ -1,4 +1,4 @@
-import Repository from './BaseRepository';
+import Repository from '@repositories/BaseRepository';
 
 const UserRepository = new Repository('user', {
   id: {

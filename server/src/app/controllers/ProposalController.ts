@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
 
-import { IController } from './IController';
-import UserRepository from '../repositories/UserRepository';
-import ChatRepository from '../repositories/ChatRepository';
-import MessageRepository from '../repositories/MessageRepository';
-import ProposalRepository from '../repositories/ProposalRepository';
-import KnowledgeRepository from '../repositories/KnowledgeRepository';
-import JobVacancyRepository from '../repositories/JobVacancyRepository';
-import NotificationRepository from '../repositories/NotificationRepository';
-import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
+import { IController } from '@controllers/IController';
+import UserRepository from '@repositories/UserRepository';
+import ChatRepository from '@repositories/ChatRepository';
+import MessageRepository from '@repositories/MessageRepository';
+import ProposalRepository from '@repositories/ProposalRepository';
+import KnowledgeRepository from '@repositories/KnowledgeRepository';
+import JobVacancyRepository from '@repositories/JobVacancyRepository';
+import NotificationRepository from '@repositories/NotificationRepository';
+import KnowledgeTypeRepository from '@repositories/KnowledgeTypeRepository';
 
-import WebSocket from '../../WebSocket';
+import WebSocket from '@root/WebSocket';
 
 export default class ProposalController implements IController {
   async index(req: Request, res: Response): Promise<void> {

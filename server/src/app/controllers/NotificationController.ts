@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import { IController } from './IController';
-import NotificationRepository from '../repositories/NotificationRepository';
+import { IController } from '@controllers/IController';
+import NotificationRepository from '@repositories/NotificationRepository';
 
 export default class NotificationController implements IController {
   async index(req: Request, res: Response): Promise<void> {

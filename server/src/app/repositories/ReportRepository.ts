@@ -1,4 +1,4 @@
-import BaseRepository from './BaseRepository';
+import BaseRepository from '@repositories/BaseRepository';
 
 const ReportRepository = new BaseRepository('report', {
   id: {

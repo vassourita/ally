@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 
-import Database from '../../database/Database';
-import { IController } from './IController';
-import UserRepository from '../repositories/UserRepository';
-import ProposalRepository from '../repositories/ProposalRepository';
-import KnowledgeRepository from '../repositories/KnowledgeRepository';
-import JobVacancyRepository from '../repositories/JobVacancyRepository';
-import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
+import Database from '@database/Database';
+import { IController } from '@controllers/IController';
+import UserRepository from '@repositories/UserRepository';
+import ProposalRepository from '@repositories/ProposalRepository';
+import KnowledgeRepository from '@repositories/KnowledgeRepository';
+import JobVacancyRepository from '@repositories/JobVacancyRepository';
+import KnowledgeTypeRepository from '@repositories/KnowledgeTypeRepository';
 
 export default class JobVacancyController implements IController {
   async index(req: Request, res: Response): Promise<void> {

@@ -1,4 +1,4 @@
-import Repository from './BaseRepository';
+import Repository from '@repositories/BaseRepository';
 
 const MessageRepository = new Repository('message', {
   id: {

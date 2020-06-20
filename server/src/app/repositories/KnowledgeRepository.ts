@@ -1,4 +1,4 @@
-import Repository from './BaseRepository';
+import Repository from '@repositories/BaseRepository';
 
 const KnowledgeRepository = new Repository('knowledge', {
   id: {

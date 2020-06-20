@@ -6,8 +6,8 @@ import Youch from 'youch';
 import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 
-import Router from './Router';
-import WebSocket from './WebSocket';
+import Router from '@root/Router';
+import WebSocket from '@root/WebSocket';
 
 export default class AllyApi {
   private app: express.Application;

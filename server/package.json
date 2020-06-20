@@ -4,8 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "server:dev": "ts-node-dev src/index.ts",
-    "server:start": "ts-node src/index.ts",
+    "server:dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpileOnly --ignore-watch node_modules --no-notify src/index.ts",
     "db:migrate": "knex migrate:latest",
     "db:migrate:rollback": "knex migrate:rollback",
     "db:seed": "knex seed:run"
@@ -28,6 +27,7 @@
     "pluralize": "^8.0.0",
     "ramda": "^0.27.0",
     "socket.io": "^2.3.0",
+    "tsconfig-paths": "^3.9.0",
     "youch": "^2.0.10",
     "yup": "^0.28.5"
   },

@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 
-import { IController } from './IController';
-import UserRepository from '../repositories/UserRepository';
-import KnowledgeRepository from '../repositories/KnowledgeRepository';
-import KnowledgeTypeRepository from '../repositories/KnowledgeTypeRepository';
+import { IController } from '@controllers/IController';
+import UserRepository from '@repositories/UserRepository';
+import KnowledgeRepository from '@repositories/KnowledgeRepository';
+import KnowledgeTypeRepository from '@repositories/KnowledgeTypeRepository';
 
-const cities: any[] = require('../../database/cities.json');
+import cities from '@database/cities.json';
 
 export default class UserController implements IController {
   async index(req: Request, res: Response): Promise<void> {
@@ -134,7 +134,7 @@ export default class UserController implements IController {
             name: knowledge.name,
             user_id: userId,
           },
-          false
+          false,
         ));
       });
     }

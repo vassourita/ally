@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import AllyApi from './Api';
+import AllyApi from '@root/Api';
 
 const api = new AllyApi();
 

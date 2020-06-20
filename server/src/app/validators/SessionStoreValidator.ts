@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { Request, Response, NextFunction } from 'express';
 
-import { IValidator } from './IValidator';
+import { IValidator } from '@validators/IValidator';
 
 export default class UserStoreValidator implements IValidator {
   async validate(req: Request, res: Response, next: NextFunction) {
