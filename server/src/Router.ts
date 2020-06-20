@@ -1,19 +1,20 @@
 import express from 'express';
 
+import EmployerController from '@controllers/EmployerController';
+import JobVacancyController from '@controllers/JobVacancyController';
+import MessageController from '@controllers/MessageController';
+import NotificationController from '@controllers/NotificationController';
+import OpportunityController from '@controllers/OpportunityController';
+import ProposalController from '@controllers/ProposalController';
+import ReportController from '@controllers/ReportController';
+import SessionController from '@controllers/SessionController';
+import UserController from '@controllers/UserController';
+
 import AuthMiddleware from '@middlewares/AuthMiddleware';
 import UploadMiddleware from '@middlewares/UploadMiddleware';
 
 import SessionStoreValidator from '@validators/SessionStoreValidator';
 
-import UserController from '@controllers/UserController';
-import ReportController from '@controllers/ReportController';
-import SessionController from '@controllers/SessionController';
-import MessageController from '@controllers/MessageController';
-import ProposalController from '@controllers/ProposalController';
-import EmployerController from '@controllers/EmployerController';
-import JobVacancyController from '@controllers/JobVacancyController';
-import OpportunityController from '@controllers/OpportunityController';
-import NotificationController from '@controllers/NotificationController';
 
 export default class Router {
   public routes: express.Router;

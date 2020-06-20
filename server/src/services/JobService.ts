@@ -1,12 +1,4 @@
-/* eslint-disable consistent-return */
-/* eslint-disable indent */
-/* eslint-disable operator-linebreak */
 import { formatRFC3339, isBefore, subDays, parseISO } from 'date-fns';
-
-import UserRepository from '../app/repositories/UserRepository';
-import KnowledgeRepository from '../app/repositories/KnowledgeRepository';
-import JobVacancyRepository from '../app/repositories/JobVacancyRepository';
-import KnowledgeTypeRepository from '../app/repositories/KnowledgeTypeRepository';
 
 import Database from '../database/Database';
 
@@ -21,20 +13,20 @@ export default class JobService {
     let localFilter = '';
 
     switch (local) {
-      case 'region': {
-        localFilter = ` AND user.microregion_id = ${Database.escape(user.microregion_id)} `;
-        break;
-      }
-      case 'city': {
-        localFilter = ` AND user.city = ${Database.escape(user.city)} `;
-        break;
-      }
-      case 'state': {
-        localFilter = ` AND user.state = ${Database.escape(user.state)} `;
-        break;
-      }
-      default:
-        break;
+    case 'region': {
+      localFilter = ` AND user.microregion_id = ${Database.escape(user.microregion_id)} `;
+      break;
+    }
+    case 'city': {
+      localFilter = ` AND user.city = ${Database.escape(user.city)} `;
+      break;
+    }
+    case 'state': {
+      localFilter = ` AND user.state = ${Database.escape(user.state)} `;
+      break;
+    }
+    default:
+      break;
     }
 
     const jobs = await Database.getInstance().query<any>(`
@@ -105,19 +97,19 @@ export default class JobService {
     });
 
     switch (days) {
-      case 'month': {
-        return filteredJobs.filter(
-          job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date().toString()), 30)),
-        );
-      }
-      case 'week': {
-        return filteredJobs.filter(
-          job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date().toString()), 7)),
-        );
-      }
-      default: {
-        return filteredJobs;
-      }
+    case 'month': {
+      return filteredJobs.filter(
+        job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date().toString()), 30)),
+      );
+    }
+    case 'week': {
+      return filteredJobs.filter(
+        job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date().toString()), 7)),
+      );
+    }
+    default: {
+      return filteredJobs;
+    }
     }
 
     // const jobsFilteredByUser = jobs.filter(job => {

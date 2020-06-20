@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { IController } from '@controllers/IController';
+
 import ReportRepository from '@repositories/ReportRepository';
 
 export default class ReportController implements IController {

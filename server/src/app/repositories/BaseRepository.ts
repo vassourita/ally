@@ -1,10 +1,9 @@
-/* eslint-disable operator-linebreak */
-/* eslint-disable indent */
 import pluralize from 'pluralize';
 
-import Database from '@database/Database';
-import AllySqlRepositoryPrimaryKeyError from '@root/helpers/errors/AllySqlRepositoryPrimaryKeyError';
 import AllySqlJoinTypeError from '@root/helpers/errors/AllySqlJoinTypeError';
+import AllySqlRepositoryPrimaryKeyError from '@root/helpers/errors/AllySqlRepositoryPrimaryKeyError';
+
+import Database from '@database/Database';
 
 interface ITableSchema {
   [fieldName: string]: {
@@ -75,22 +74,21 @@ export default class BaseRepository<T extends ITableSchema> {
   }
 
   async find(query: IQuery<T> = {}): Promise<IQueryReturn<T>[] & any[]> {
-    const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [], groupBy = [] } = query;
+    const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
     const formattedWhere = Object.entries(where);
 
     const getSelect = attrs.map(a => ` ${this.tableName}.${a} `);
-    const getWhere =
-      formattedWhere.length > 0
-        ? `WHERE ${formattedWhere
-            .map(([key, value]) => {
-              const parts: any[] = value.toString().split(/\s+(?=([^']*'[^']*')*[^']*$)/g);
-              if (parts.length > 1) {
-                return ` ${this.tableName}.${key} ${parts.join(' ')} `;
-              }
-              return `\n${this.tableName}.${key} = ${Database.escape(value)}`;
-            })
-            .join(' AND ')}`
-        : '';
+    const getWhere = formattedWhere.length > 0
+      ? `WHERE ${formattedWhere
+        .map(([key, value]) => {
+          const parts: any[] = value.toString().split(/\s+(?=([^']*'[^']*')*[^']*$)/g);
+          if (parts.length > 1) {
+            return ` ${this.tableName}.${key} ${parts.join(' ')} `;
+          }
+          return `\n${this.tableName}.${key} = ${Database.escape(value)}`;
+        })
+        .join(' AND ')}`
+      : '';
     const getGroupBy = join.length ? ` GROUP BY ${this.tableName}.${this.primaryFields[0]} ` : '';
     const getLimit = limit ? ` LIMIT ${limit} ` : '';
     const getOffset = offset ? ` OFFSET ${offset} ` : '';
@@ -121,8 +119,8 @@ export default class BaseRepository<T extends ITableSchema> {
     const sql = `
       DELETE FROM ${this.tableName}
       WHERE ${formattedWhere
-        .map(([key, value]) => `\n${this.tableName}.${key} ${operator} ${Database.escape(value)}`)
-        .join(' AND ')}
+    .map(([key, value]) => `\n${this.tableName}.${key} ${operator} ${Database.escape(value)}`)
+    .join(' AND ')}
     `;
     const { affectedRows } = await this.db.execute(sql, []);
     return affectedRows;
@@ -135,8 +133,8 @@ export default class BaseRepository<T extends ITableSchema> {
       UPDATE ${this.tableName}
       SET ${formattedSet.map(([key, value]) => ` ${this.tableName}.${key} = ${Database.escape(value)} `)}
       WHERE ${formattedWhere
-        .map(([key, value]) => ` ${this.tableName}.${key} ${operator} ${Database.escape(value)} `)
-        .join(' AND ')}
+    .map(([key, value]) => ` ${this.tableName}.${key} ${operator} ${Database.escape(value)} `)
+    .join(' AND ')}
     `;
     const { affectedRows } = await this.db.execute(sql, []);
     return affectedRows;
@@ -166,7 +164,7 @@ export default class BaseRepository<T extends ITableSchema> {
     return res;
   }
 
-  private static getJoins(join: IJoin[], upperRepository: BaseRepository<any>) {
+  private static getJoins(join: IJoin[], _upperRepository: BaseRepository<any>) {
     return {
       fields(): string[] {
         return join.map(j => {
@@ -175,12 +173,12 @@ export default class BaseRepository<T extends ITableSchema> {
           const getAttrs = attrs.map(attr => ` '${attr}', ${j.repo.tableName}.${attr}, `);
           const getInnerJoins: string[] | string = j.join
             ? j.join.map(
-                iJ =>
-                  ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${BaseRepository.getJoins(
+              iJ =>
+                ` '${iJ.as || pluralize(iJ.repo.tableName)}', ${BaseRepository.getJoins(
                     j.join as IJoin[],
                     j.repo,
-                  ).fields()} `,
-              )
+                ).fields()} `,
+            )
             : '';
 
           if (j.type === 'count') {
@@ -220,9 +218,8 @@ export default class BaseRepository<T extends ITableSchema> {
       joins(): string[] | string {
         if (join) {
           return join.map(j => {
-            const getOn =
-              j.on &&
-              `ON ${Object.entries(j.on)
+            const getOn = j.on
+              && `ON ${Object.entries(j.on)
                 .map(([key, value]) => `\n${j.repo.tableName}.${key} = ${value}`)
                 .join(' AND ')}`;
 

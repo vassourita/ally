@@ -1,9 +1,9 @@
 import cors from 'cors';
-import Http from 'http';
-import path from 'path';
-import morgan from 'morgan';
-import Youch from 'youch';
 import express, { Request, Response, NextFunction } from 'express';
+import Http from 'http';
+import morgan from 'morgan';
+import path from 'path';
+import Youch from 'youch';
 import 'express-async-errors';
 
 import Router from '@root/Router';

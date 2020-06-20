@@ -1,12 +1,13 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 
+import cities from '@database/cities.json';
+
 import { IController } from '@controllers/IController';
-import UserRepository from '@repositories/UserRepository';
+
 import KnowledgeRepository from '@repositories/KnowledgeRepository';
 import KnowledgeTypeRepository from '@repositories/KnowledgeTypeRepository';
-
-import cities from '@database/cities.json';
+import UserRepository from '@repositories/UserRepository';
 
 export default class UserController implements IController {
   async index(req: Request, res: Response): Promise<void> {

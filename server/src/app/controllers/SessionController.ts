@@ -1,9 +1,11 @@
 import bcrypt from 'bcryptjs';
-import jwt, { Secret } from 'jsonwebtoken';
 import { Request, Response } from 'express';
+import jwt, { Secret } from 'jsonwebtoken';
 
 import authConfig from '@config/auth';
+
 import { IController } from '@controllers/IController';
+
 import UserRepository from '@repositories/UserRepository';
 
 export default class SessionController implements IController {

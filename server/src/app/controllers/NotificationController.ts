@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { IController } from '@controllers/IController';
+
 import NotificationRepository from '@repositories/NotificationRepository';
 
 export default class NotificationController implements IController {

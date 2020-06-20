@@ -1,5 +1,5 @@
-import io from 'socket.io';
 import { Server } from 'http';
+import io from 'socket.io';
 
 interface ISocketConnection {
   [userId: string]: {

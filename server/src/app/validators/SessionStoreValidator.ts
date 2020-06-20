@@ -1,5 +1,5 @@
-import * as Yup from 'yup';
 import { Request, Response, NextFunction } from 'express';
+import * as Yup from 'yup';
 
 import { IValidator } from '@validators/IValidator';
 
