@@ -21,6 +21,7 @@
       "@helpers/*": ["./src/helpers/*"],
       "@database/*": ["./src/database/*"],
       "@services/*": ["./src/services/*"],
+      "@models/*": ["./src/app/models/*"],
       "@validators/*": ["./src/app/validators/*"],
       "@controllers/*": ["./src/app/controllers/*"],
       "@middlewares/*": ["./src/app/middlewares/*"],

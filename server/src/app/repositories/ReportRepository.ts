@@ -1,24 +1,9 @@
+import Report from '@models/Report';
+
 import BaseRepository from '@repositories/BaseRepository';
 
-const ReportRepository = new BaseRepository('report', {
-  id: {
-    primary: true,
-    type: String(),
-  },
-  description: {
-    type: String(),
-  },
-  user_id: {
-    returning: false,
-    type: Number(),
-  },
-  job_vacancy_id: {
-    returning: false,
-    type: Number(),
-  },
-  created_at: {
-    type: String(),
-  },
+const ReportRepository = new BaseRepository<Report>('report', {
+  id: { primary: true, },
 });
 
 export default ReportRepository;

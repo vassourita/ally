@@ -20,7 +20,7 @@ export default class NotificationController implements IController {
 
     const notifications = await NotificationRepository.update({
       set: { is_read: true },
-      where: { id },
+      where: { id: Number(id) },
     });
 
     res.status(200).json({ notifications });

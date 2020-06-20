@@ -42,7 +42,7 @@ export default class UserController implements IController {
     const { id } = req.params;
 
     const user = await UserRepository.findOne({
-      where: { id, employer: false },
+      where: { id: Number(id), employer: false },
       join: [
         {
           repo: KnowledgeRepository,

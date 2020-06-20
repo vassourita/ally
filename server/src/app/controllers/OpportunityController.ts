@@ -1,5 +1,6 @@
-import JobService from '@services/JobService';
 import { Request, Response } from 'express';
+
+import JobService from '@services/JobService';
 
 import { IController } from '@controllers/IController';
 

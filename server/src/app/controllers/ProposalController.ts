@@ -55,7 +55,7 @@ export default class ProposalController implements IController {
     );
 
     const proposal = await ProposalRepository.findOne({
-      where: { id: insertId },
+      where: { id: insertId as number },
       join: [
         {
           repo: JobVacancyRepository,
@@ -87,11 +87,11 @@ export default class ProposalController implements IController {
 
   async update(req: Request, res: Response): Promise<void> {
     const employerId = res.locals.userId;
-    const proposalId = req.params.id;
+    const proposalId = Number(req.params.id);
     const { status } = req.body;
 
     const proposal = await ProposalRepository.findOne({
-      where: { id: proposalId },
+      where: { id: Number(proposalId) },
       join: [
         {
           repo: JobVacancyRepository,
@@ -185,7 +185,7 @@ export default class ProposalController implements IController {
     const { id } = req.params;
 
     const deleted = await ProposalRepository.delete({
-      where: { id },
+      where: { id: Number(id) },
     });
 
     res.status(200).json({ deleted });

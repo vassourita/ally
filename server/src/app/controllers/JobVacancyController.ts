@@ -51,7 +51,7 @@ export default class JobVacancyController implements IController {
     const { id } = req.params;
 
     const job = await JobVacancyRepository.findOne({
-      where: { id },
+      where: { id: Number(id) },
       join: [
         {
           repo: ProposalRepository,
@@ -89,7 +89,7 @@ export default class JobVacancyController implements IController {
     const { userId } = res.locals;
     const { name, description, amount, local, knowledges } = req.body;
 
-    const newJob: any = await JobVacancyRepository.create({
+    const newJob = await JobVacancyRepository.create({
       name,
       local,
       amount,
@@ -153,14 +153,14 @@ export default class JobVacancyController implements IController {
     if (amount) {
       updated.amount = await JobVacancyRepository.update({
         set: { amount },
-        where: { id },
+        where: { id: Number(id) },
       });
     }
 
     if (local) {
       updated.local = await JobVacancyRepository.update({
         set: { local },
-        where: { id },
+        where: { id: Number(id) },
       });
     }
 
@@ -185,7 +185,7 @@ export default class JobVacancyController implements IController {
     }
 
     const job = await JobVacancyRepository.findOne({
-      where: { id },
+      where: { id: Number(id) },
       join: [
         {
           repo: ProposalRepository,

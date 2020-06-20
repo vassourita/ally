@@ -34,7 +34,7 @@ export default class EmployerController implements IController {
     const { id } = req.params;
 
     const user = await UserRepository.findOne({
-      where: { id, employer: true },
+      where: { id: Number(id), employer: true },
       join: [
         {
           repo: JobVacancyRepository,

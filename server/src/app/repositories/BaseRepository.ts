@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-class-members */
 import pluralize from 'pluralize';
 
 import AllySqlJoinTypeError from '@helpers/errors/AllySqlJoinTypeError';
@@ -10,13 +11,12 @@ interface ITableSchema {
     returning?: boolean;
     primary?: boolean;
     required?: boolean;
-    type: any;
   };
 }
 
 interface IJoin {
   repo: BaseRepository<any>;
-  on: IWhere;
+  on: IWhere<any>;
   attrs?: string[];
   as?: string;
   type: 'many' | 'single' | 'count';
@@ -25,28 +25,20 @@ interface IJoin {
   op?: string;
 }
 
-interface IWhere {
-  [field: string]: any;
+type IWhere<T> = {
+  [K in keyof Partial<T>]: T[K];
 }
 
-interface IQuery<T extends ITableSchema> {
-  attrs?: Array<keyof T>;
+interface IQuery<T> {
+  attrs?: Array<keyof T & string>;
   limit?: number;
   offset?: number;
-  where?: IWhere;
+  where?: IWhere<T>;
   join?: IJoin[];
   groupBy?: string[];
 }
 
-type IQueryReturn<T extends ITableSchema> = {
-  [K in keyof T]: T[K]['type'];
-};
-
-type ICreateReturn<T extends ITableSchema> = {
-  [K in keyof Partial<T>]: T[K]['type'];
-};
-
-export default class BaseRepository<T extends ITableSchema> {
+export default class BaseRepository<M> {
   private db: Database;
   public tableName: string;
   public tableSchema: ITableSchema;
@@ -55,7 +47,7 @@ export default class BaseRepository<T extends ITableSchema> {
   public primaryFields: string[];
   public requiredFields: string[];
 
-  constructor(tableName: string, tableSchema: T) {
+  constructor(tableName: string, tableSchema: ITableSchema) {
     this.db = Database.getInstance();
     this.tableName = tableName;
     this.tableSchema = tableSchema;
@@ -64,16 +56,16 @@ export default class BaseRepository<T extends ITableSchema> {
     const values = Object.values(tableSchema);
 
     this.fields = keys;
-    this.primaryFields = keys.filter((k, i) => values[i].primary || false);
-    this.requiredFields = keys.filter((k, i) => values[i].required || true);
-    this.returnFields = keys.filter((k, i) => values[i].returning !== false);
+    this.primaryFields = keys.filter((_, i) => values[i].primary || false);
+    this.requiredFields = keys.filter((_, i) => values[i].required || true);
+    this.returnFields = keys.filter((_, i) => values[i].returning !== false);
 
     if (this.primaryFields.length < 1) {
       throw new AllySqlRepositoryPrimaryKeyError();
     }
   }
 
-  async find(query: IQuery<T> = {}): Promise<IQueryReturn<T>[] & any[]> {
+  async find(query: IQuery<M> = {}): Promise<M[]> {
     const { attrs = this.returnFields, limit = null, offset = 0, where = {}, join = [] } = query;
     const formattedWhere = Object.entries(where);
     const params = [];
@@ -110,17 +102,17 @@ export default class BaseRepository<T extends ITableSchema> {
       ${getLimit}
       ${getOffset}
     `;
-    const results = this.db.query<IQueryReturn<T>>(sql, [...getJoins.params, ...params]);
+    const results = this.db.query<M>(sql, [...getJoins.params, ...params]);
 
     return results;
   }
 
-  async findOne(query: IQuery<T>) {
+  async findOne(query: IQuery<M>) {
     const results = await this.find({ ...query, limit: 1 });
     return results[0] || null;
   }
 
-  async delete({ where }: { where: IWhere }) {
+  async delete({ where }: { where: IWhere<M> }) {
     const formattedWhere = Object.entries(where);
     const params = [];
     let getWhere = '';
@@ -145,7 +137,7 @@ export default class BaseRepository<T extends ITableSchema> {
     return affectedRows;
   }
 
-  async update({ where, set }: { where: IWhere; set: IWhere }) {
+  async update({ where, set }: { where: IWhere<M>; set: IWhere<M> }) {
     const formattedWhere = Object.entries(where);
     const formattedSet = Object.entries(set);
     const params = [];
@@ -177,7 +169,9 @@ export default class BaseRepository<T extends ITableSchema> {
     return affectedRows;
   }
 
-  async create(schema: ICreateReturn<T>, returning = true): Promise<number | IQueryReturn<T>> {
+  create(schema: Partial<M>, returning: false): Promise<number>
+  create(schema: Partial<M>, returning?: true): Promise<M>
+  async create(schema: Partial<M>, returning = true) {
     const sql = `
       INSERT INTO ${this.tableName}
         (${Object.keys(schema)})
@@ -191,12 +185,12 @@ export default class BaseRepository<T extends ITableSchema> {
     }
 
     let res = await this.findOne({
-      where: { [this.primaryFields[0]]: insertId },
+      where: { [this.primaryFields[0]]: insertId } as any,
     });
     if (res) return res;
 
     res = await this.findOne({
-      where: { [this.primaryFields[1]]: insertId },
+      where: { [this.primaryFields[1]]: insertId } as any,
     });
     return res;
   }
