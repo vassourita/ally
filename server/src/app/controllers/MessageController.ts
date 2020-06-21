@@ -18,11 +18,10 @@ export default class MessageController implements IController {
       where: { id: userId },
     });
 
-    const idFilter = user.employer ? 'employer_id' : 'user_id';
-    const userJoinFilter = user.employer ? 'user_id' : 'employer_id';
+    const idFilter = user.employer ? ['employer', 'user'] : ['user', 'employer'];
 
     const chats = await ChatRepository.find({
-      where: { [idFilter]: userId },
+      where: { [`${idFilter[0]}_id`]: userId },
       join: [
         {
           repo: MessageRepository,
@@ -32,7 +31,8 @@ export default class MessageController implements IController {
         },
         {
           repo: UserRepository,
-          on: { [userJoinFilter]: `chat.${userJoinFilter}` },
+          on: { id: `chat.${idFilter[1]}_id` },
+          as: '',
           type: 'single',
         },
       ],
