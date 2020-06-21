@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FiAlertCircle } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { formatRelative } from 'date-fns';

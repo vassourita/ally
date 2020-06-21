@@ -28,6 +28,7 @@ function Dashboard() {
       toast.info(data.notification.description);
       dispatch(NotificationActions.addNotification(data.notification));
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.id]);
 
   return (
