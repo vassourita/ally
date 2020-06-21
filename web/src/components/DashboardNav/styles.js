@@ -13,7 +13,7 @@ export const Title = styled.h3`
   font-family: 'Quicksand';
   font-size: 20px;
   font-weight: 500;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
   padding: 34px 34px 0;
 `;
 

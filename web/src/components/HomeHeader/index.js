@@ -58,14 +58,21 @@ function HomeHeader() {
             </NavLink>
           </li>
           {validSession ? (
-            <li>
-              <Button onClick={() => history.push('/register')}>DASHBOARD</Button>
-            </li>
+            <>
+              <li>
+                <NavLink activeClassName="active-link" to="/login">
+                  LOGIN
+                </NavLink>
+              </li>
+              <li>
+                <Button onClick={() => history.push('/profile')}>DASHBOARD</Button>
+              </li>
+            </>
           ) : (
             <>
               <li>
                 <NavLink activeClassName="active-link" to="/login">
-                  ENTRAR
+                  LOGIN
                 </NavLink>
               </li>
               <li>

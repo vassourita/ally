@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Slide } from 'react-toastify';
 
 import { GlobalStyles } from './styles/global';
 
@@ -14,7 +14,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <GlobalStyles />
         <Routes />
-        <ToastContainer autoClose={4000} hideProgressBar={true} position={'top-right'} />
+        <ToastContainer transition={Slide} autoClose={4000} hideProgressBar={true} position={'top-right'} />
       </PersistGate>
     </Provider>
   );

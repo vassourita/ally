@@ -26,9 +26,6 @@ function DashboardHeader() {
         <img src={iconImg} alt="allyIcon" />
         <List>
           <ListItem>
-            <Link to="https://google.com">Ajuda</Link>
-          </ListItem>
-          <ListItem>
             <Link to="/">Retornar ao site</Link>
           </ListItem>
         </List>
@@ -39,7 +36,11 @@ function DashboardHeader() {
           <strong>{user.name}</strong>
         </p>
         <Link to="/profile">
-          <img src={user.image_url ? `${process.env.REACT_APP_FILES_URL}${user.image_url}` : null} alt="" className="imgUser" />
+          <img
+            src={user.image_url ? `${process.env.REACT_APP_FILES_URL}${user.image_url}` : null}
+            alt=""
+            className="imgUser"
+          />
         </Link>
       </Greeting>
     </Container>

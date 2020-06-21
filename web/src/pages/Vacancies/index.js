@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useParams, useHistory } from 'react-router-dom';
 import Modal from 'react-modal';
@@ -62,6 +62,18 @@ function Vacancies() {
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
+
+  const listRef = useRef(null);
+
+  const calculateListScroll = () => {
+    if (
+      actualJob?.proposals.length > 1 ||
+      (listRef.current && listRef.current.scrollHeight > listRef.current.clientHeight)
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   useEffect(() => {
     (async () => {
@@ -377,7 +389,7 @@ function Vacancies() {
           )}
         </CardBox>
       </Header>
-      <List>
+      <List hasScroll={calculateListScroll()} ref={listRef}>
         {actualJob?.proposals?.map(proposal => (
           <ListItem key={proposal.id} className="modal-shadow">
             <UserImg

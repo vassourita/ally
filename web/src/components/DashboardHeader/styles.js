@@ -40,6 +40,7 @@ export const Greeting = styled.div`
   font-size: 14px;
   strong {
     font-size: 15px;
+    font-weight: 500;
   }
   img {
     margin-left: 20px;

@@ -18,3 +18,10 @@ export const addChat = chat => {
     data: { chat },
   };
 };
+
+export const addMessage = (chatId, message) => {
+  return {
+    type: 'ADD_MESSAGE',
+    data: { chatId, message },
+  };
+};

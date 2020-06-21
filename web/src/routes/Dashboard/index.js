@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { toast } from 'react-toastify';
 
@@ -22,13 +22,17 @@ function Dashboard() {
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
+  const history = useHistory();
+
   useEffect(() => {
     socket.connect(auth.id);
     socket.subscribeToNotifications(data => {
-      toast.info(data.notification.description);
+      toast.info(data.notification.description, {
+        onClick: () => history.push(data.notification.link),
+      });
       dispatch(NotificationActions.addNotification(data.notification));
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.id]);
 
   return (
@@ -38,7 +42,8 @@ function Dashboard() {
           <TransitionGroup>
             <CSSTransition timeout={400} classNames="fade-roll" key={location.key}>
               <Switch location={location}>
-                <PrivateRoute path="/chat" component={Chat} />
+                <PrivateRoute exact path="/chat" component={Chat} />
+                <PrivateRoute path="/chat/:id" component={Chat} />
                 <PrivateRoute path="/users/:id" component={User} />
                 <PrivateRoute exact path="/profile" component={Profile} />
                 <PrivateRoute exact path="/vacancies" component={Vacancies} />

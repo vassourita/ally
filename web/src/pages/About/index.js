@@ -17,8 +17,8 @@ function About() {
           <CardTextContainer>
             <CardTitle>O que é ally?</CardTitle>
             <CardText>
-              A ally é um projeto 99% brasileiro, desenvolvido por estudantes do curso de informática para internet da Etec
-              Aristóteles Ferreira localizada em Santos - SP.
+              A ally é um projeto 99% brasileiro, desenvolvido por estudantes do curso de informática para internet da
+              Etec Aristóteles Ferreira localizada em Santos - SP.
             </CardText>
           </CardTextContainer>
         </Card>
@@ -27,8 +27,8 @@ function About() {
           <CardTextContainer>
             <CardTitle>Como funciona?</CardTitle>
             <CardText>
-              Aqui somos nós que procuramos por você, trazendo os resultados na palma da sua mão em tempo real. Basta se cadastrar
-              e visualizar as oportunidades.
+              Aqui somos nós que procuramos por você, trazendo os resultados na palma da sua mão em tempo real. Basta se
+              cadastrar e visualizar as oportunidades.
             </CardText>
           </CardTextContainer>
         </Card>
@@ -37,8 +37,8 @@ function About() {
           <CardTextContainer>
             <CardTitle>Como usar?</CardTitle>
             <CardText>
-              Empresas podem criar uma conta clicando <Link to="/register">aqui</Link>, depois cadastrar suas vagas. Profissionais
-              podem baixar nosso aplicativo aqui para criar uma conta.
+              Empresas podem criar uma conta clicando <Link to="/register">aqui</Link>, depois cadastrar suas vagas.
+              Profissionais podem baixar nosso aplicativo aqui para criar uma conta.
             </CardText>
           </CardTextContainer>
         </Card>

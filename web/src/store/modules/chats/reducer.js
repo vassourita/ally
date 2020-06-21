@@ -17,6 +17,11 @@ function chats(state = INITIAL_STATE, { type, data }) {
     case 'SET_CHATS': {
       return data.chats;
     }
+    case 'ADD_MESSAGE': {
+      return state.map(chat =>
+        chat.id !== data.chatId ? chat : { ...chat, messages: [...chat.messages, data.message] }
+      );
+    }
     default: {
       return state;
     }

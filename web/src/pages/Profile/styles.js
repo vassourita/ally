@@ -44,7 +44,7 @@ export const UserAbout = styled.div`
   max-height: 100%;
   max-width: 100%;
   overflow-y: scroll;
-  word-break: break-all;
+  word-break: keep-all;
   ::-webkit-scrollbar-track {
     margin: 0;
   }

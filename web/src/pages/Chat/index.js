@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { FiCheck } from 'react-icons/fi';
 import { NavLink, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -17,13 +16,12 @@ function Chat() {
 
   const dispatch = useDispatch();
   const chats = useSelector(state => state.chats);
-  const userId = useSelector(state => state.auth.id);
 
   const actualChat = chats.find(j => j.id === Number(chatId));
 
   useEffect(() => {
     api
-      .get('/chats')
+      .get('/messages')
       .then(response => {
         if (response.data.chats) {
           dispatch(ChatActions.setChats(response.data.chats));
@@ -36,23 +34,7 @@ function Chat() {
   }, [dispatch]);
 
   function getBadge(messages) {
-    const last = messages[messages.length - 1];
-
-    if ((last.author_id = userId)) {
-      if (last.is_read) {
-        return <FiCheck />;
-      } else {
-        return '';
-      }
-    }
-
-    const unread = messages.filter(m => !m.is_read);
-
-    if (!unread) {
-      return 0;
-    } else {
-      return unread.length;
-    }
+    return 0;
   }
 
   return (
@@ -62,10 +44,10 @@ function Chat() {
         <NavList>
           {chats.map(chat => (
             <NavItem key={chat.id}>
-              <NavLink activeClassName="nav-link-active" to={`/chats/${chat.id}`}>
+              <NavLink activeClassName="nav-link-active" to={`/chat/${chat.id}`}>
                 <div>
-                  <Title>{chat.name}</Title>
-                  <Available>{[...chat.messages].pop().content}</Available>
+                  <Title>{chat.user.name}</Title>
+                  <Available>{[...chat.messages].pop()?.content || 'Nenhuma mensagem ainda'}</Available>
                 </div>
                 <Badge>{getBadge(chat.messages)}</Badge>
               </NavLink>

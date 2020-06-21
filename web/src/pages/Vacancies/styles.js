@@ -96,6 +96,7 @@ export const Header = styled.div`
 export const List = styled.ul`
   grid-area: list;
   overflow-y: auto;
+  padding-right: ${p => (p.hasScroll ? '40px' : '0px')};
 `;
 
 export const ListItem = styled.li`
@@ -196,6 +197,7 @@ export const Counter = styled.div`
     font-size: 14px;
     display: flex;
     align-items: center;
+    margin-bottom: 7px;
     svg {
       margin-left: 5px;
     }
