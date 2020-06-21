@@ -32,7 +32,7 @@ export default class MessageController implements IController {
         {
           repo: UserRepository,
           on: { id: `chat.${idFilter[1]}_id` },
-          as: '',
+          as: idFilter[1],
           type: 'single',
         },
       ],
