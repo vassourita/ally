@@ -39,7 +39,7 @@ function Dashboard() {
     socket.subscribeToMessages(data => {
       dispatch(ChatActions.addMessage(data.message.chat.id, data.message));
       if (location.pathname !== '/chat') {
-        toast.info(`Nova mensagem de ${data.message.user.name}`, {
+        toast.info(`Nova mensagem de ${data.message.chat.user.name}`, {
           onClick: () => history.push(`/chat/${data.message.chat.id}`),
         });
       }
