@@ -8,7 +8,6 @@ import ChatRepository from '@repositories/ChatRepository';
 import MessageRepository from '@repositories/MessageRepository';
 import UserRepository from '@repositories/UserRepository';
 
-
 export default class MessageController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
@@ -54,6 +53,8 @@ export default class MessageController implements IController {
     const chat = await ChatRepository.findOne({
       where: { id: chatId },
     });
+
+    message.chat = chat;
 
     const targetId = userId === chat.employer_id ? chat.user_id : chat.employer_id;
 
