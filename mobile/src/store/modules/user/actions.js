@@ -11,9 +11,23 @@ export const removeUser = () => {
   };
 };
 
-export const updateUser = about => {
+export const updateUser = updated => {
   return {
     type: 'UPDATE_USER',
-    data: { updated: about },
+    data: { updated },
+  };
+};
+
+export const addKnowledge = knowledge => {
+  return {
+    type: 'ADD_KNOWLEDGE',
+    data: { knowledge },
+  };
+};
+
+export const removeKnowledge = id => {
+  return {
+    type: 'REMOVE_KNOWLEDGE',
+    data: { id },
   };
 };

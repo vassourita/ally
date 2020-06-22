@@ -79,9 +79,11 @@ export const GlobalStyles = createGlobalStyle`
   .modal-refactor {
     border-radius: none;
     background: #fff;
-    max-width: 400px;
     padding: 20px;
-    width: 90%;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    h6 {
+      margin: 0 0 32px;
+    }
   }
 
   .ReactModal__Overlay {

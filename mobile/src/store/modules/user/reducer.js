@@ -26,6 +26,18 @@ function user(state = INITIAL_STATE, { type, data }) {
     case 'REMOVE_USER': {
       return INITIAL_STATE;
     }
+    case 'ADD_KNOWLEDGE': {
+      return {
+        ...state,
+        knowledges: [...state.knowledges, data.knowledge],
+      };
+    }
+    case 'REMOVE_KNOWLEDGE': {
+      return {
+        ...state,
+        knowledges: state.knowledges.filter(k => k.id !== data.id),
+      };
+    }
     default: {
       return state;
     }

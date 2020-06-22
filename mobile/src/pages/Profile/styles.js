@@ -46,3 +46,35 @@ export const Content = styled.p`
     margin-right: 5px;
   }
 `;
+
+export const Knowledges = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0 20px;
+  h6 {
+    margin: 0;
+  }
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    svg {
+      margin-left: 15px;
+    }
+  }
+`;
+
+export const Edit = styled.div`
+  margin-top: 20px;
+  > div {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+export const DoubleInput = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+`;
