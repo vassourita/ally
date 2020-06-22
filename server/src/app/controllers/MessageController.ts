@@ -68,7 +68,6 @@ export default class MessageController implements IController {
         },
       ]
     });
-    console.log(chat);
 
     message.chat = chat;
 
