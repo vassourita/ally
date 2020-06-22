@@ -50,9 +50,25 @@ export default class MessageController implements IController {
       content,
     });
 
+    const user = await UserRepository.findOne({
+      attrs: ['employer'],
+      where: { id: userId },
+    });
+
+    const idFilter = user.employer ? 'employer' : 'user';
+
     const chat = await ChatRepository.findOne({
       where: { id: chatId },
+      join: [
+        {
+          repo: UserRepository,
+          on: { id: `chat.${idFilter}_id` },
+          as: idFilter,
+          type: 'single',
+        },
+      ]
     });
+    console.log(chat);
 
     message.chat = chat;
 
