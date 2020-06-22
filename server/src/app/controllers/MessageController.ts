@@ -55,11 +55,10 @@ export default class MessageController implements IController {
       where: { id: chatId },
     });
 
-    const ws = WebSocket.getInstance();
-
     const targetId = userId === chat.employer_id ? chat.user_id : chat.employer_id;
 
-    const target = targetId && ws.connectedUsers[targetId.toString()];
+    const ws = WebSocket.getInstance();
+    const target = ws.connectedUsers[targetId.toString()];
 
     if (target) {
       target.connection.emit('new_message', { message });
