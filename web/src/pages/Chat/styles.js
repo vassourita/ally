@@ -65,7 +65,7 @@ export const Title = styled.h5`
   font-size: 15px;
 `;
 
-export const Available = styled.span`
+export const LastMessage = styled.span`
   color: #666;
   font-size: 11px;
 `;
@@ -108,6 +108,88 @@ export const Header = styled.div`
 export const MessageList = styled.ul`
   grid-area: list;
   overflow-y: auto;
+  display: grid;
+  grid-template-rows: 1fr 40px 40px;
+`;
+
+export const Messages = styled.div`
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Message = styled.div`
+  width: fit-content;
+  max-width: 60%;
+  margin-top: 12px;
+  padding: 10px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  white-space: pre-wrap;
+  word-break: break-all;
+  :first-child {
+    margin-top: 0;
+  }
+  span {
+    color: #666;
+    font-size: 10px;
+    margin-top: 5px;
+  }
+  &.left {
+    background: #fff;
+    color: #333;
+    align-self: flex-start;
+    text-align: left;
+    span {
+      align-self: flex-end;
+      color: #666;
+      font-size: 10px;
+      margin-top: 5px;
+    }
+  }
+  &.right {
+    background: var(--ally-blue);
+    color: #fff;
+    align-self: flex-end;
+    text-align: right;
+    span {
+      align-self: flex-start;
+      color: #cfcfcf;
+      font-size: 10px;
+      margin-top: 5px;
+    }
+  }
+`;
+
+export const MessageInput = styled.div`
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 40px;
+  input {
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    padding: 0 15px;
+    font-size: 15px;
+    border: 0;
+  }
+  button {
+    background-color: var(--ally-blue);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    border: 0;
+    cursor: pointer;
+    transition: 0.2s ease;
+    :hover {
+      background-color: var(--ally-blue-d);
+    }
+  }
 `;
 
 export const ListItem = styled.li`
