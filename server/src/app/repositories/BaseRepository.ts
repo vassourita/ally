@@ -78,7 +78,7 @@ export class BaseRepository<M> {
             if (value.split('')[0] === '*' && value.split('')[1] === '*') {
               return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
             }
-            if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+            if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@') && !value.includes(' ')) {
               return ` ${this.tableName}.${key} = ${value} `;
             }
           }
@@ -146,7 +146,7 @@ export class BaseRepository<M> {
         if (value.split('')[0] === '*' && value.split('')[1] === '*') {
           return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
         }
-        if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+        if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@') && !value.includes(' ')) {
           return ` ${this.tableName}.${key} = ${value} `;
         }
       }
@@ -161,7 +161,7 @@ export class BaseRepository<M> {
             if (value.split('')[0] === '*' && value.split('')[1] === '*') {
               return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
             }
-            if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+            if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@') && !value.includes(' ')) {
               return ` ${this.tableName}.${key} = ${value} `;
             }
           }
@@ -266,7 +266,7 @@ export class BaseRepository<M> {
                 if (value.split('')[0] === '*' && value.split('')[1] === '*') {
                   return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
                 }
-                if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+                if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@') && !value.includes(' ')) {
                   return ` ${j.repo.tableName}.${key} = ${value} `;
                 }
                 params.push(value);
