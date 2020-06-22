@@ -42,11 +42,10 @@ export const MessageData = styled.div`
   align-self: center;
   padding: 7px;
   font-size: 13px;
-  background-color: #fff;
+  background: #e9e9e9;
   color: #333;
   margin-top: 12px;
   :first-child {
-    margin-top: 0;
   }
 `;
 
@@ -60,9 +59,6 @@ export const Message = styled.div`
   flex-direction: column;
   white-space: pre-wrap;
   word-break: break-word;
-  :first-child {
-    margin-top: 0;
-  }
   :last-child {
     margin-bottom: 12px;
   }

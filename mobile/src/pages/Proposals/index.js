@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { differenceInCalendarDays } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiCheckCircle, FiXCircle, FiClock } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 
 import * as ProposalActions from '../../store/modules/proposals/actions';
 import api from '../../services/api';
@@ -11,8 +12,9 @@ import { toast } from 'react-toastify';
 
 function Proposals() {
   const proposals = useSelector(state => state.proposals);
-
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   useEffect(() => {
     api
@@ -72,7 +74,7 @@ function Proposals() {
       <List>
         {proposals.length ? (
           proposals.map(proposal => (
-            <Card key={proposal.id}>
+            <Card onClick={() => history.push(`/proposals/${proposal.id}`)} key={proposal.id}>
               <h3>{proposal.job.name}</h3>
               <p>
                 por <strong>{proposal.job.employer.name}</strong>

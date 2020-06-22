@@ -9,7 +9,7 @@ import pt_BR from 'date-fns/locale/pt-BR';
 import * as NotificationActions from '../../store/modules/notifications/actions';
 import api from '../../services/api';
 
-import { Container, List, ListItem, Name, Side, Date as DateContainer, LinkButton, NoNotifications } from './styles';
+import { Container, List, ListItem, Name, Side, Date as DateContainer, NoNotifications } from './styles';
 
 function Notifications() {
   const notifications = useSelector(state => state.notifications);
@@ -34,7 +34,8 @@ function Notifications() {
       });
   }, [dispatch]);
 
-  const handleSetRead = async id => {
+  const handleSetRead = async (id, link) => {
+    history.push(link);
     try {
       const response = await api.put(`/notifications/${id}`);
 
@@ -42,7 +43,7 @@ function Notifications() {
         return dispatch(
           NotificationActions.updateNotification(id, {
             is_read: true,
-          }),
+          })
         );
       }
       toast.error('Ocorreu um erro inesperado em nosso servidor');
@@ -60,7 +61,7 @@ function Notifications() {
       <List>
         {!notifications.length && <NoNotifications>Nenhuma notificação</NoNotifications>}
         {notifications.map(notification => (
-          <ListItem onClick={() => history.push(notification.link)} key={notification.id}>
+          <ListItem onClick={() => handleSetRead(notification.id, notification.link)} key={notification.id}>
             <Name>
               <h4>
                 {notification.title} {!notification.is_read && <FiAlertCircle size="14" color="#df8020" />}
@@ -68,13 +69,6 @@ function Notifications() {
               <p>{notification.description}</p>
             </Name>
             <Side>
-              {!notification.is_read ? (
-                <>
-                  <LinkButton onClick={() => handleSetRead(notification.id)}>Marcar como lido</LinkButton>
-                </>
-              ) : (
-                <div></div>
-              )}
               <DateContainer>{getNotificationDate(notification.created_at)}</DateContainer>
             </Side>
           </ListItem>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export default function SelectBlock({
   id,
@@ -12,9 +12,10 @@ export default function SelectBlock({
   options = [],
   ...rest
 }) {
+  const [open, setOpen] = useState(false);
   return (
     <Container className="select-block">
-      <SelectContainer>
+      <SelectContainer isOpen={open}>
         <Select
           id={id}
           placeholder=""
@@ -28,6 +29,8 @@ export default function SelectBlock({
               primary: 'var(--ally-red)',
             },
           })}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setOpen(false)}
           onChange={onChange}
           menuPlacement="auto"
           isSearchable={false}
@@ -101,6 +104,12 @@ const SelectContainer = styled.div`
       font-size: 16px;
       transition: all 0.4s ease-out;
       cursor: text;
+      ${p =>
+        p.isOpen &&
+        css`
+          color: var(--ally-red);
+          opacity: 100%;
+        `}
     }
   }
 `;

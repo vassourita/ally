@@ -22,9 +22,9 @@ export const Info = styled.div`
   padding: 20px;
   h3 {
     margin-top: 35px;
-    font-weight: 500;
+    font-weight: 600;
     font-family: 'Quicksand';
-    font-size: 22px;
+    font-size: 20px;
     text-align: center;
   }
 `;
@@ -32,13 +32,13 @@ export const Info = styled.div`
 export const Title = styled.h6`
   font-weight: 500;
   font-family: 'Quicksand';
-  font-size: 20px;
+  font-weight: 600;
+  font-size: 19px;
   margin: 20px 0 7px;
 `;
 
 export const Content = styled.p`
-  font-weight: 400;
-  font-size: 17px;
+  font-size: 16px;
   margin-bottom: 4px;
   display: flex;
   align-items: center;

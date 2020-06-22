@@ -11,24 +11,25 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
-  padding: 8px 0;
+  padding: 10px 0;
   border-top: 1px solid #ccc;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   :first-child {
     padding-top: 0;
-    border-top: none;
+    border-top: 0;
   }
 `;
 
 export const Name = styled.div`
   h4 {
     font-family: 'Quicksand';
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   p {
-    font-size: 12px;
+    color: #222;
+    font-size: 13px;
     margin-bottom: 8px;
   }
 `;
@@ -36,8 +37,9 @@ export const Side = styled.div`
   font-size: 12px;
   text-align: right;
   display: flex;
+  color: #555;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   a:hover {
     text-decoration: underline;
     color: var(--ally-blue);

@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { FiFile } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { formatPhone } from '../../utils/formatters/formatPhone';
+
 import * as UserActions from '../../store/modules/user/actions';
 import api from '../../services/api';
 
@@ -28,7 +30,7 @@ function Profile() {
         <Content>{user.about}</Content>
         <Title>Contato</Title>
         <Content>{user.email}</Content>
-        <Content>{user.phone}</Content>
+        <Content>{formatPhone(user.phone.toString())}</Content>
         <Title>Endereço</Title>
         <Content>
           {user.city} - {user.state}

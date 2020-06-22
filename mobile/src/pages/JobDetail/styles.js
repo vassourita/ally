@@ -27,8 +27,9 @@ export const Body = styled.div`
 
 export const Title = styled.h6`
   color: #333;
+  font-family: 'Quicksand';
+  font-weight: 600;
   font-size: 18px;
-  font-weight: 500;
   margin-bottom: 10px;
 `;
 
@@ -58,9 +59,9 @@ export const EmployerImage = styled.div`
 
 export const EmployerName = styled.p`
   color: #333;
-  font-size: 17px;
-  font-weight: 500;
+  font-size: 18px;
   font-family: 'Quicksand';
+  font-weight: 600;
 `;
 
 export const EmployerAddress = styled(Text)`

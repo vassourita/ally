@@ -9,12 +9,12 @@ export const Nav = styled.nav``;
 export const NavList = styled.ul``;
 
 export const NavItem = styled.li`
-  padding: 10px 0;
+  padding: 12px 0;
   border-top: 1px solid #ccc;
   display: flex;
   :first-child {
     padding-top: 0;
-    border-top: none;
+    border-top: 0;
   }
   a {
     display: flex;
@@ -32,6 +32,7 @@ export const Title = styled.h5`
   color: #000;
   font-family: 'Quicksand';
   font-size: 17px;
+  margin-bottom: 3px;
 `;
 
 export const LastMessage = styled.span`
