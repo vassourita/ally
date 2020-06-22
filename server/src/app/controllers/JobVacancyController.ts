@@ -189,7 +189,7 @@ export default class JobVacancyController implements IController {
       join: [
         {
           repo: ProposalRepository,
-          on: { job_vacancy_id: 'job_vacancy.id' },
+          on: { job_vacancy_id: 'job_vacancy.id', status: 'awaiting' },
           type: 'many',
           join: [
             {
