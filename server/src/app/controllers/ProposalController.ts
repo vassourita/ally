@@ -143,10 +143,12 @@ export default class ProposalController implements IController {
       title = 'Proposta aceita';
       text = `Sua proposta para ${proposal.job.name} foi aceita! A empresa ${proposal.job.employer.name} entrará em contato.`;
       link = `/proposals/${proposalId}`;
-      await JobVacancyRepository.update({
-        set: { amount: '** = job_vacancy.amount - 1' as any },
-        where: { id: proposal.job_vacancy_id }
-      });
+      if (proposal.job.amount > 0) {
+        await JobVacancyRepository.update({
+          set: { amount: '** = job_vacancy.amount - 1' as any },
+          where: { id: proposal.job_vacancy_id }
+        });
+      }
       await ProposalRepository.update({
         set: { status: 'accepted' },
         where: { id: proposalId },
