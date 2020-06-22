@@ -9,7 +9,7 @@ function proposals(state = INITIAL_STATE, { type, data }) {
     case 'REMOVE_PROPOSAL': {
       return state.filter(j => j.id !== data.id);
     }
-    case 'UPDATE_PROPOSALS': {
+    case 'UPDATE_PROPOSAL': {
       const clone = [...state];
       const index = state.findIndex(j => j.id === data.id);
       clone[index] = {

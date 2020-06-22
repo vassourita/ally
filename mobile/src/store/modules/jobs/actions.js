@@ -7,7 +7,7 @@ export const setJobs = jobs => {
 
 export const updateJob = (id, updated) => {
   return {
-    type: 'UPDATE_JOBS',
+    type: 'UPDATE_JOB',
     data: { id, updated },
   };
 };

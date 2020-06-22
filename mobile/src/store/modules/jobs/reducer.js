@@ -9,7 +9,7 @@ function jobs(state = INITIAL_STATE, { type, data }) {
     case 'REMOVE_JOB': {
       return state.filter(j => j.id !== data.id);
     }
-    case 'UPDATE_JOBS': {
+    case 'UPDATE_JOB': {
       const clone = [...state];
       const index = state.findIndex(j => j.id === data.id);
       clone[index] = {

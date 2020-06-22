@@ -1,9 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FiChevronLeft } from 'react-icons/fi';
 import { useParams, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import * as JobActions from '../../store/modules/jobs/actions';
 import api from '../../services/api';
 
 import Button from '../../components/Button';
@@ -27,6 +28,8 @@ function JobDetail() {
   const history = useHistory();
   const job = useSelector(state => state.jobs.find(job => job.id === Number(id)));
 
+  const dispatch = useDispatch();
+
   async function handleSendProposal(e) {
     e.preventDefault();
     try {
@@ -39,6 +42,7 @@ function JobDetail() {
           onClick: () => history.push('/proposals'),
         });
         history.push('/jobs');
+        dispatch(JobActions.removeJob(job.id));
       } else {
         toast.error('Ocorreu um erro inesperado em nosso servidor');
       }

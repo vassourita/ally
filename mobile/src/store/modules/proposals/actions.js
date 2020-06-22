@@ -7,7 +7,7 @@ export const setProposals = proposals => {
 
 export const updateProposal = (id, updated) => {
   return {
-    type: 'UPDATE_PROPOSALS',
+    type: 'UPDATE_PROPOSAL',
     data: { id, updated },
   };
 };
