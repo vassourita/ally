@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 
 import { IController } from '@controllers/IController';
 
-import JobVacancyRepository from '@repositories/JobVacancyRepository';
-import KnowledgeRepository from '@repositories/KnowledgeRepository';
-import KnowledgeTypeRepository from '@repositories/KnowledgeTypeRepository';
-import ProposalRepository from '@repositories/ProposalRepository';
-import UserRepository from '@repositories/UserRepository';
+import { JobVacancyRepository } from '@repositories/JobVacancyRepository';
+import { KnowledgeRepository } from '@repositories/KnowledgeRepository';
+import { KnowledgeTypeRepository } from '@repositories/KnowledgeTypeRepository';
+import { ProposalRepository } from '@repositories/ProposalRepository';
+import { UserRepository } from '@repositories/UserRepository';
 
-export default class JobVacancyController implements IController {
+export class JobVacancyController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 

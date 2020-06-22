@@ -1,8 +1,8 @@
-import User from '@models/User';
+import { User } from '@models/User';
 
-import Repository from '@repositories/BaseRepository';
+import { BaseRepository } from '@repositories/BaseRepository';
 
-const UserRepository = new Repository<User>('user', {
+export const UserRepository = new BaseRepository<User>('user', {
   id: { primary: true, },
   name: { },
   email: { },
@@ -20,5 +20,3 @@ const UserRepository = new Repository<User>('user', {
   about: { },
   created_at: { },
 });
-
-export default UserRepository;

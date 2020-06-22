@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-export default class Logger {
+export class Logger {
   static info(title: string, message: string) {
     const now = format(new Date(), 'hh:mm:ss');
     console.info(`\x1b[34m[${now}] ${title}\x1b[0m ${message}`);

@@ -1,6 +1,6 @@
-import User from '@models/User';
+import { User } from '@models/User';
 
-class Notification {
+export class Notification {
   public id: number;
   public description: string;
   public title: string;
@@ -11,5 +11,3 @@ class Notification {
 
   public user: User;
 }
-
-export default Notification;

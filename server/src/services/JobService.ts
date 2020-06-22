@@ -1,6 +1,6 @@
 import { formatRFC3339, isBefore, subDays, parseISO } from 'date-fns';
 
-import Database from '@database/Database';
+import { Database } from '@database/Database';
 
 interface IFilterQuery {
   days: string;
@@ -8,7 +8,7 @@ interface IFilterQuery {
   user: any;
 }
 
-export default class JobService {
+export class JobService {
   public async filterJobs({ days, local, user }: IFilterQuery) {
     let localFilter = '';
 

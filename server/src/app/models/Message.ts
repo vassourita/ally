@@ -1,7 +1,7 @@
-import Chat from '@models/Chat';
-import User from '@models/User';
+import { Chat } from '@models/Chat';
+import { User } from '@models/User';
 
-class Message {
+export class Message {
   public id: number;
   public chat_id: number;
   public author_id: number;
@@ -11,5 +11,3 @@ class Message {
   public chat: Chat;
   public author: User;
 }
-
-export default Message;

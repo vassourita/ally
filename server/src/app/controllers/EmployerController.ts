@@ -5,10 +5,10 @@ import cities from '@database/cities.json';
 
 import { IController } from '@controllers/IController';
 
-import JobVacancyRepository from '@repositories/JobVacancyRepository';
-import UserRepository from '@repositories/UserRepository';
+import { JobVacancyRepository } from '@repositories/JobVacancyRepository';
+import { UserRepository } from '@repositories/UserRepository';
 
-export default class EmployerController implements IController {
+export class EmployerController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { page = 1 } = req.query;
 

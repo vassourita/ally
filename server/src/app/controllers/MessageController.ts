@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
-import WebSocket from '@root/WebSocket';
+import { WebSocket } from '@root/WebSocket';
 
 import { IController } from '@controllers/IController';
 
-import ChatRepository from '@repositories/ChatRepository';
-import MessageRepository from '@repositories/MessageRepository';
-import UserRepository from '@repositories/UserRepository';
+import { ChatRepository } from '@repositories/ChatRepository';
+import { MessageRepository } from '@repositories/MessageRepository';
+import { UserRepository } from '@repositories/UserRepository';
 
-export default class MessageController implements IController {
+export class MessageController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 

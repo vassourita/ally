@@ -1,13 +1,11 @@
-import Proposal from '@models/Proposal';
+import { Proposal } from '@models/Proposal';
 
-import Repository from '@repositories/BaseRepository';
+import { BaseRepository } from '@repositories/BaseRepository';
 
-const ChatRepository = new Repository<Proposal>('proposal', {
+export const ProposalRepository = new BaseRepository<Proposal>('proposal', {
   id: { primary: true, },
   status: { },
   user_id: { },
   job_vacancy_id: { },
   created_at: { },
 });
-
-export default ChatRepository;

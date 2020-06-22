@@ -1,7 +1,7 @@
-import JobVacancy from '@models/JobVacancy';
-import User from '@models/User';
+import { JobVacancy } from '@models/JobVacancy';
+import { User } from '@models/User';
 
-class Proposal {
+export class Proposal {
   public id: number;
   public status: string;
   public user_id: number;
@@ -11,5 +11,3 @@ class Proposal {
   public user: User;
   public job: JobVacancy;
 }
-
-export default Proposal;

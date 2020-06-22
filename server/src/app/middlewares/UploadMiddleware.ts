@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import multer from 'multer';
 import { extname, resolve } from 'path';
 
-export default class UploadMiddleware {
+export class UploadMiddleware {
   private get config() {
     return multer.diskStorage({
       destination: resolve(__dirname, '..', '..', '..', 'public', 'uploads'),

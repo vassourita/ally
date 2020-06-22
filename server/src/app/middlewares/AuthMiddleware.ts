@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-import authConfig from '@config/auth';
+import { authConfig } from '@config/auth';
 
-export default class AuthMiddleware {
+export class AuthMiddleware {
   public async handle(req: Request, res: Response, next: NextFunction) {
     const auth = req.headers.authorization;
 

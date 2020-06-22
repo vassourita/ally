@@ -6,12 +6,12 @@ import path from 'path';
 import Youch from 'youch';
 import 'express-async-errors';
 
-import Router from '@root/Router';
-import WebSocket from '@root/WebSocket';
+import { Router } from '@root/Router';
+import { WebSocket } from '@root/WebSocket';
 
-import Logger from '@helpers/Logger';
+import { Logger } from '@helpers/Logger';
 
-export default class AllyApi {
+export class AllyApi {
   private app: express.Application;
   private server: Http.Server;
 

@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 
 import { IValidator } from '@validators/IValidator';
 
-export default class UserStoreValidator implements IValidator {
+export class SessionStoreValidator implements IValidator {
   async validate(req: Request, res: Response, next: NextFunction) {
     try {
       const schema = Yup.object().shape({

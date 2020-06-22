@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
-import JobService from '@services/JobService';
+import { JobService } from '@services/JobService';
 
 import { IController } from '@controllers/IController';
 
-import KnowledgeRepository from '@repositories/KnowledgeRepository';
-import KnowledgeTypeRepository from '@repositories/KnowledgeTypeRepository';
-import UserRepository from '@repositories/UserRepository';
+import { KnowledgeRepository } from '@repositories/KnowledgeRepository';
+import { KnowledgeTypeRepository } from '@repositories/KnowledgeTypeRepository';
+import { UserRepository } from '@repositories/UserRepository';
 
-export default class OpportunityController implements IController {
+export class OpportunityController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
     const { days, local } = req.query;

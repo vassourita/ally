@@ -1,9 +1,9 @@
-import Chat from '@models/Chat';
-import JobVacancy from '@models/JobVacancy';
-import Knowledge from '@models/Knowledge';
-import Notification from '@models/Notification';
+import { Chat } from '@models/Chat';
+import { JobVacancy } from '@models/JobVacancy';
+import { Knowledge } from '@models/Knowledge';
+import { Notification } from '@models/Notification';
 
-class User {
+export class User {
   public id: number;
   public name: string;
   public email: string;
@@ -26,5 +26,3 @@ class User {
   public knowledges: Knowledge[];
   public notifications: Notification[];
 }
-
-export default User;

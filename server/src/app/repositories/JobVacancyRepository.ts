@@ -1,8 +1,8 @@
-import JobVacancy from '@models/JobVacancy';
+import { JobVacancy } from '@models/JobVacancy';
 
-import Repository from '@repositories/BaseRepository';
+import { BaseRepository } from '@repositories/BaseRepository';
 
-const JobVacancyRepository = new Repository<JobVacancy>('job_vacancy', {
+export const JobVacancyRepository = new BaseRepository<JobVacancy>('job_vacancy', {
   id: { primary: true, },
   employer_id: { },
   name: { },
@@ -11,5 +11,3 @@ const JobVacancyRepository = new Repository<JobVacancy>('job_vacancy', {
   created_at: { },
   description: { },
 });
-
-export default JobVacancyRepository;

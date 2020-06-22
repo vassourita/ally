@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
 
-import WebSocket from '@root/WebSocket';
+import { WebSocket } from '@root/WebSocket';
 
 import { IController } from '@controllers/IController';
 
-import ChatRepository from '@repositories/ChatRepository';
-import JobVacancyRepository from '@repositories/JobVacancyRepository';
-import NotificationRepository from '@repositories/NotificationRepository';
-import ProposalRepository from '@repositories/ProposalRepository';
-import UserRepository from '@repositories/UserRepository';
+import { ChatRepository } from '@repositories/ChatRepository';
+import { JobVacancyRepository } from '@repositories/JobVacancyRepository';
+import { NotificationRepository } from '@repositories/NotificationRepository';
+import { ProposalRepository } from '@repositories/ProposalRepository';
+import { UserRepository } from '@repositories/UserRepository';
 
-export default class ProposalController implements IController {
+export class ProposalController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 

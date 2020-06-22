@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 
 import { IController } from '@controllers/IController';
 
-import ReportRepository from '@repositories/ReportRepository';
+import { ReportRepository } from '@repositories/ReportRepository';
 
-export default class ReportController implements IController {
+export class ReportController implements IController {
   async index(req: Request, res: Response): Promise<void> {
     const reports = await ReportRepository.find();
 

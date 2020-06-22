@@ -1,10 +1,8 @@
-import KnowledgeType from '@models/KnowledgeType';
+import { KnowledgeType } from '@models/KnowledgeType';
 
-import Repository from '@repositories/BaseRepository';
+import { BaseRepository } from '@repositories/BaseRepository';
 
-const KnowledgeTypeRepository = new Repository<KnowledgeType>('knowledge_type', {
+export const KnowledgeTypeRepository = new BaseRepository<KnowledgeType>('knowledge_type', {
   id: { primary: true, },
   name: { },
 });
-
-export default KnowledgeTypeRepository;

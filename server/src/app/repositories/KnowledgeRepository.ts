@@ -1,8 +1,8 @@
-import Knowledge from '@models/Knowledge';
+import { Knowledge } from '@models/Knowledge';
 
-import Repository from '@repositories/BaseRepository';
+import { BaseRepository } from '@repositories/BaseRepository';
 
-const KnowledgeRepository = new Repository<Knowledge>('knowledge', {
+export const KnowledgeRepository = new BaseRepository<Knowledge>('knowledge', {
   id: { primary: true, },
   name: {},
   user_id: { },
@@ -10,5 +10,3 @@ const KnowledgeRepository = new Repository<Knowledge>('knowledge', {
   knowledge_type_id: { },
   differential: {},
 });
-
-export default KnowledgeRepository;

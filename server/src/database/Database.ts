@@ -2,11 +2,11 @@ import mysql, { ConnectionConfig, OkPacket } from 'mysql';
 import Ramda from 'ramda';
 import { promisify } from 'util';
 
-import dbConfig from '@config/database';
+import { databaseConfig } from '@config/database';
 
-import Logger from '@helpers/Logger';
+import { Logger } from '@helpers/Logger';
 
-export default class Database {
+export class Database {
   private static instance: Database;
   private client: mysql.Connection;
 
@@ -17,7 +17,7 @@ export default class Database {
 
   public static getInstance() {
     if (!this.instance) {
-      this.instance = new Database(dbConfig as ConnectionConfig);
+      this.instance = new Database(databaseConfig as ConnectionConfig);
     }
     return this.instance;
   }

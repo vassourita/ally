@@ -1,10 +1,10 @@
 /* eslint-disable no-dupe-class-members */
 import pluralize from 'pluralize';
 
-import AllySqlJoinTypeError from '@helpers/errors/AllySqlJoinTypeError';
-import AllySqlRepositoryPrimaryKeyError from '@helpers/errors/AllySqlRepositoryPrimaryKeyError';
+import { AllySqlJoinTypeError } from '@helpers/errors/AllySqlJoinTypeError';
+import { AllySqlRepositoryPrimaryKeyError } from '@helpers/errors/AllySqlRepositoryPrimaryKeyError';
 
-import Database from '@database/Database';
+import { Database } from '@database/Database';
 
 interface ITableSchema {
   [fieldName: string]: {
@@ -38,7 +38,7 @@ interface IQuery<T> {
   groupBy?: string[];
 }
 
-export default class BaseRepository<M> {
+export class BaseRepository<M> {
   private db: Database;
   public tableName: string;
   public tableSchema: ITableSchema;

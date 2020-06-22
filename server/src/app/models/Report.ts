@@ -1,7 +1,7 @@
-import JobVacancy from '@models/JobVacancy';
-import User from '@models/User';
+import { JobVacancy } from '@models/JobVacancy';
+import { User } from '@models/User';
 
-class Report {
+export class Report {
   public id: string;
   public description: string;
   public user_id: number;
@@ -11,5 +11,3 @@ class Report {
   public user: User;
   public job: JobVacancy;
 }
-
-export default Report;

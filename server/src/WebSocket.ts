@@ -1,7 +1,7 @@
 import { Server } from 'http';
 import io from 'socket.io';
 
-import Logger from '@helpers/Logger';
+import { Logger } from '@helpers/Logger';
 
 interface ISocketConnection {
   [userId: string]: {
@@ -10,7 +10,7 @@ interface ISocketConnection {
   };
 }
 
-export default class WebSocket {
+export class WebSocket {
   public connectedUsers: ISocketConnection;
   public io?: io.Server;
   private static instance: WebSocket;

@@ -1,8 +1,8 @@
-import JobVacancy from '@models/JobVacancy';
-import KnowledgeType from '@models/KnowledgeType';
-import User from '@models/User';
+import { JobVacancy } from '@models/JobVacancy';
+import { KnowledgeType } from '@models/KnowledgeType';
+import { User } from '@models/User';
 
-class Knowledge {
+export class Knowledge {
   public id: number;
   public name: string;
   public knowledge_type_id: number;
@@ -14,5 +14,3 @@ class Knowledge {
   public job: JobVacancy;
   public user: User;
 }
-
-export default Knowledge;

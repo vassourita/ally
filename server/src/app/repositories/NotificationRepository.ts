@@ -1,8 +1,8 @@
-import Notification from '@models/Notification';
+import { Notification } from '@models/Notification';
 
-import Repository from '@repositories/BaseRepository';
+import { BaseRepository } from '@repositories/BaseRepository';
 
-const NotificationRepository = new Repository<Notification>('notification', {
+export const NotificationRepository = new BaseRepository<Notification>('notification', {
   id: { primary: true, },
   description: { },
   title: { },
@@ -11,5 +11,3 @@ const NotificationRepository = new Repository<Notification>('notification', {
   is_read: { },
   created_at: { },
 });
-
-export default NotificationRepository;
