@@ -96,7 +96,13 @@ export const Header = styled.div`
 export const List = styled.ul`
   grid-area: list;
   overflow-y: auto;
-  padding-right: ${p => (p.hasScroll ? '40px' : '0px')};
+  ::-webkit-scrollbar {
+    width: 32px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-left: 20px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+  }
 `;
 
 export const ListItem = styled.li`

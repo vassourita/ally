@@ -25,10 +25,15 @@ export const NavList = styled.ul``;
 export const NavItem = styled.li`
   margin-left: 35px;
   display: flex;
+  img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
   a {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
     strong {
@@ -116,6 +121,29 @@ export const Messages = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  margin-bottom: 40px;
+  ::-webkit-scrollbar-track {
+    margin-bottom: 0px;
+  }
+  ::-webkit-scrollbar {
+    width: 32px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-left: 20px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+  }
+`;
+
+export const MessageData = styled.div`
+  align-self: center;
+  padding: 7px;
+  font-size: 13px;
+  background-color: #fff;
+  color: #333;
+  margin-top: 12px;
+  :first-child {
+    margin-top: 0;
+  }
 `;
 
 export const Message = styled.div`
@@ -127,7 +155,7 @@ export const Message = styled.div`
   display: flex;
   flex-direction: column;
   white-space: pre-wrap;
-  word-break: break-all;
+  word-break: break-word;
   :first-child {
     margin-top: 0;
   }

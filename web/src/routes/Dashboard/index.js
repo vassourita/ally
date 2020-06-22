@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { toast } from 'react-toastify';
 
 import * as socket from '../../services/socket';
 import * as NotificationActions from '../../store/modules/notifications/actions';
+import * as ChatActions from '../../store/modules/chats/actions';
 
 import Chat from '../../pages/Chat';
 import User from '../../pages/User';
@@ -23,14 +24,25 @@ function Dashboard() {
   const dispatch = useDispatch();
 
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     socket.connect(auth.id);
+
     socket.subscribeToNotifications(data => {
       toast.info(data.notification.description, {
         onClick: () => history.push(data.notification.link),
       });
       dispatch(NotificationActions.addNotification(data.notification));
+    });
+
+    socket.subscribeToMessages(data => {
+      dispatch(ChatActions.addMessage(data.message.chat.id, data.message));
+      if (location.pathname !== '/chat') {
+        toast.info(`Nova mensagem de ${data.message.user.name}`, {
+          onClick: () => history.push(`/chat/${data.message.chat.id}`),
+        });
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.id]);

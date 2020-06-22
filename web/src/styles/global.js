@@ -101,23 +101,11 @@ export const GlobalStyles = createGlobalStyle`
     border: 0px none #ffffff;
     border-radius: 0px;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #e0e0e0;
-  }
-  ::-webkit-scrollbar-thumb:active {
-    background: #e0e0e0;
-  }
   ::-webkit-scrollbar-track {
     background: #ffffff00;
     border: 0px none #ffffff00;
     border-radius: 0px;
     margin-bottom: 40px;
-  }
-  ::-webkit-scrollbar-track:hover {
-    background: #ffffff00;
-  }
-  ::-webkit-scrollbar-track:active {
-    background: #ffffff00;
   }
   ::-webkit-scrollbar-corner {
     background: transparent;
