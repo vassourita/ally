@@ -10,7 +10,7 @@ import { Container, Title, List, ListItem, PageName, Logoff } from './styles';
 function DashboardNav() {
   const dispatch = useDispatch();
 
-  function handleLogoff() {
+  async function handleLogoff() {
     dispatch(AuthActions.logoff());
   }
 

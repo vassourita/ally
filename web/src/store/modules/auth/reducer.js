@@ -20,7 +20,11 @@ function auth(state = INITIAL_STATE, { type, data }) {
     }
     case 'LOGOFF': {
       localStorage.removeItem(state.TOKEN_KEY);
-      return INITIAL_STATE;
+      return {
+        id: null,
+        token: null,
+        TOKEN_KEY,
+      };
     }
     default: {
       return state;
