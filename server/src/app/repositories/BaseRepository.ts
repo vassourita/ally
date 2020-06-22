@@ -141,8 +141,18 @@ export default class BaseRepository<M> {
     const formattedWhere = Object.entries(where);
     const formattedSet = Object.entries(set);
     const params = [];
-    const getSet = ` SET ${formattedSet.map(([key]) => ` ${this.tableName}.${key} = ? `)} `;
-    formattedSet.forEach(([, value]) => params.push(value));
+    const getSet = ` SET ${formattedSet.map(([key, value]) => {
+      if (typeof value === 'string') {
+        if (value.split('')[0] === '*' && value.split('')[1] === '*') {
+          return ` ${this.tableName}.${key} ${value.split('').slice(2).join('')} `;
+        }
+        if (typeof value === 'string' && value.split('.').length === 2 && !value.includes('@')) {
+          return ` ${this.tableName}.${key} = ${value} `;
+        }
+      }
+      params.push(value);
+      return ` ${this.tableName}.${key} = ? `;
+    })} `;
     let getWhere = '';
     if (formattedWhere.length > 0) {
       getWhere = `WHERE ${formattedWhere
@@ -156,7 +166,7 @@ export default class BaseRepository<M> {
             }
           }
           params.push(value);
-          return `\n${this.tableName}.${key} = ?`;
+          return ` ${this.tableName}.${key} = ? `;
         })
         .join(' AND ')}`;
     }
