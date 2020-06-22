@@ -8,6 +8,9 @@ import Button from '../../components/Button';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
+import { formatPhone } from '../../utils/formatters/formatPhone';
+import { formatCnpj } from '../../utils/formatters/formatCnpj';
+
 import api from '../../services/api';
 
 import { Grid, Header, UserAbout, UserImage, UserInfo, Info, Title, Content, EditInput, DoubleInput } from './styles';
@@ -55,12 +58,12 @@ function Profile() {
             <Content>
               {user.city} - {user.state}
             </Content>
-            <Content>CNPJ {user.fiscal_code}</Content>
+            <Content>CNPJ {formatCnpj(user.fiscal_code.toString())}</Content>
           </div>
           <div>
             <Title>Contato</Title>
             <Content>{user.email}</Content>
-            <Content>{user.phone}</Content>
+            <Content>{formatPhone(user.phone.toString())}</Content>
           </div>
           {editMode ? (
             <DoubleInput>

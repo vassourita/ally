@@ -5,6 +5,8 @@ import { FiArrowLeft } from 'react-icons/fi';
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
 
+import { formatPhone } from '../../utils/formatters/formatPhone';
+
 import api from '../../services/api';
 
 import { Grid, Header, UserAbout, UserImage, UserInfo, Info, Title, Content } from './styles';
@@ -53,7 +55,7 @@ function User() {
 
           <Title>Contato</Title>
           <Content>{user.email}</Content>
-          <Content>{user.phone}</Content>
+          <Content>{formatPhone(user.phone.toString())}</Content>
         </Info>
       </UserInfo>
       <UserAbout className="modal-shadow">

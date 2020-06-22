@@ -98,9 +98,6 @@ function Chat() {
   };
 
   function getMessageDate(message, index, messages) {
-    if (messages.length === 0) {
-      return 'Nenhuma mensagem ainda';
-    }
     const date = format(new Date(message.created_at), "dd' de 'MMMM", { locale: ptBR });
     if (index === 0) {
       return <MessageData>{date}</MessageData>;
@@ -150,6 +147,7 @@ function Chat() {
       {actualChat?.id && (
         <MessageList>
           <Messages>
+            {!actualChat.messages.length && <MessageData>Nenhuma mensagem ainda</MessageData>}
             {actualChat.messages.map((message, i, all) => (
               <>
                 {getMessageDate(message, i, all)}
