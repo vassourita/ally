@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import { FiAlertCircle } from 'react-icons/fi';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export default function SelectBlock({ id, label, value, onChange, errors = [{}], isPass, options, ...rest }) {
+  const [open, setOpen] = useState(false);
+
   function getErrors() {
     for (const error of errors) {
       if (error.cond)
@@ -17,12 +19,14 @@ export default function SelectBlock({ id, label, value, onChange, errors = [{}],
 
   return (
     <Container className="select-block">
-      <SelectContainer>
+      <SelectContainer isOpen={open}>
         <Select
           menuPlacement="auto"
           placeholder=""
           value={value}
           onChange={onChange}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setOpen(false)}
           className={'select-container'}
           id={id}
           options={options}
@@ -107,6 +111,12 @@ const SelectContainer = styled.div`
       font-size: 16px;
       transition: all 0.4s ease-out;
       cursor: text;
+      ${p =>
+        p.isOpen &&
+        css`
+          color: var(--ally-blue);
+          opacity: 100%;
+        `}
     }
   }
 `;

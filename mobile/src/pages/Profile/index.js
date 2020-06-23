@@ -181,7 +181,7 @@ function Profile() {
         )}
         <Title>Contato</Title>
         <Content>{user.email}</Content>
-        <Content>{formatPhone(user.phone.toString())}</Content>
+        <Content>{user.phone && formatPhone(user.phone.toString())}</Content>
         <Title>Endereço</Title>
         <Content>
           {user.city} - {user.state}
@@ -204,7 +204,7 @@ function Profile() {
               <FiPlus color={modalOpen ? 'var(--ally-red)' : 'unset'} size={20} onClick={() => setModalOpen(true)} />
             </div>
           </div>
-          {!user.knowledges.length && <Content>Nenhum conhecimento adicionado</Content>}
+          {!user.knowledges?.length && <Content>Nenhum conhecimento adicionado</Content>}
           {user.knowledges?.map(k => (
             <Content>
               {k.type.name} - {k.name}

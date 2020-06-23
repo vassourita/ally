@@ -56,6 +56,11 @@ function Login() {
       });
 
       if (response.status === 200) {
+        if (response.data.user.employer) {
+          return toast.error(
+            'Você está tentando se conectar com uma conta empresarial. Utilize nosso site para acessar sua conta.'
+          );
+        }
         dispatch(UserActions.setUser(response.data.user));
         dispatch(AuthActions.login(response.data.token, response.data.user.id));
         return history.push('/jobs');
