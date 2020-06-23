@@ -51,5 +51,9 @@ export const Content = styled.p`
   font-size: 14px;
   color: #888;
   margin-bottom: 5px;
-  text-overflow: '...';
+  display: flex;
+  align-items: center;
+  svg {
+    margin-right: 5px;
+  }
 `;

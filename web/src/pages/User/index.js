@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiFile } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
@@ -18,13 +19,20 @@ function User() {
   const history = useHistory();
 
   useEffect(() => {
-    (async () => {
+    async function fetchUser() {
       try {
-        const { status, data } = await api.get(`/users/${id}`);
+        const response = await api.get(`/users/${id}`);
 
-        if (status === 200) return setUser(data.user);
-      } catch {}
-    })();
+        if (response.data.user) {
+          return setUser(response.data.user);
+        }
+
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      } catch {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
+    }
+    fetchUser();
   }, [id]);
 
   const BoxTitle = () => (
@@ -55,12 +63,16 @@ function User() {
 
           <Title>Contato</Title>
           <Content>{user.email}</Content>
-          <Content>{formatPhone(user.phone.toString())}</Content>
+          <Content>{user.phone && formatPhone(user.phone?.toString())}</Content>
         </Info>
       </UserInfo>
       <UserAbout className="modal-shadow">
         <Title>Sobre</Title>
         <Content>{user.about || 'Não há descrição ainda'}</Content>
+        <Title>Currículo</Title>
+        <Content>
+          <FiFile /> curriculo.pdf
+        </Content>
       </UserAbout>
     </Grid>
   );
