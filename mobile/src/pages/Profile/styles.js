@@ -58,12 +58,33 @@ export const Image = styled.img`
   position: absolute;
 `;
 
+export const EditButton = styled.div`
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  position: absolute;
+  top: 70px;
+  right: 17px;
+`;
+
+export const EditInput = styled.textarea`
+  font-size: 16px;
+  width: 100%;
+  padding: 4px;
+  border-radius: 0px;
+  border: 1px solid #ccc;
+  color: #888;
+  resize: none;
+`;
+
 export const Info = styled.div`
   border: 1px solid #999;
   width: 100%;
   height: 100%;
   margin-top: 50px;
   padding: 20px;
+  input {
+  }
   h3 {
     margin-top: 35px;
     font-weight: 600;
@@ -95,7 +116,7 @@ export const Knowledges = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 15px 0 20px;
+  margin: 20px 0 0;
   h6 {
     margin: 0 0 5px;
   }
@@ -103,6 +124,9 @@ export const Knowledges = styled.div`
     margin-top: 7px;
     display: flex;
     align-items: center;
+    :only-child {
+      margin: 0 0 4px;
+    }
     svg {
       margin-left: 7px;
     }

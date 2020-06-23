@@ -4,10 +4,6 @@ export const Container = styled.div`
   overflow: auto;
 `;
 
-export const Nav = styled.nav``;
-
-export const NavList = styled.ul``;
-
 export const NavItem = styled.li`
   padding: 12px 0;
   border-top: 1px solid #ccc;

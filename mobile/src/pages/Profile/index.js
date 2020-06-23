@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiFile, FiCheckSquare, FiXSquare, FiPlus, FiTrash } from 'react-icons/fi';
+import { FiFile, FiCheckSquare, FiXSquare, FiPlus, FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'react-modal';
 
@@ -13,7 +13,18 @@ import { formatPhone } from '../../utils/formatters/formatPhone';
 import * as UserActions from '../../store/modules/user/actions';
 import api from '../../services/api';
 
-import { Container, ModalContainer, Image, Info, Content, Title, Knowledges, DoubleInput } from './styles';
+import {
+  Container,
+  ModalContainer,
+  Image,
+  Info,
+  Content,
+  Title,
+  Knowledges,
+  DoubleInput,
+  EditButton,
+  EditInput,
+} from './styles';
 
 const options = [
   { label: 'Especialização', value: 1 },
@@ -28,11 +39,13 @@ function Profile() {
   const { user, auth } = useSelector(state => ({ auth: state.auth, user: state.user }));
   const dispatch = useDispatch();
 
+  const [editMode, setEditMode] = useState(false);
   const [excludeMode, setExcludeMode] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState({
     typeId: 6,
     name: '',
+    about: user.about,
   });
 
   useEffect(() => {
@@ -82,6 +95,25 @@ function Profile() {
     setModalOpen(false);
   };
 
+  const handleEditProfile = async () => {
+    setEditMode(!editMode);
+    if (user.about !== editData.about) {
+      try {
+        const response = await api.put('/users', {
+          about: editData.about,
+        });
+
+        if (response.data.updated.about) {
+          return dispatch(UserActions.setUser(response.data.user));
+        }
+
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      } catch {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
+    }
+  };
+
   return (
     <Container>
       <Modal className="modal-refactor" overlayClassName="overlay-refactor" isOpen={modalOpen}>
@@ -122,11 +154,22 @@ function Profile() {
       </Modal>
 
       <Image src={`${process.env.REACT_APP_FILES_URL}${user.image_url}`} />
+      <EditButton>
+        <FiEdit size={21} color={editMode ? 'var(--ally-red)' : 'unset'} onClick={handleEditProfile} />
+      </EditButton>
 
       <Info>
         <h3>{user.name}</h3>
         <Title>Sobre</Title>
-        <Content>{user.about}</Content>
+        {editMode ? (
+          <EditInput
+            placeholder="Adicione uma descrição"
+            value={editData.about || user.about}
+            onChange={e => setEditData({ ...editData, about: e.target.value })}
+          />
+        ) : (
+          <Content>{user.about || 'Não há descrição ainda'}</Content>
+        )}
         <Title>Contato</Title>
         <Content>{user.email}</Content>
         <Content>{formatPhone(user.phone.toString())}</Content>
@@ -140,26 +183,27 @@ function Profile() {
         <Content>
           <FiFile /> curriculo.pdf
         </Content>
-      </Info>
-      <Knowledges>
-        <div>
-          <Title>Conhecimentos</Title>
+        <Knowledges>
           <div>
-            <FiTrash
-              color={excludeMode ? 'var(--ally-red)' : 'unset'}
-              size={20}
-              onClick={() => setExcludeMode(!excludeMode)}
-            />
-            <FiPlus color={modalOpen ? 'var(--ally-red)' : 'unset'} size={20} onClick={() => setModalOpen(true)} />
+            <Title>Conhecimentos</Title>
+            <div>
+              <FiTrash
+                color={excludeMode ? 'var(--ally-red)' : 'unset'}
+                size={20}
+                onClick={() => setExcludeMode(!excludeMode)}
+              />
+              <FiPlus color={modalOpen ? 'var(--ally-red)' : 'unset'} size={20} onClick={() => setModalOpen(true)} />
+            </div>
           </div>
-        </div>
-        {user.knowledges?.map(k => (
-          <Content>
-            {k.type.name} - {k.name}
-            {excludeMode && <FiTrash onClick={() => handleDeleteKnowledge(k.id)} />}
-          </Content>
-        ))}
-      </Knowledges>
+          {!user.knowledges.length && <Content>Nenhum conhecimento adicionado</Content>}
+          {user.knowledges?.map(k => (
+            <Content>
+              {k.type.name} - {k.name}
+              {excludeMode && <FiTrash onClick={() => handleDeleteKnowledge(k.id)} />}
+            </Content>
+          ))}
+        </Knowledges>
+      </Info>
     </Container>
   );
 }

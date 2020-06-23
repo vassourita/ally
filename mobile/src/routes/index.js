@@ -21,15 +21,15 @@ function Routes() {
   useEffect(() => {
     socket.connect(auth.id);
     socket.subscribeToNotifications(data => {
-      toast.info(data.notification.description, {
-        onClick: () => history.push(data.notification.link),
-      });
       dispatch(NotificationActions.addNotification(data.notification));
     });
 
     socket.subscribeToMessages(data => {
       dispatch(ChatActions.addMessage(data.message.chat.id, data.message));
-      if (location.pathname.split('').slice(1, 5) !== '/chat') {
+      if (toast.isActive) {
+        return;
+      }
+      if (location.pathname.split('').slice(0, 5) !== '/chat') {
         toast.info(`Nova mensagem de ${data.message.chat.employer.name}`, {
           onClick: () => history.push(`/chat/${data.message.chat.id}`),
         });

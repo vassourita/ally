@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import * as ChatActions from '../../store/modules/chats/actions';
 import api from '../../services/api';
 
-import { Nav, NavList, NavItem, LastMessage, Title, Container, NoMessages } from './styles';
+import { NavItem, LastMessage, Title, Container, NoMessages } from './styles';
 
 function Chat() {
   const dispatch = useDispatch();
@@ -47,9 +47,9 @@ function Chat() {
 
   return (
     <Container>
-      {!chats.length && <NoMessages />}
-      <Nav>
-        <NavList>
+      {!chats.length && <NoMessages>Nenhuma conversa iniciada</NoMessages>}
+      <nav>
+        <ul>
           {chats.map(chat => (
             <NavItem key={chat.id}>
               <NavLink activeClassName="nav-link-active" to={`/chat/${chat.id}`}>
@@ -61,8 +61,8 @@ function Chat() {
               </NavLink>
             </NavItem>
           ))}
-        </NavList>
-      </Nav>
+        </ul>
+      </nav>
     </Container>
   );
 }
