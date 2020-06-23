@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 
 import Button from '../../components/Button';
 import InputBlock from '../../components/InputBlock';
-import HighSelectBlock from '../../components/HighSelectBlock';
+import SelectBlock from '../../components/SelectBlock';
 import { toast } from 'react-toastify';
 
 import { formatPhone } from '../../utils/formatters/formatPhone';
@@ -13,7 +13,7 @@ import { formatPhone } from '../../utils/formatters/formatPhone';
 import * as UserActions from '../../store/modules/user/actions';
 import api from '../../services/api';
 
-import { Container, Image, Info, Content, Title, Knowledges, DoubleInput } from './styles';
+import { Container, ModalContainer, Image, Info, Content, Title, Knowledges, DoubleInput } from './styles';
 
 const options = [
   { label: 'Especialização', value: 1 },
@@ -29,7 +29,7 @@ function Profile() {
   const dispatch = useDispatch();
 
   const [excludeMode, setExcludeMode] = useState(false);
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState({
     typeId: 6,
     name: '',
@@ -43,14 +43,14 @@ function Profile() {
     });
   }, [auth.id, dispatch]);
 
-  const handleDeleteKnowledge = async knowledge => {
+  const handleDeleteKnowledge = async id => {
     try {
       const { data } = await api.put('/users', {
-        removeKnowledge: knowledge.id,
+        removeKnowledge: id,
       });
 
       if (data.updated.removeKnowledge) {
-        return dispatch(UserActions.removeKnowledge(knowledge.id));
+        return dispatch(UserActions.removeKnowledge(id));
       }
 
       toast.error('Ocorreu um erro inesperado em nosso servidor');
@@ -85,40 +85,44 @@ function Profile() {
   return (
     <Container>
       <Modal className="modal-refactor" overlayClassName="overlay-refactor" isOpen={modalOpen}>
-        <Title>Adicionar conhecimento</Title>
-        <HighSelectBlock
-          onChange={({ label, value }) => setEditData({ ...editData, typeId: value })}
-          label="Tipo"
-          options={options}
-        ></HighSelectBlock>
-        <InputBlock
-          label="Nome"
-          id="knowledge-name"
-          value={editData.name}
-          onChange={e => setEditData({ ...editData, name: e.target.value })}
-        ></InputBlock>
-        <DoubleInput>
-          <Button
-            disabled={!editData.name || !editData.typeId}
-            style={{ borderColor: 'var(--ally-blue)' }}
-            outlined
-            onClick={handleAddKnowledge}
-          >
-            <FiCheckSquare color="var(--ally-blue)" />
-          </Button>
-          <Button
-            style={{ borderColor: 'var(--ally-red)' }}
-            outlined
-            onClick={() => {
-              setEditData({ typeId: 0, name: '' });
-              setModalOpen(false);
-            }}
-          >
-            <FiXSquare color="var(--ally-red)" />
-          </Button>
-        </DoubleInput>
+        <ModalContainer>
+          <Title>Adicionar conhecimento</Title>
+          <SelectBlock
+            onChange={({ label, value }) => setEditData({ ...editData, typeId: value })}
+            label="Tipo"
+            options={options}
+          ></SelectBlock>
+          <InputBlock
+            label="Nome"
+            id="knowledge-name"
+            value={editData.name}
+            onChange={e => setEditData({ ...editData, name: e.target.value })}
+          ></InputBlock>
+          <DoubleInput>
+            <Button
+              disabled={!editData.name || !editData.typeId}
+              style={{ borderColor: 'var(--ally-blue)' }}
+              outlined
+              onClick={handleAddKnowledge}
+            >
+              <FiCheckSquare color="var(--ally-blue)" />
+            </Button>
+            <Button
+              style={{ borderColor: 'var(--ally-red)' }}
+              outlined
+              onClick={() => {
+                setEditData({ typeId: 0, name: '' });
+                setModalOpen(false);
+              }}
+            >
+              <FiXSquare color="var(--ally-red)" />
+            </Button>
+          </DoubleInput>
+        </ModalContainer>
       </Modal>
+
       <Image src={`${process.env.REACT_APP_FILES_URL}${user.image_url}`} />
+
       <Info>
         <h3>{user.name}</h3>
         <Title>Sobre</Title>
@@ -146,16 +150,13 @@ function Profile() {
               size={20}
               onClick={() => setExcludeMode(!excludeMode)}
             />
-            <FiPlus
-              color={modalOpen ? 'var(--ally-red)' : 'unset'}
-              size={20}
-              onClick={() => setModalOpen(!modalOpen)}
-            />
+            <FiPlus color={modalOpen ? 'var(--ally-red)' : 'unset'} size={20} onClick={() => setModalOpen(true)} />
           </div>
         </div>
         {user.knowledges?.map(k => (
           <Content>
             {k.type.name} - {k.name}
+            {excludeMode && <FiTrash onClick={() => handleDeleteKnowledge(k.id)} />}
           </Content>
         ))}
       </Knowledges>

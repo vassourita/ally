@@ -7,6 +7,50 @@ export const Container = styled.main`
   position: relative;
 `;
 
+export const ModalContainer = styled.div`
+  .input-block .input-container {
+    height: 42px;
+    margin-top: 20px;
+
+    &:focus-within {
+      padding: 0 14px;
+      border: 2px solid var(--ally-red);
+      label {
+        color: var(--ally-red);
+        opacity: 100%;
+      }
+      & > div {
+        bottom: 32px;
+        left: 14px;
+      }
+    }
+
+    & > div {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      bottom: 33px;
+      left: 15px;
+
+      background-color: #fff;
+      transition: all 0.4s ease;
+
+      label {
+        margin: 0 4px;
+        color: #000;
+        opacity: 60%;
+        font-size: 16px;
+        transition: all 0.4s ease;
+        cursor: text;
+      }
+    }
+  }
+  button {
+    margin-top: -15px;
+    height: 42px;
+  }
+`;
+
 export const Image = styled.img`
   height: 100px;
   width: 100px;
@@ -53,7 +97,15 @@ export const Knowledges = styled.div`
   flex-direction: column;
   margin: 15px 0 20px;
   h6 {
-    margin: 0;
+    margin: 0 0 5px;
+  }
+  p {
+    margin-top: 7px;
+    display: flex;
+    align-items: center;
+    svg {
+      margin-left: 7px;
+    }
   }
   > div {
     display: flex;

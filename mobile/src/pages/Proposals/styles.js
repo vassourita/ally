@@ -44,5 +44,5 @@ export const NoProposals = styled.span`
   align-items: center;
   text-align: center;
   justify-content: center;
-  height: calc(100vh - 280px);
+  height: calc(100vh - 260px);
 `;

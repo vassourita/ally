@@ -29,7 +29,7 @@ export default function InputBlock({ id, label, errors = [{}], isPass, type = 't
 
   return (
     <Container className="input-block">
-      <InputContainer>
+      <InputContainer className="input-container">
         <input autoComplete="off" id={id} value={value || ''} type={getType()} {...rest} />
         {isPass &&
           (passwordShown ? (
