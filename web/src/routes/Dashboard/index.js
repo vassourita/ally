@@ -26,26 +26,33 @@ function Dashboard() {
   const history = useHistory();
   const location = useLocation();
 
+  const path = location.pathname.split('').slice(0, 5).join('');
+
   useEffect(() => {
     socket.connect(auth.id);
+    socket.unsubscribeToNotifications();
+    socket.unsubscribeToMessages();
 
     socket.subscribeToNotifications(data => {
+      dispatch(NotificationActions.addNotification(data.notification));
+
       toast.info(data.notification.description, {
         onClick: () => history.push(data.notification.link),
       });
-      dispatch(NotificationActions.addNotification(data.notification));
     });
 
     socket.subscribeToMessages(data => {
       dispatch(ChatActions.addMessage(data.message.chat.id, data.message));
-      if (location.pathname !== '/chat') {
+      if (toast.isActive) {
+        return;
+      }
+      if (path !== '/chat') {
         toast.info(`Nova mensagem de ${data.message.chat.user.name}`, {
           onClick: () => history.push(`/chat/${data.message.chat.id}`),
         });
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.id]);
+  }, [auth.id, dispatch, history, path]);
 
   return (
     <DashboardMain>

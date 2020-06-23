@@ -4,6 +4,14 @@ const socket = socketio(process.env.REACT_APP_SOCKET_URL, {
   autoConnect: false,
 });
 
+export function unsubscribeToNotifications() {
+  socket.removeEventListener('new_notification');
+}
+
+export function unsubscribeToMessages() {
+  socket.removeEventListener('new_message');
+}
+
 export function subscribeToNotifications(subscribeFunction) {
   socket.on('new_notification', subscribeFunction);
 }

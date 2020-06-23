@@ -11,6 +11,7 @@ import SelectBlock from '../../components/SelectBlock';
 
 import { Container, Filters, List, Card, Image, Info, Bottom, NoVacancies } from './styles';
 import { toast } from 'react-toastify';
+import { useCallback } from 'react';
 
 const dateOptions = [
   { label: 'Qualquer', value: 'any' },
@@ -62,7 +63,7 @@ function Jobs() {
       });
   }, [dispatch, local, date]);
 
-  function getJobDate(jobDate) {
+  const getJobDate = useCallback(jobDate => {
     const difference = differenceInCalendarDays(new Date(jobDate), new Date());
 
     if (difference === 0) {
@@ -72,24 +73,27 @@ function Jobs() {
       return `ontem`;
     }
     return `a ${-difference} dias`;
-  }
+  }, []);
 
-  function orderJobs(a, b) {
-    switch (order) {
-      case 'newer': {
-        return new Date(b.created_at) - new Date(a.created_at);
+  const orderJobs = useCallback(
+    (a, b) => {
+      switch (order) {
+        case 'newer': {
+          return new Date(b.created_at) - new Date(a.created_at);
+        }
+        case 'older': {
+          return new Date(a.created_at) - new Date(b.created_at);
+        }
+        case 'requirements': {
+          return -1;
+        }
+        default: {
+          return 0;
+        }
       }
-      case 'older': {
-        return new Date(a.created_at) - new Date(b.created_at);
-      }
-      case 'requirements': {
-        return -1;
-      }
-      default: {
-        return 0;
-      }
-    }
-  }
+    },
+    [order]
+  );
 
   return (
     <Container>

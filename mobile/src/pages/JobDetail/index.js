@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiChevronLeft } from 'react-icons/fi';
 import { useParams, useHistory } from 'react-router-dom';
@@ -30,26 +30,29 @@ function JobDetail() {
 
   const dispatch = useDispatch();
 
-  async function handleSendProposal(e) {
-    e.preventDefault();
-    try {
-      const response = await api.post('/proposals', {
-        jobVacancyId: job.id,
-      });
-
-      if (response.data.proposal) {
-        toast.info('Proposta enviada! Você receberá uma mensagem se a proposta for aceita', {
-          onClick: () => history.push('/proposals'),
+  const handleSendProposal = useCallback(
+    async e => {
+      e.preventDefault();
+      try {
+        const response = await api.post('/proposals', {
+          jobVacancyId: job.id,
         });
-        history.push('/jobs');
-        dispatch(JobActions.removeJob(job.id));
-      } else {
+
+        if (response.data.proposal) {
+          toast.info('Proposta enviada! Você receberá uma mensagem se a proposta for aceita', {
+            onClick: () => history.push('/proposals'),
+          });
+          history.push('/jobs');
+          dispatch(JobActions.removeJob(job.id));
+        } else {
+          toast.error('Ocorreu um erro inesperado em nosso servidor');
+        }
+      } catch (error) {
         toast.error('Ocorreu um erro inesperado em nosso servidor');
       }
-    } catch (error) {
-      toast.error('Ocorreu um erro inesperado em nosso servidor');
-    }
-  }
+    },
+    [dispatch, history, job.id]
+  );
 
   return (
     <Container>
