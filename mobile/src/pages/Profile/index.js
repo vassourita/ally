@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { FiFile, FiCheckSquare, FiXSquare, FiPlus, FiTrash, FiEdit, FiLogOut } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'react-modal';
+import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 
 import Button from '../../components/Button';
 import InputBlock from '../../components/InputBlock';
 import SelectBlock from '../../components/SelectBlock';
-import { toast } from 'react-toastify';
 
 import { formatPhone } from '../../utils/formatters/formatPhone';
 
@@ -40,6 +41,8 @@ const options = [
 function Profile() {
   const { user, auth } = useSelector(state => ({ auth: state.auth, user: state.user }));
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const [editMode, setEditMode] = useState(false);
   const [excludeMode, setExcludeMode] = useState(false);
@@ -117,7 +120,7 @@ function Profile() {
   };
 
   const handleLogoff = async () => {
-    dispatch(AuthActions.logoff());
+    history.push('/login');
   };
 
   return (
