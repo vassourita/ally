@@ -1,4 +1,4 @@
-import { formatRFC3339, isBefore, subDays, parseISO } from 'date-fns';
+import { isBefore, subDays } from 'date-fns';
 
 import { Database } from '@database/Database';
 
@@ -99,12 +99,12 @@ export class JobService {
     switch (days) {
     case 'month': {
       return filteredJobs.filter(
-        job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date().toString()), 30)),
+        job => !isBefore(new Date(job.created_at), subDays(new Date(), 31)),
       );
     }
     case 'week': {
       return filteredJobs.filter(
-        job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date().toString()), 7)),
+        job => !isBefore(new Date(job.created_at), subDays(new Date(), 8)),
       );
     }
     default: {
