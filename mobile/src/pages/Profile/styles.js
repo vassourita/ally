@@ -60,11 +60,21 @@ export const Image = styled.img`
 
 export const EditButton = styled.div`
   height: 30px;
-  width: 30px;
   border-radius: 50%;
   position: absolute;
   top: 70px;
-  right: 17px;
+  right: 25px;
+`;
+
+export const LogoffButton = styled.div`
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  display: flex;
+  svg {
+    margin-left: 7px;
+  }
 `;
 
 export const EditInput = styled.textarea`

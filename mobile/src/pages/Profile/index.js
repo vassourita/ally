@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiFile, FiCheckSquare, FiXSquare, FiPlus, FiTrash, FiEdit } from 'react-icons/fi';
+import { FiFile, FiCheckSquare, FiXSquare, FiPlus, FiTrash, FiEdit, FiLogOut } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'react-modal';
 
@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { formatPhone } from '../../utils/formatters/formatPhone';
 
 import * as UserActions from '../../store/modules/user/actions';
+import * as AuthActions from '../../store/modules/auth/actions';
 import api from '../../services/api';
 
 import {
@@ -24,6 +25,7 @@ import {
   DoubleInput,
   EditButton,
   EditInput,
+  LogoffButton,
 } from './styles';
 
 const options = [
@@ -114,6 +116,10 @@ function Profile() {
     }
   };
 
+  const handleLogoff = async () => {
+    dispatch(AuthActions.logoff());
+  };
+
   return (
     <Container>
       <Modal className="modal-refactor" overlayClassName="overlay-refactor" isOpen={modalOpen}>
@@ -154,8 +160,11 @@ function Profile() {
       </Modal>
 
       <Image src={`${process.env.REACT_APP_FILES_URL}${user.image_url}`} />
+      <LogoffButton onClick={handleLogoff}>
+        Sair <FiLogOut size={20} color={editMode ? 'var(--ally-red)' : 'unset'} />
+      </LogoffButton>
       <EditButton>
-        <FiEdit size={21} color={editMode ? 'var(--ally-red)' : 'unset'} onClick={handleEditProfile} />
+        <FiEdit size={20} color={editMode ? 'var(--ally-red)' : 'unset'} onClick={handleEditProfile} />
       </EditButton>
 
       <Info>
