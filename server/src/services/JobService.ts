@@ -135,7 +135,6 @@ export class JobService {
       const requirements = job.knowledges.filter(k => !k.differential);
 
       job.knowledges.filter(k => k.differential).forEach(differential => {
-        console.log(differential);
         const name = normalize(differential.name);
 
         const userKnowledgeNames = user.knowledges.map(k => normalize(k.name));
@@ -188,7 +187,6 @@ export class JobService {
       }) : null;
     });
 
-    console.log(jobsByUser.filter(j => j !== null));
     return jobsByUser.filter(j => j !== null);
   }
 }
