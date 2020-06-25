@@ -1,6 +1,7 @@
 import { isBefore, subDays } from 'date-fns';
 
 import { JobVacancy } from '@root/app/models/JobVacancy';
+import { Knowledge } from '@root/app/models/Knowledge';
 import { User } from '@root/app/models/User';
 
 import { Database } from '@database/Database';
@@ -9,6 +10,13 @@ interface IFilterQuery {
   days: string;
   local: string;
   user: User;
+}
+
+interface IMatch {
+  knowledge: Knowledge;
+  match: boolean;
+  differential?: Knowledge;
+  requirement?: Knowledge;
 }
 
 export class JobService {
@@ -118,56 +126,69 @@ export class JobService {
       break;
     }
 
-    const jobsByUser = jobsByDate.filter(job => {
+    const jobsByUser = jobsByDate.map(job => {
+      const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+      const requirementMatches: IMatch[] = [];
+      const differentialMatches: IMatch[] = [];
+
       const requirements = job.knowledges.filter(k => !k.differential);
 
+      job.knowledges.filter(k => k.differential).forEach(differential => {
+        console.log(differential);
+        const name = normalize(differential.name);
+
+        const userKnowledgeNames = user.knowledges.map(k => normalize(k.name));
+        const knowledge = user.knowledges.find(k => normalize(k.name) === name);
+
+        if (!userKnowledgeNames.includes(name)) {
+          differentialMatches.push({ knowledge, differential, match: false });
+          return;
+        }
+
+        if (knowledge.type.id > differential.type.id) {
+          differentialMatches.push({ knowledge, differential, match: false });
+          return;
+        }
+
+        differentialMatches.push({ knowledge, differential, match: true });
+      });
 
       const matchedRequirements = requirements.filter(requirement => {
-        const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
         const name = normalize(requirement.name);
 
         const userKnowledgeNames = user.knowledges.map(k => normalize(k.name));
-        if (!userKnowledgeNames.includes(name)) {
-          return false;
-        }
-
         const knowledge = user.knowledges.find(k => normalize(k.name) === name);
-        if (knowledge.type.id > requirement.type.id) {
+
+        if (!userKnowledgeNames.includes(name)) {
+          requirementMatches.push({ knowledge, requirement, match: false });
           return false;
         }
 
+        if (knowledge.type.id > requirement.type.id) {
+          requirementMatches.push({ knowledge, requirement, match: false });
+          return false;
+        }
+
+        requirementMatches.push({ knowledge, requirement, match: true });
         return true;
       });
 
-      return matchedRequirements.length === requirements.length;
+      const reqPercent = () =>
+        ((requirementMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => !k.differential).length) || 0;
+      const diffPercent = () =>
+        ((differentialMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => k.differential).length) || 0;
+
+      return matchedRequirements.length === requirements.length ? ({
+        ...job,
+        diffMatchPercent: diffPercent(),
+        reqMatchPercent: reqPercent(),
+        differentialMatches,
+        requirementMatches,
+      }) : null;
     });
 
-    return jobsByUser;
-    // const jobsFilteredByUser = jobs.filter(job => {
-    //   if (!job.knowledges.length) return true;
-    //   if (!job.knowledges.filter(k => !k.differential).length) return true;
-
-    //   const requiredKnowledges = job.knowledges.filter(k => !k.differential);
-    //   const matchedKnowledges = requiredKnowledges.filter(jobK => {
-    //     return !!user.knowledges.filter(userK => {
-    //       const sameName = userK.name.toLowerCase() === jobK.name.toLowerCase();
-    //       const sameType = userK.type.id <= jobK.type.id;
-    //       return sameName && sameType;
-    //     }).length;
-    //   });
-
-    //   const hasMatchAllRequired = matchedKnowledges.length >= requiredKnowledges.length;
-
-    //   return hasMatchAllRequired;
-    // });
-
-    // if (!days) {
-    //   return jobsFilteredByUser;
-    // }
-
-    // return jobsFilteredByUser.filter(
-    //   job => !isBefore(parseISO(formatRFC3339(job.created_at)), subDays(parseISO(new Date()), Number(days))),
-    // );
+    console.log(jobsByUser.filter(j => j !== null));
+    return jobsByUser.filter(j => j !== null);
   }
 }
