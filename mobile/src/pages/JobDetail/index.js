@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiChevronLeft } from 'react-icons/fi';
+import { FiChevronLeft, FiAlertTriangle } from 'react-icons/fi';
 import { useParams, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -59,7 +59,7 @@ function JobDetail() {
       <Header>
         <FiChevronLeft onClick={() => history.goBack(-1)} size={30} />
         <h3>{job.name}</h3>
-        <FiChevronLeft color="transparent" size={30} />
+        <FiAlertTriangle color="var(--ally-red)" size={24} />
       </Header>
       <Body>
         <Employer>
