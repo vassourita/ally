@@ -3,6 +3,9 @@ import { isBefore, subDays } from 'date-fns';
 import { JobVacancy } from '@root/app/models/JobVacancy';
 import { Knowledge } from '@root/app/models/Knowledge';
 import { User } from '@root/app/models/User';
+import { KnowledgeRepository } from '@root/app/repositories/KnowledgeRepository';
+import { KnowledgeTypeRepository } from '@root/app/repositories/KnowledgeTypeRepository';
+import { UserRepository } from '@root/app/repositories/UserRepository';
 
 import { Database } from '@database/Database';
 
@@ -140,18 +143,16 @@ export class JobService {
 
   public getJobMatchData(jobList: JobVacancy[], user: User, filter: boolean): IMatches[] {
     const jobs = jobList.map(job => {
-      const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
       const requirementMatches: IMatch[] = [];
       const differentialMatches: IMatch[] = [];
 
       const requirements = job.knowledges.filter(k => !k.differential);
 
       job.knowledges.filter(k => k.differential).forEach(differential => {
-        const name = normalize(differential.name);
+        const name = this.normalize(differential.name);
 
-        const userKnowledgeNames = user.knowledges.map(k => normalize(k.name));
-        const knowledge = user.knowledges.find(k => normalize(k.name) === name);
+        const userKnowledgeNames = user.knowledges.map(k => this.normalize(k.name));
+        const knowledge = user.knowledges.find(k => this.normalize(k.name) === name);
 
         if (!userKnowledgeNames.includes(name)) {
           differentialMatches.push({ knowledge, differential, match: false });
@@ -167,10 +168,10 @@ export class JobService {
       });
 
       const matchedRequirements = requirements.filter(requirement => {
-        const name = normalize(requirement.name);
+        const name = this.normalize(requirement.name);
 
-        const userKnowledgeNames = user.knowledges.map(k => normalize(k.name));
-        const knowledge = user.knowledges.find(k => normalize(k.name) === name);
+        const userKnowledgeNames = user.knowledges.map(k => this.normalize(k.name));
+        const knowledge = user.knowledges.find(k => this.normalize(k.name) === name);
 
         if (!userKnowledgeNames.includes(name)) {
           requirementMatches.push({ knowledge, requirement, match: false });
@@ -212,5 +213,102 @@ export class JobService {
     });
 
     return jobs.filter(j => j !== null);
+  }
+
+  public normalize(s: string) {
+    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  public async generateMatchData(jobList: JobVacancy[]) {
+    const jobs = await Promise.all(jobList.map(async job => {
+      const requirements = job.knowledges.filter(k => !k.differential);
+      const differentials = job.knowledges.filter(k => k.differential);
+
+      const proposals = await Promise.all(job.proposals.map(async proposal => {
+        const user = await UserRepository.findOne({
+          where: { id: proposal.user_id },
+          join: [
+            {
+              repo: KnowledgeRepository,
+              attrs: ['id', 'name'],
+              on: { user_id: 'user.id' },
+              type: 'many',
+              join: [
+                {
+                  repo: KnowledgeTypeRepository,
+                  on: { id: 'knowledge.knowledge_type_id' },
+                  as: 'type',
+                  type: 'single',
+                },
+              ],
+            },
+          ]
+        });
+
+        const requirementMatches: IMatch[] = [];
+        const differentialMatches: IMatch[] = [];
+
+        differentials.forEach(differential => {
+          const name = this.normalize(differential.name);
+
+          const userKnowledgeNames = user.knowledges.map(k => this.normalize(k.name));
+          const knowledge = user.knowledges.find(k => this.normalize(k.name) === name);
+
+          if (!userKnowledgeNames.includes(name)) {
+            differentialMatches.push({ knowledge, differential, match: false });
+            return;
+          }
+
+          if (knowledge.type.id > differential.type.id) {
+            differentialMatches.push({ knowledge, differential, match: false });
+            return;
+          }
+
+          differentialMatches.push({ knowledge, differential, match: true });
+        });
+
+        requirements.forEach(requirement => {
+          const name = this.normalize(requirement.name);
+
+          const userKnowledgeNames = user.knowledges.map(k => this.normalize(k.name));
+          const knowledge = user.knowledges.find(k => this.normalize(k.name) === name);
+
+          if (!userKnowledgeNames.includes(name)) {
+            requirementMatches.push({ knowledge, requirement, match: false });
+            return;
+          }
+
+          if (knowledge.type.id > requirement.type.id) {
+            requirementMatches.push({ knowledge, requirement, match: false });
+            return;
+          }
+
+          requirementMatches.push({ knowledge, requirement, match: true });
+        });
+
+        const reqPercent = () => (job.knowledges.filter(k => !k.differential).length
+          ? ((requirementMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => !k.differential).length) || 0
+          : 100);
+        const diffPercent = () => (job.knowledges.filter(k => k.differential).length
+          ? ((differentialMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => k.differential).length) || 0
+          : 100);
+
+        return {
+          ...proposal,
+          user,
+          differentialMatches,
+          requirementMatches,
+          reqMatchPercent: reqPercent(),
+          diffMatchPercent: diffPercent()
+        };
+      }));
+
+      return {
+        ...job,
+        proposals
+      };
+    }));
+
+    return jobs;
   }
 }

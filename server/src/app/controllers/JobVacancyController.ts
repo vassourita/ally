@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { JobService } from '@root/services/JobService';
+
 import { IController } from '@controllers/IController';
 
 import { JobVacancyRepository } from '@repositories/JobVacancyRepository';
@@ -44,7 +46,10 @@ export class JobVacancyController implements IController {
       ],
     });
 
-    res.status(200).json({ jobs });
+    const jobService = new JobService();
+    const jobsWithMatches = await jobService.generateMatchData(jobs);
+
+    res.status(200).json({ jobs: jobsWithMatches });
   }
 
   async show(req: Request, res: Response): Promise<void> {
