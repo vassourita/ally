@@ -392,34 +392,32 @@ function Vacancies() {
             <UserInfo>
               <Counter>
                 <div className="stat-top">
-                  <h4>100%</h4>
+                  <h4>{proposal.reqMatchPercent}%</h4>
                   <p>dos requisitos</p>
                 </div>
                 <div className="stat-bottom">
-                  <h4>100%</h4>
+                  <h4>{proposal.diffMatchPercent}%</h4>
                   <p>dos diferenciais</p>
                 </div>
                 <div className="data-top">
-                  {actualJob?.knowledges
-                    ?.filter(k => !k.differential)
-                    .map(knowledge => (
-                      <section key={knowledge.id}>
-                        <span>
-                          {knowledge.type.name} - {knowledge.name} <FiCheckSquare />
-                        </span>
-                      </section>
-                    ))}
+                  {proposal.requirementMatches.map(req => (
+                    <section key={req.requirement.id}>
+                      <span>
+                        {req.requirement.type.name} - {req.requirement.name}{' '}
+                        {req.match ? <FiCheckSquare /> : <FiXSquare />}
+                      </span>
+                    </section>
+                  ))}
                 </div>
                 <div className="data-bottom">
-                  {actualJob?.knowledges
-                    ?.filter(k => k.differential)
-                    .map(knowledge => (
-                      <section key={knowledge.id}>
-                        <span>
-                          {knowledge.type.name} - {knowledge.name} <FiCheckSquare />
-                        </span>
-                      </section>
-                    ))}
+                  {proposal.differentialMatches.map(diff => (
+                    <section key={diff.differential.id}>
+                      <span>
+                        {diff.differential.type.name} - {diff.differential.name}{' '}
+                        {diff.match ? <FiCheckSquare /> : <FiXSquare />}
+                      </span>
+                    </section>
+                  ))}
                 </div>
               </Counter>
               <Inputs>

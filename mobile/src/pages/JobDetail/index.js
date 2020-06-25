@@ -83,11 +83,11 @@ function JobDetail() {
         <Text>Você cumpre:</Text>
         <Counter>
           <div>
-            <h4>100%</h4>
+            <h4>{job.reqMatchPercent}%</h4>
             <Text>dos requisitos</Text>
           </div>
           <div>
-            <h4>100%</h4>
+            <h4>{job.diffMatchPercent}%</h4>
             <Text>dos diferenciais</Text>
           </div>
         </Counter>
