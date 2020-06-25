@@ -19,6 +19,13 @@ interface IMatch {
   requirement?: Knowledge;
 }
 
+interface IMatches extends JobVacancy {
+  diffMatchPercent: number;
+  differentialMatches: IMatch[];
+  reqMatchPercent: number;
+  requirementMatches: IMatch[];
+}
+
 export class JobService {
   public async filterJobs({ days, local, user }: IFilterQuery) {
     let localFilter = '';
@@ -107,26 +114,32 @@ export class JobService {
       return true;
     });
 
-    let jobsByDate: JobVacancy[];
+    const jobsByDate = this.filterByDate(days, jobsByLocal);
+
+    const jobsByUser = this.getJobMatchData(jobsByDate, user, true);
+
+    return jobsByUser.filter(j => j !== null);
+  }
+
+  public filterByDate(days: string, jobs: JobVacancy[]) {
     switch (days) {
     case 'month':
-      jobsByDate = jobsByLocal.filter(
+      return jobs.filter(
         job => !isBefore(new Date(job.created_at), subDays(new Date(), 31)),
       );
-      break;
 
     case 'week':
-      jobsByDate = jobsByLocal.filter(
+      return jobs.filter(
         job => !isBefore(new Date(job.created_at), subDays(new Date(), 8)),
       );
-      break;
 
     default:
-      jobsByDate = jobsByLocal;
-      break;
+      return jobs;
     }
+  }
 
-    const jobsByUser = jobsByDate.map(job => {
+  public getJobMatchData(jobList: JobVacancy[], user: User, filter: boolean): IMatches[] {
+    const jobs = jobList.map(job => {
       const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
       const requirementMatches: IMatch[] = [];
@@ -173,20 +186,31 @@ export class JobService {
         return true;
       });
 
-      const reqPercent = () =>
-        ((requirementMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => !k.differential).length) || 0;
-      const diffPercent = () =>
-        ((differentialMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => k.differential).length) || 0;
+      const reqPercent = () => (job.knowledges.filter(k => !k.differential).length
+        ? ((requirementMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => !k.differential).length) || 0
+        : 100);
+      const diffPercent = () => (job.knowledges.filter(k => k.differential).length
+        ? ((differentialMatches.filter(r => r.match).length * 100) / job.knowledges.filter(k => k.differential).length) || 0
+        : 100);
 
-      return matchedRequirements.length === requirements.length ? ({
+      if (filter) {
+        return matchedRequirements.length === requirements.length ? ({
+          ...job,
+          diffMatchPercent: diffPercent(),
+          reqMatchPercent: reqPercent(),
+          differentialMatches,
+          requirementMatches,
+        }) : null;
+      }
+      return ({
         ...job,
         diffMatchPercent: diffPercent(),
         reqMatchPercent: reqPercent(),
         differentialMatches,
         requirementMatches,
-      }) : null;
+      });
     });
 
-    return jobsByUser.filter(j => j !== null);
+    return jobs.filter(j => j !== null);
   }
 }
