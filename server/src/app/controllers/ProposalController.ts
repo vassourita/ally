@@ -2,29 +2,28 @@ import { Request, Response } from 'express';
 
 import { WebSocket } from '@root/WebSocket';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import { IController } from '@controllers/IController';
 
-import { ChatRepository } from '@repositories/ChatRepository';
-import { JobVacancyRepository } from '@repositories/JobVacancyRepository';
-import { NotificationRepository } from '@repositories/NotificationRepository';
-import { ProposalRepository } from '@repositories/ProposalRepository';
-import { UserRepository } from '@repositories/UserRepository';
 
 export class ProposalController implements IController {
+  constructor(private readonly repoService: RepositoryService) {}
+
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
-    const proposals = await ProposalRepository.find({
+    const proposals = await this.repoService.proposals.find({
       where: { user_id: userId },
       join: [
         {
-          repo: JobVacancyRepository,
+          repo: this.repoService.jobVacancies,
           on: { id: 'proposal.job_vacancy_id' },
           type: 'single',
           as: 'job',
           join: [
             {
-              repo: UserRepository,
+              repo: this.repoService.users,
               on: { id: 'job_vacancy.employer_id' },
               type: 'single',
               as: 'employer',
@@ -41,11 +40,11 @@ export class ProposalController implements IController {
     const { userId } = res.locals;
     const { jobVacancyId } = req.body;
 
-    const user = await UserRepository.findOne({
+    const user = await this.repoService.users.findOne({
       where: { id: userId },
     });
 
-    const insertId = await ProposalRepository.create(
+    const insertId = await this.repoService.proposals.create(
       {
         user_id: userId,
         job_vacancy_id: jobVacancyId,
@@ -54,11 +53,11 @@ export class ProposalController implements IController {
       false,
     );
 
-    const proposal = await ProposalRepository.findOne({
+    const proposal = await this.repoService.proposals.findOne({
       where: { id: insertId as number },
       join: [
         {
-          repo: JobVacancyRepository,
+          repo: this.repoService.jobVacancies,
           on: { id: 'proposal.job_vacancy_id' },
           type: 'single',
           as: 'job',
@@ -66,7 +65,7 @@ export class ProposalController implements IController {
       ],
     });
 
-    const notification = await NotificationRepository.create({
+    const notification = await this.repoService.notifications.create({
       user_id: proposal.job.employer_id,
       title: `Nova proposta em '${proposal.job.name}'`,
       description: `Você recebeu uma nova proposta de ${user.name} em sua vaga '${proposal.job.name}'`,
@@ -90,17 +89,17 @@ export class ProposalController implements IController {
     const proposalId = Number(req.params.id);
     const { status } = req.body;
 
-    const proposal = await ProposalRepository.findOne({
+    const proposal = await this.repoService.proposals.findOne({
       where: { id: Number(proposalId) },
       join: [
         {
-          repo: JobVacancyRepository,
+          repo: this.repoService.jobVacancies,
           on: { id: 'proposal.job_vacancy_id' },
           type: 'single',
           as: 'job',
           join: [
             {
-              repo: UserRepository,
+              repo: this.repoService.users,
               on: { id: 'job_vacancy.employer_id' },
               type: 'single',
               as: 'employer',
@@ -125,12 +124,12 @@ export class ProposalController implements IController {
       return;
     }
 
-    let chat = await ChatRepository.findOne({
+    let chat = await this.repoService.chats.findOne({
       where: { employer_id: employerId, user_id: proposal.user_id },
     });
 
     if (!chat) {
-      chat = await ChatRepository.create({
+      chat = await this.repoService.chats.create({
         employer_id: employerId,
         user_id: proposal.user_id,
       });
@@ -144,12 +143,12 @@ export class ProposalController implements IController {
       text = `Sua proposta para ${proposal.job.name} foi aceita! A empresa ${proposal.job.employer.name} entrará em contato.`;
       link = `/proposals/${proposalId}`;
       if (proposal.job.amount > 0) {
-        await JobVacancyRepository.update({
+        await this.repoService.jobVacancies.update({
           set: { amount: '** = job_vacancy.amount - 1' as any },
           where: { id: proposal.job_vacancy_id }
         });
       }
-      await ProposalRepository.update({
+      await this.repoService.proposals.update({
         set: { status: 'accepted' },
         where: { id: proposalId },
       });
@@ -157,13 +156,13 @@ export class ProposalController implements IController {
       title = 'Proposta negada';
       text = `Sua proposta para ${proposal.job.name} foi negada.`;
       link = `/proposals/${proposalId}`;
-      await ProposalRepository.update({
+      await this.repoService.proposals.update({
         set: { status: 'denied' },
         where: { id: proposalId },
       });
     }
 
-    const notification = await NotificationRepository.create({
+    const notification = await this.repoService.notifications.create({
       user_id: proposal.user_id,
       title,
       description: text,
@@ -171,7 +170,7 @@ export class ProposalController implements IController {
       is_read: false,
     });
 
-    const updatedProposal = await ProposalRepository.findOne({
+    const updatedProposal = await this.repoService.proposals.findOne({
       where: { id: proposalId },
     });
 
@@ -190,7 +189,7 @@ export class ProposalController implements IController {
   async destroy(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const deleted = await ProposalRepository.delete({
+    const deleted = await this.repoService.proposals.delete({
       where: { id: Number(id) },
     });
 

@@ -1,5 +1,7 @@
 import express from 'express';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import { EmployerController } from '@controllers/EmployerController';
 import { JobVacancyController } from '@controllers/JobVacancyController';
 import { MessageController } from '@controllers/MessageController';
@@ -24,15 +26,17 @@ export class Router {
     const upload = new UploadMiddleware();
     const auth = new AuthMiddleware();
 
-    const user = new UserController();
-    const report = new ReportController();
-    const message = new MessageController();
-    const session = new SessionController();
-    const proposal = new ProposalController();
-    const employer = new EmployerController();
-    const jobVacancy = new JobVacancyController();
-    const opportunity = new OpportunityController();
-    const notification = new NotificationController();
+    const repoService = new RepositoryService();
+
+    const user = new UserController(repoService);
+    const report = new ReportController(repoService);
+    const message = new MessageController(repoService);
+    const session = new SessionController(repoService);
+    const proposal = new ProposalController(repoService);
+    const employer = new EmployerController(repoService);
+    const jobVacancy = new JobVacancyController(repoService);
+    const opportunity = new OpportunityController(repoService);
+    const notification = new NotificationController(repoService);
 
     routes.post('/sessions', new SessionStoreValidator().validate, session.store);
 

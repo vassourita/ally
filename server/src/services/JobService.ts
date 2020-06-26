@@ -1,13 +1,12 @@
 import { isBefore, subDays } from 'date-fns';
 
-import { JobVacancy } from '@root/app/models/JobVacancy';
-import { Knowledge } from '@root/app/models/Knowledge';
-import { User } from '@root/app/models/User';
-import { KnowledgeRepository } from '@root/app/repositories/KnowledgeRepository';
-import { KnowledgeTypeRepository } from '@root/app/repositories/KnowledgeTypeRepository';
-import { UserRepository } from '@root/app/repositories/UserRepository';
+import { RepositoryService } from '@services/RepositoryService';
 
 import { Database } from '@database/Database';
+
+import { JobVacancy } from '@models/JobVacancy';
+import { Knowledge } from '@models/Knowledge';
+import { User } from '@models/User';
 
 interface IFilterQuery {
   days: string;
@@ -30,6 +29,8 @@ interface IMatches extends JobVacancy {
 }
 
 export class JobService {
+  constructor(private readonly repoService: RepositoryService) {}
+
   public async filterJobs({ days, local, user }: IFilterQuery) {
     let localFilter = '';
 
@@ -225,17 +226,17 @@ export class JobService {
       const differentials = job.knowledges.filter(k => k.differential);
 
       const proposals = await Promise.all(job.proposals.map(async proposal => {
-        const user = await UserRepository.findOne({
+        const user = await this.repoService.users.findOne({
           where: { id: proposal.user_id },
           join: [
             {
-              repo: KnowledgeRepository,
+              repo: this.repoService.knowledges,
               attrs: ['id', 'name'],
               on: { user_id: 'user.id' },
               type: 'many',
               join: [
                 {
-                  repo: KnowledgeTypeRepository,
+                  repo: this.repoService.knowledgeTypes,
                   on: { id: 'knowledge.knowledge_type_id' },
                   as: 'type',
                   type: 'single',

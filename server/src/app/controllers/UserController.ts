@@ -1,31 +1,31 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import cities from '@database/cities.json';
 
 import { IController } from '@controllers/IController';
 
-import { KnowledgeRepository } from '@repositories/KnowledgeRepository';
-import { KnowledgeTypeRepository } from '@repositories/KnowledgeTypeRepository';
-import { UserRepository } from '@repositories/UserRepository';
-
 export class UserController implements IController {
+  constructor(private readonly repoService: RepositoryService) {}
+
   async index(req: Request, res: Response): Promise<void> {
     const { page = 1 } = req.query;
 
-    const users = await UserRepository.find({
+    const users = await this.repoService.users.find({
       where: { employer: false },
       limit: 10 * Number(page),
       offset: (Number(page) - 1) * 10,
       join: [
         {
-          repo: KnowledgeRepository,
+          repo: this.repoService.knowledges,
           attrs: ['id', 'name'],
           on: { user_id: 'user.id' },
           type: 'many',
           join: [
             {
-              repo: KnowledgeTypeRepository,
+              repo: this.repoService.knowledgeTypes,
               on: { id: 'knowledge.knowledge_type_id' },
               as: 'type',
               type: 'single',
@@ -41,17 +41,17 @@ export class UserController implements IController {
   async show(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const user = await UserRepository.findOne({
+    const user = await this.repoService.users.findOne({
       where: { id: Number(id), employer: false },
       join: [
         {
-          repo: KnowledgeRepository,
+          repo: this.repoService.knowledges,
           on: { user_id: 'user.id' },
           type: 'many',
           attrs: ['id', 'name'],
           join: [
             {
-              repo: KnowledgeTypeRepository,
+              repo: this.repoService.knowledgeTypes,
               on: { id: 'knowledge.knowledge_type_id' },
               as: 'type',
               type: 'single',
@@ -68,7 +68,7 @@ export class UserController implements IController {
     const { name, email, password, cpf, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
     const { filename } = req.file;
 
-    const userExists = await UserRepository.findOne({
+    const userExists = await this.repoService.users.findOne({
       attrs: ['id', 'email'],
       where: { email, employer: true },
     });
@@ -87,7 +87,7 @@ export class UserController implements IController {
 
     const passwordHash = await bcrypt.hash(password, 8);
 
-    const user = await UserRepository.create({
+    const user = await this.repoService.users.create({
       employer: false,
       name,
       email,
@@ -113,7 +113,7 @@ export class UserController implements IController {
     const updated: any = {};
 
     if (about) {
-      updated.about = await UserRepository.update({
+      updated.about = await this.repoService.users.update({
         set: {
           about,
         },
@@ -122,14 +122,14 @@ export class UserController implements IController {
     }
 
     if (removeKnowledge) {
-      updated.removeKnowledge = await KnowledgeRepository.delete({
+      updated.removeKnowledge = await this.repoService.knowledges.delete({
         where: { id: Number(removeKnowledge) },
       });
     }
 
     if (addKnowledge) {
       updated.addKnowledge = addKnowledge.filter(async (knowledge: any) => {
-        return !!(await KnowledgeRepository.create(
+        return !!(await this.repoService.knowledges.create(
           {
             knowledge_type_id: knowledge.typeId,
             name: knowledge.name,
@@ -140,17 +140,17 @@ export class UserController implements IController {
       });
     }
 
-    const user = await UserRepository.findOne({
+    const user = await this.repoService.users.findOne({
       where: { id: userId },
       join: [
         {
-          repo: KnowledgeRepository,
+          repo: this.repoService.knowledges,
           attrs: ['id', 'name'],
           on: { user_id: 'user.id' },
           type: 'many',
           join: [
             {
-              repo: KnowledgeTypeRepository,
+              repo: this.repoService.knowledgeTypes,
               on: { id: 'knowledge.knowledge_type_id' },
               as: 'type',
               type: 'single',
@@ -173,7 +173,7 @@ export class UserController implements IController {
       return;
     }
 
-    const deleted = await UserRepository.delete({
+    const deleted = await this.repoService.users.delete({
       where: { id: Number(id), employer: false },
     });
 

@@ -1,24 +1,25 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import cities from '@database/cities.json';
 
 import { IController } from '@controllers/IController';
 
-import { JobVacancyRepository } from '@repositories/JobVacancyRepository';
-import { UserRepository } from '@repositories/UserRepository';
-
 export class EmployerController implements IController {
+  constructor(private readonly repoService: RepositoryService) {}
+
   async index(req: Request, res: Response): Promise<void> {
     const { page = 1 } = req.query;
 
-    const users = await UserRepository.find({
+    const users = await this.repoService.users.find({
       where: { employer: true },
       limit: 10 * Number(page),
       offset: (Number(page) - 1) * 10,
       join: [
         {
-          repo: JobVacancyRepository,
+          repo: this.repoService.jobVacancies,
           on: { employer_id: 'user.id' },
           as: 'jobs',
           type: 'many',
@@ -32,11 +33,11 @@ export class EmployerController implements IController {
   async show(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const user = await UserRepository.findOne({
+    const user = await this.repoService.users.findOne({
       where: { id: Number(id), employer: true },
       join: [
         {
-          repo: JobVacancyRepository,
+          repo: this.repoService.jobVacancies,
           on: { employer_id: 'user.id' },
           as: 'jobs',
           type: 'many',
@@ -51,7 +52,7 @@ export class EmployerController implements IController {
     const { name, email, password, cnpj, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
     const { filename } = req.file;
 
-    const userExists = await UserRepository.findOne({
+    const userExists = await this.repoService.users.findOne({
       attrs: ['id', 'email'],
       where: { email, employer: true },
     });
@@ -70,7 +71,7 @@ export class EmployerController implements IController {
 
     const passwordHash = await bcrypt.hash(password, 8);
 
-    const user = await UserRepository.create({
+    const user = await this.repoService.users.create({
       employer: true,
       name,
       email,
@@ -96,7 +97,7 @@ export class EmployerController implements IController {
     const updated: any = {};
 
     if (about) {
-      updated.about = await UserRepository.update({
+      updated.about = await this.repoService.users.update({
         set: {
           about,
         },
@@ -116,7 +117,7 @@ export class EmployerController implements IController {
       return;
     }
 
-    const deleted = await UserRepository.delete({
+    const deleted = await this.repoService.users.delete({
       where: { id: Number(id), employer: true },
     });
 

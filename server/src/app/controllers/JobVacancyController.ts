@@ -2,28 +2,26 @@ import { Request, Response } from 'express';
 
 import { JobService } from '@root/services/JobService';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import { IController } from '@controllers/IController';
 
-import { JobVacancyRepository } from '@repositories/JobVacancyRepository';
-import { KnowledgeRepository } from '@repositories/KnowledgeRepository';
-import { KnowledgeTypeRepository } from '@repositories/KnowledgeTypeRepository';
-import { ProposalRepository } from '@repositories/ProposalRepository';
-import { UserRepository } from '@repositories/UserRepository';
-
 export class JobVacancyController implements IController {
+  constructor(private readonly repoService: RepositoryService) {}
+
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
-    const jobs = await JobVacancyRepository.find({
+    const jobs = await this.repoService.jobVacancies.find({
       where: { employer_id: userId },
       join: [
         {
-          repo: ProposalRepository,
+          repo: this.repoService.proposals,
           on: { job_vacancy_id: 'job_vacancy.id', status: 'awaiting' },
           type: 'many',
           join: [
             {
-              repo: UserRepository,
+              repo: this.repoService.users,
               on: { id: 'proposal.user_id' },
               type: 'single',
               as: 'user',
@@ -31,12 +29,12 @@ export class JobVacancyController implements IController {
           ],
         },
         {
-          repo: KnowledgeRepository,
+          repo: this.repoService.knowledges,
           on: { job_vacancy_id: 'job_vacancy.id' },
           type: 'many',
           join: [
             {
-              repo: KnowledgeTypeRepository,
+              repo: this.repoService.knowledgeTypes,
               on: { id: 'knowledge.knowledge_type_id' },
               as: 'type',
               type: 'single',
@@ -46,7 +44,7 @@ export class JobVacancyController implements IController {
       ],
     });
 
-    const jobService = new JobService();
+    const jobService = new JobService(this.repoService);
     const jobsWithMatches = await jobService.generateMatchData(jobs);
 
     res.status(200).json({ jobs: jobsWithMatches });
@@ -55,16 +53,16 @@ export class JobVacancyController implements IController {
   async show(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const job = await JobVacancyRepository.findOne({
+    const job = await this.repoService.jobVacancies.findOne({
       where: { id: Number(id) },
       join: [
         {
-          repo: ProposalRepository,
+          repo: this.repoService.proposals,
           on: { job_vacancy_id: 'job_vacancy.id' },
           type: 'many',
           join: [
             {
-              repo: UserRepository,
+              repo: this.repoService.users,
               on: { id: 'proposal.user_id' },
               type: 'single',
               as: 'user',
@@ -72,12 +70,12 @@ export class JobVacancyController implements IController {
           ],
         },
         {
-          repo: KnowledgeRepository,
+          repo: this.repoService.knowledges,
           on: { job_vacancy_id: 'job_vacancy.id' },
           type: 'many',
           join: [
             {
-              repo: KnowledgeTypeRepository,
+              repo: this.repoService.knowledgeTypes,
               on: { id: 'knowledge.knowledge_type_id' },
               as: 'type',
               type: 'single',
@@ -94,7 +92,7 @@ export class JobVacancyController implements IController {
     const { userId } = res.locals;
     const { name, description, amount, local, knowledges } = req.body;
 
-    const newJob = await JobVacancyRepository.create({
+    const newJob = await this.repoService.jobVacancies.create({
       name,
       local,
       amount,
@@ -103,7 +101,7 @@ export class JobVacancyController implements IController {
     });
 
     knowledges.forEach(async (knowledge: any) => {
-      await KnowledgeRepository.create(
+      await this.repoService.knowledges.create(
         {
           knowledge_type_id: knowledge.typeId,
           name: knowledge.name,
@@ -114,16 +112,16 @@ export class JobVacancyController implements IController {
       );
     });
 
-    const job = await JobVacancyRepository.findOne({
+    const job = await this.repoService.jobVacancies.findOne({
       where: { id: newJob.id },
       join: [
         {
-          repo: ProposalRepository,
+          repo: this.repoService.proposals,
           on: { job_vacancy_id: 'job_vacancy.id' },
           type: 'many',
           join: [
             {
-              repo: UserRepository,
+              repo: this.repoService.users,
               on: { id: 'proposal.user_id' },
               type: 'single',
               as: 'user',
@@ -131,12 +129,12 @@ export class JobVacancyController implements IController {
           ],
         },
         {
-          repo: KnowledgeRepository,
+          repo: this.repoService.knowledges,
           on: { job_vacancy_id: 'job_vacancy.id' },
           type: 'many',
           join: [
             {
-              repo: KnowledgeTypeRepository,
+              repo: this.repoService.knowledgeTypes,
               on: { id: 'knowledge.knowledge_type_id' },
               as: 'type',
               type: 'single',
@@ -156,28 +154,28 @@ export class JobVacancyController implements IController {
     const updated: any = {};
 
     if (amount) {
-      updated.amount = await JobVacancyRepository.update({
+      updated.amount = await this.repoService.jobVacancies.update({
         set: { amount },
         where: { id: Number(id) },
       });
     }
 
     if (local) {
-      updated.local = await JobVacancyRepository.update({
+      updated.local = await this.repoService.jobVacancies.update({
         set: { local },
         where: { id: Number(id) },
       });
     }
 
     if (removeKnowledge) {
-      updated.removeKnowledge = await KnowledgeRepository.delete({
+      updated.removeKnowledge = await this.repoService.knowledges.delete({
         where: { id: Number(removeKnowledge) },
       });
     }
 
     if (addKnowledge) {
       updated.addKnowledge = addKnowledge.filter(async (knowledge: any) => {
-        return !!(await KnowledgeRepository.create(
+        return !!(await this.repoService.knowledges.create(
           {
             knowledge_type_id: knowledge.typeId,
             name: knowledge.name,
@@ -189,16 +187,16 @@ export class JobVacancyController implements IController {
       });
     }
 
-    const job = await JobVacancyRepository.findOne({
+    const job = await this.repoService.jobVacancies.findOne({
       where: { id: Number(id) },
       join: [
         {
-          repo: ProposalRepository,
+          repo: this.repoService.proposals,
           on: { job_vacancy_id: 'job_vacancy.id', status: 'awaiting' },
           type: 'many',
           join: [
             {
-              repo: UserRepository,
+              repo: this.repoService.users,
               on: { id: 'proposal.user_id' },
               type: 'single',
               as: 'user',
@@ -206,12 +204,12 @@ export class JobVacancyController implements IController {
           ],
         },
         {
-          repo: KnowledgeRepository,
+          repo: this.repoService.knowledges,
           on: { job_vacancy_id: 'job_vacancy.id' },
           type: 'many',
           join: [
             {
-              repo: KnowledgeTypeRepository,
+              repo: this.repoService.knowledgeTypes,
               on: { id: 'knowledge.knowledge_type_id' },
               as: 'type',
               type: 'single',
@@ -227,7 +225,7 @@ export class JobVacancyController implements IController {
   async destroy(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const deleted = await JobVacancyRepository.delete({
+    const deleted = await this.repoService.jobVacancies.delete({
       where: { id: Number(id) },
     });
 

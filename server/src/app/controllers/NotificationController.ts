@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import { IController } from '@controllers/IController';
 
-import { NotificationRepository } from '@repositories/NotificationRepository';
-
 export class NotificationController implements IController {
+  constructor(private readonly repoService: RepositoryService) {}
+
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
 
-    const notifications = await NotificationRepository.find({
+    const notifications = await this.repoService.notifications.find({
       where: { user_id: userId },
     });
 
@@ -18,7 +20,7 @@ export class NotificationController implements IController {
   async update(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const notifications = await NotificationRepository.update({
+    const notifications = await this.repoService.notifications.update({
       set: { is_read: true },
       where: { id: Number(id) },
     });

@@ -4,15 +4,18 @@ import jwt, { Secret } from 'jsonwebtoken';
 
 import { authConfig } from '@config/auth';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import { IController } from '@controllers/IController';
 
-import { UserRepository } from '@repositories/UserRepository';
 
 export class SessionController implements IController {
+  constructor(private readonly repoService: RepositoryService) {}
+
   async store(req: Request, res: Response) {
     const { email, password } = req.body;
 
-    const user = await UserRepository.findOne({
+    const user = await this.repoService.users.findOne({
       attrs: ['id', 'email', 'password'],
       where: { email },
     });
@@ -31,7 +34,7 @@ export class SessionController implements IController {
       expiresIn: authConfig.expiresIn,
     });
 
-    const loggedUser = await UserRepository.findOne({
+    const loggedUser = await this.repoService.users.findOne({
       where: { id: user.id },
     });
 

@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 
+import { RepositoryService } from '@services/RepositoryService';
+
 import { IController } from '@controllers/IController';
 
-import { ReportRepository } from '@repositories/ReportRepository';
-
 export class ReportController implements IController {
+  constructor(private readonly repoService: RepositoryService) {}
+
   async index(req: Request, res: Response): Promise<void> {
-    const reports = await ReportRepository.find();
+    const reports = await this.repoService.reports.find();
 
     res.status(201).json({ reports });
   }
@@ -15,7 +17,7 @@ export class ReportController implements IController {
     const { userId } = res.locals;
     const { description, jobVacancyId } = req.body;
 
-    const report = await ReportRepository.create({
+    const report = await this.repoService.reports.create({
       description,
       user_id: userId,
       job_vacancy_id: jobVacancyId,
