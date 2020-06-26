@@ -1,14 +1,15 @@
 import { Request, Response } from 'express';
 
-import { WebSocket } from '@root/WebSocket';
-
 import { RepositoryService } from '@services/RepositoryService';
+import { WebSocketService } from '@services/WebSocketService';
 
 import { IController } from '@controllers/IController';
 
-
 export class ProposalController implements IController {
-  constructor(private readonly repoService: RepositoryService) {}
+  constructor(
+    private readonly repoService: RepositoryService,
+    private readonly wsService: WebSocketService
+  ) {}
 
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
@@ -73,13 +74,7 @@ export class ProposalController implements IController {
       is_read: false,
     });
 
-    const ws = WebSocket.getInstance();
-
-    const target = ws.connectedUsers[proposal.job.employer_id.toString()];
-
-    if (target) {
-      target.connection.emit('new_notification', { notification });
-    }
+    await this.wsService.sendNotification(proposal.job.employer_id.toString(), notification);
 
     res.status(201).json({ proposal });
   }
@@ -170,18 +165,7 @@ export class ProposalController implements IController {
       is_read: false,
     });
 
-    const updatedProposal = await this.repoService.proposals.findOne({
-      where: { id: proposalId },
-    });
-
-    const ws = WebSocket.getInstance();
-
-    const target = ws.connectedUsers[proposal.user_id.toString()];
-
-    if (target) {
-      target.connection.emit('new_notification', { notification });
-      target.connection.emit('update_proposal', { proposal: updatedProposal });
-    }
+    await this.wsService.sendNotification(proposal.job.employer_id.toString(), notification);
 
     res.status(201).json({ updated: true, chat });
   }

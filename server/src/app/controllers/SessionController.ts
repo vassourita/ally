@@ -8,7 +8,6 @@ import { RepositoryService } from '@services/RepositoryService';
 
 import { IController } from '@controllers/IController';
 
-
 export class SessionController implements IController {
   constructor(private readonly repoService: RepositoryService) {}
 

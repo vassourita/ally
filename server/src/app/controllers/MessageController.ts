@@ -3,11 +3,15 @@ import { Request, Response } from 'express';
 import { WebSocket } from '@root/WebSocket';
 
 import { RepositoryService } from '@services/RepositoryService';
+import { WebSocketService } from '@services/WebSocketService';
 
 import { IController } from '@controllers/IController';
 
 export class MessageController implements IController {
-  constructor(private readonly repoService: RepositoryService) {}
+  constructor(
+    private readonly repoService: RepositoryService,
+    private readonly wsService: WebSocketService
+  ) {}
 
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
@@ -73,12 +77,7 @@ export class MessageController implements IController {
 
     const targetId = userId === chat.employer_id ? chat.user_id : chat.employer_id;
 
-    const ws = WebSocket.getInstance();
-    const target = ws.connectedUsers[targetId.toString()];
-
-    if (target) {
-      target.connection.emit('new_message', { message });
-    }
+    await this.wsService.sendMessage(targetId.toString(), message);
 
     res.status(201).json({ message });
   }

@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 
-import { JobService } from '@root/services/JobService';
-
+import { JobService } from '@services/JobService';
 import { RepositoryService } from '@services/RepositoryService';
 
 import { IController } from '@controllers/IController';
 
 export class JobVacancyController implements IController {
-  constructor(private readonly repoService: RepositoryService) {}
+  constructor(
+    private readonly repoService: RepositoryService,
+    private readonly jobService: JobService
+  ) {}
 
   async index(req: Request, res: Response): Promise<void> {
     const { userId } = res.locals;
@@ -44,8 +46,7 @@ export class JobVacancyController implements IController {
       ],
     });
 
-    const jobService = new JobService(this.repoService);
-    const jobsWithMatches = await jobService.generateMatchData(jobs);
+    const jobsWithMatches = await this.jobService.generateMatchData(jobs);
 
     res.status(200).json({ jobs: jobsWithMatches });
   }

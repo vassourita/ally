@@ -1,6 +1,10 @@
 import express from 'express';
 
+import { WebSocket } from '@root/WebSocket';
+
+import { JobService } from '@services/JobService';
 import { RepositoryService } from '@services/RepositoryService';
+import { WebSocketService } from '@services/WebSocketService';
 
 import { EmployerController } from '@controllers/EmployerController';
 import { JobVacancyController } from '@controllers/JobVacancyController';
@@ -27,14 +31,16 @@ export class Router {
     const auth = new AuthMiddleware();
 
     const repoService = new RepositoryService();
+    const jobService = new JobService(repoService);
+    const wsService = new WebSocketService(WebSocket.getInstance());
 
     const user = new UserController(repoService);
     const report = new ReportController(repoService);
-    const message = new MessageController(repoService);
+    const message = new MessageController(repoService, wsService);
     const session = new SessionController(repoService);
-    const proposal = new ProposalController(repoService);
+    const proposal = new ProposalController(repoService, wsService);
     const employer = new EmployerController(repoService);
-    const jobVacancy = new JobVacancyController(repoService);
+    const jobVacancy = new JobVacancyController(repoService, jobService);
     const opportunity = new OpportunityController(repoService);
     const notification = new NotificationController(repoService);
 
