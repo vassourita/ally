@@ -31,7 +31,7 @@ interface IMatches extends JobVacancy {
 export class JobService {
   constructor(private readonly repoService: RepositoryService) {}
 
-  public async filterJobs({ days, local, user }: IFilterQuery) {
+  public filterJobs = async ({ days, local, user }: IFilterQuery) => {
     let localFilter = '';
 
     switch (local) {
@@ -220,7 +220,7 @@ export class JobService {
     return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
-  public async generateMatchData(jobList: JobVacancy[]) {
+  public generateMatchData = async (jobList: JobVacancy[]) => {
     const jobs = await Promise.all(jobList.map(async job => {
       const requirements = job.knowledges.filter(k => !k.differential);
       const differentials = job.knowledges.filter(k => k.differential);

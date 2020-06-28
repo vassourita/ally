@@ -11,7 +11,7 @@ export class JobVacancyController implements IController {
     private readonly jobService: JobService
   ) {}
 
-  async index(req: Request, res: Response): Promise<void> {
+  public index = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
 
     const jobs = await this.repoService.jobVacancies.find({
@@ -51,7 +51,7 @@ export class JobVacancyController implements IController {
     res.status(200).json({ jobs: jobsWithMatches });
   }
 
-  async show(req: Request, res: Response): Promise<void> {
+  public show = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     const job = await this.repoService.jobVacancies.findOne({
@@ -89,7 +89,7 @@ export class JobVacancyController implements IController {
     res.status(200).json({ job });
   }
 
-  async store(req: Request, res: Response): Promise<void> {
+  public store = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { name, description, amount, local, knowledges } = req.body;
 
@@ -148,7 +148,7 @@ export class JobVacancyController implements IController {
     res.status(201).json({ job });
   }
 
-  async update(req: Request, res: Response): Promise<void> {
+  public update = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const { amount, local, removeKnowledge, addKnowledge } = req.body;
 
@@ -223,7 +223,7 @@ export class JobVacancyController implements IController {
     res.status(200).json({ job, updated });
   }
 
-  async destroy(req: Request, res: Response): Promise<void> {
+  public destroy = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     const deleted = await this.repoService.jobVacancies.delete({

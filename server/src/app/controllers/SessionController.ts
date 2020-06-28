@@ -9,9 +9,11 @@ import { RepositoryService } from '@services/RepositoryService';
 import { IController } from '@controllers/IController';
 
 export class SessionController implements IController {
-  constructor(private readonly repoService: RepositoryService) {}
+  constructor(
+    private repoService: RepositoryService
+  ) {}
 
-  async store(req: Request, res: Response) {
+  public store = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
     const user = await this.repoService.users.findOne({

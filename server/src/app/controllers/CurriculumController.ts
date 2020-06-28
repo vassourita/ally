@@ -5,9 +5,11 @@ import { RepositoryService } from '@services/RepositoryService';
 import { IController } from '@controllers/IController';
 
 export class CurriculumController implements IController {
-  constructor(private readonly repoService: RepositoryService) {}
+  constructor(
+    private readonly repoService: RepositoryService
+  ) {}
 
-  async store(req: Request, res: Response): Promise<void> {
+  public store = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { filename } = req.file;
 
@@ -19,7 +21,7 @@ export class CurriculumController implements IController {
     res.json({ updated });
   }
 
-  async destroy(req: Request, res: Response): Promise<void> {
+  public destroy = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
 
     const updated = await this.repoService.users.update({

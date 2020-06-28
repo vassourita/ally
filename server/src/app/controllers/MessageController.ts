@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 
-import { WebSocket } from '@root/WebSocket';
-
 import { RepositoryService } from '@services/RepositoryService';
 import { WebSocketService } from '@services/WebSocketService';
 
@@ -13,7 +11,7 @@ export class MessageController implements IController {
     private readonly wsService: WebSocketService
   ) {}
 
-  async index(req: Request, res: Response): Promise<void> {
+  public index = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
 
     const user = await this.repoService.users.findOne({
@@ -44,7 +42,7 @@ export class MessageController implements IController {
     res.status(200).json({ chats });
   }
 
-  async store(req: Request, res: Response): Promise<void> {
+  public store = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { content, chatId } = req.body;
 

@@ -7,7 +7,7 @@ import { IController } from '@controllers/IController';
 export class NotificationController implements IController {
   constructor(private readonly repoService: RepositoryService) {}
 
-  async index(req: Request, res: Response): Promise<void> {
+  public index = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
 
     const notifications = await this.repoService.notifications.find({
@@ -17,7 +17,7 @@ export class NotificationController implements IController {
     res.status(200).json({ notifications });
   }
 
-  async update(req: Request, res: Response): Promise<void> {
+  public update = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     const notifications = await this.repoService.notifications.update({

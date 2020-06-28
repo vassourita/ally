@@ -6,9 +6,12 @@ import { RepositoryService } from '@services/RepositoryService';
 import { IController } from '@controllers/IController';
 
 export class OpportunityController implements IController {
-  constructor(private readonly repoService: RepositoryService) {}
+  constructor(
+    private readonly repoService: RepositoryService,
+    private readonly jobService: JobService,
+  ) {}
 
-  async index(req: Request, res: Response): Promise<void> {
+  public index = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { days, local } = req.query;
 
@@ -31,8 +34,7 @@ export class OpportunityController implements IController {
       ],
     });
 
-    const jobService = new JobService();
-    const jobs = await jobService.filterJobs({ days: days as string, local: local as string, user });
+    const jobs = await this.jobService.filterJobs({ days: days as string, local: local as string, user });
 
     res.status(200).json({ jobs });
   }

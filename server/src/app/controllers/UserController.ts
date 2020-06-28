@@ -10,7 +10,7 @@ import { IController } from '@controllers/IController';
 export class UserController implements IController {
   constructor(private readonly repoService: RepositoryService) {}
 
-  async index(req: Request, res: Response): Promise<void> {
+  public index = async (req: Request, res: Response): Promise<void> => {
     const { page = 1 } = req.query;
 
     const users = await this.repoService.users.find({
@@ -38,7 +38,7 @@ export class UserController implements IController {
     res.json({ users });
   }
 
-  async show(req: Request, res: Response): Promise<void> {
+  public show = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     const user = await this.repoService.users.findOne({
@@ -64,7 +64,7 @@ export class UserController implements IController {
     res.json({ user });
   }
 
-  async store(req: Request, res: Response): Promise<void> {
+  public store = async (req: Request, res: Response): Promise<void> => {
     const { name, email, password, cpf, phone, postalCode, address, state, city, neighborhood, ibgeCode } = req.body;
     const { filename } = req.file;
 
@@ -106,7 +106,7 @@ export class UserController implements IController {
     res.status(201).json({ user });
   }
 
-  async update(req: Request, res: Response): Promise<void> {
+  public update = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { about, removeKnowledge, addKnowledge } = req.body;
 
@@ -164,7 +164,7 @@ export class UserController implements IController {
     res.json({ user, updated });
   }
 
-  async destroy(req: Request, res: Response): Promise<void> {
+  public destroy = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { id } = req.params;
 

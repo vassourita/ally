@@ -28,8 +28,8 @@ export class Router {
   constructor() {
     const routes = express.Router({ caseSensitive: false });
 
-    const upload = new UploadMiddleware();
     const auth = new AuthMiddleware();
+    const upload = new UploadMiddleware();
 
     const repoService = new RepositoryService();
     const jobService = new JobService(repoService);
@@ -43,7 +43,7 @@ export class Router {
     const employer = new EmployerController(repoService);
     const curriculum = new CurriculumController(repoService);
     const jobVacancy = new JobVacancyController(repoService, jobService);
-    const opportunity = new OpportunityController(repoService);
+    const opportunity = new OpportunityController(repoService, jobService);
     const notification = new NotificationController(repoService);
 
     routes.post('/sessions', new SessionStoreValidator().validate, session.store);

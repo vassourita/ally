@@ -11,7 +11,7 @@ export class ProposalController implements IController {
     private readonly wsService: WebSocketService
   ) {}
 
-  async index(req: Request, res: Response): Promise<void> {
+  public index = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
 
     const proposals = await this.repoService.proposals.find({
@@ -37,7 +37,7 @@ export class ProposalController implements IController {
     res.status(200).json({ proposals });
   }
 
-  async store(req: Request, res: Response): Promise<void> {
+  public store = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { jobVacancyId } = req.body;
 
@@ -55,7 +55,7 @@ export class ProposalController implements IController {
     );
 
     const proposal = await this.repoService.proposals.findOne({
-      where: { id: insertId as number },
+      where: { id: insertId },
       join: [
         {
           repo: this.repoService.jobVacancies,
@@ -79,7 +79,7 @@ export class ProposalController implements IController {
     res.status(201).json({ proposal });
   }
 
-  async update(req: Request, res: Response): Promise<void> {
+  public update = async (req: Request, res: Response): Promise<void> => {
     const employerId = res.locals.userId;
     const proposalId = Number(req.params.id);
     const { status } = req.body;
@@ -170,7 +170,7 @@ export class ProposalController implements IController {
     res.status(201).json({ updated: true, chat });
   }
 
-  async destroy(req: Request, res: Response): Promise<void> {
+  public destroy = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     const deleted = await this.repoService.proposals.delete({

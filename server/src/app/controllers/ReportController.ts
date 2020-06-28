@@ -7,13 +7,13 @@ import { IController } from '@controllers/IController';
 export class ReportController implements IController {
   constructor(private readonly repoService: RepositoryService) {}
 
-  async index(req: Request, res: Response): Promise<void> {
+  public index = async (req: Request, res: Response): Promise<void> => {
     const reports = await this.repoService.reports.find();
 
     res.status(201).json({ reports });
   }
 
-  async store(req: Request, res: Response): Promise<void> {
+  public store = async (req: Request, res: Response): Promise<void> => {
     const { userId } = res.locals;
     const { description, jobVacancyId } = req.body;
 
