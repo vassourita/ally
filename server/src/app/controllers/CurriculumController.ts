@@ -14,11 +14,11 @@ export class CurriculumController implements IController {
     const { filename } = req.file;
 
     const updated = await this.repoService.users.update({
-      set: { curriculum: filename },
+      set: { curriculum: `** = '${filename}'` },
       where: { id: Number(userId) }
     });
 
-    res.json({ updated });
+    res.json({ updated: updated ? filename : false });
   }
 
   public destroy = async (req: Request, res: Response): Promise<void> => {
