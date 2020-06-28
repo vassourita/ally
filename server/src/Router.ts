@@ -6,6 +6,7 @@ import { JobService } from '@services/JobService';
 import { RepositoryService } from '@services/RepositoryService';
 import { WebSocketService } from '@services/WebSocketService';
 
+import { CurriculumController } from '@controllers/CurriculumController';
 import { EmployerController } from '@controllers/EmployerController';
 import { JobVacancyController } from '@controllers/JobVacancyController';
 import { MessageController } from '@controllers/MessageController';
@@ -40,6 +41,7 @@ export class Router {
     const session = new SessionController(repoService);
     const proposal = new ProposalController(repoService, wsService);
     const employer = new EmployerController(repoService);
+    const curriculum = new CurriculumController(repoService);
     const jobVacancy = new JobVacancyController(repoService, jobService);
     const opportunity = new OpportunityController(repoService);
     const notification = new NotificationController(repoService);
@@ -60,6 +62,9 @@ export class Router {
     routes.get('/users/:id', user.show);
     routes.put('/users', user.update);
     routes.delete('/users/:id', user.destroy);
+
+    routes.post('/curriculums', upload.single('file'), curriculum.store);
+    routes.delete('/curriculums', curriculum.destroy);
 
     routes.get('/jobs', jobVacancy.index);
     routes.get('/jobs/:id', jobVacancy.show);

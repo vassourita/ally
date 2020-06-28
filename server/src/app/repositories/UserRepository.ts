@@ -11,6 +11,7 @@ export class UserRepository extends BaseRepository<User> {
       password: { returning: false, },
       fiscal_code: { },
       image_url: { },
+      curriculum: { },
       phone: { },
       city: { },
       state: { },

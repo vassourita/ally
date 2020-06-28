@@ -10,6 +10,7 @@ export class User {
   public password: string;
   public fiscal_code: string;
   public image_url: string;
+  public curriculum: string;
   public phone: string;
   public city: string;
   public state: string;
