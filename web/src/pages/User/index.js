@@ -71,7 +71,20 @@ function User() {
         <Content>{user.about || 'Não há descrição ainda'}</Content>
         <Title>Currículo</Title>
         <Content>
-          <FiFile /> curriculo.pdf
+          {' '}
+          <FiFile />
+          {user.curriculum ? (
+            <a
+              style={{ color: '#888' }}
+              href={`${process.env.REACT_APP_FILES_URL}${user.curriculum}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ver currículo
+            </a>
+          ) : (
+            'Nenhum currículo disponível'
+          )}
         </Content>
       </UserAbout>
     </Grid>

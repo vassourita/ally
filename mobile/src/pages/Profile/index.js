@@ -12,7 +12,6 @@ import SelectBlock from '../../components/SelectBlock';
 import { formatPhone } from '../../utils/formatters/formatPhone';
 
 import * as UserActions from '../../store/modules/user/actions';
-import * as AuthActions from '../../store/modules/auth/actions';
 import api from '../../services/api';
 
 import {
@@ -27,6 +26,7 @@ import {
   EditButton,
   EditInput,
   LogoffButton,
+  File,
 } from './styles';
 
 const options = [
@@ -51,6 +51,7 @@ function Profile() {
     typeId: 6,
     name: '',
     about: user.about,
+    curriculum: null,
   });
 
   useEffect(() => {
@@ -119,6 +120,37 @@ function Profile() {
     }
   };
 
+  useEffect(() => {
+    if (editData.curriculum && editData.curriculum !== user.curriculum) {
+      (async () => {
+        try {
+          const data = new FormData();
+
+          data.append('file', editData.curriculum);
+
+          const response = await api.post('/curriculums', data);
+
+          if (response.data.updated) {
+            setEditMode(false);
+            return dispatch(UserActions.updateUser({ curriculum: response.data.updated }));
+          }
+          toast.error('Ocorreu um erro inesperado em nosso servidor');
+        } catch (error) {
+          toast.error('Ocorreu um erro inesperado em nosso servidor');
+        }
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editData.curriculum]);
+
+  const handleEditCurriculum = async e => {
+    e.preventDefault();
+    setEditData({
+      ...editData,
+      curriculum: e.target.files[0],
+    });
+  };
+
   const handleLogoff = async () => {
     history.push('/login');
   };
@@ -164,7 +196,7 @@ function Profile() {
 
       <Image src={`${process.env.REACT_APP_FILES_URL}${user.image_url}`} />
       <LogoffButton onClick={handleLogoff}>
-        Sair <FiLogOut size={20} color={editMode ? 'var(--ally-red)' : 'unset'} />
+        Sair <FiLogOut size={20} />
       </LogoffButton>
       <EditButton>
         <FiEdit size={20} color={editMode ? 'var(--ally-red)' : 'unset'} onClick={handleEditProfile} />
@@ -193,7 +225,30 @@ function Profile() {
         <Content>{user.address}</Content>
         <Title>Currículo</Title>
         <Content>
-          <FiFile /> curriculo.pdf
+          <File htmlFor="file-curriculum">
+            <FiFile />
+            {editMode ? (
+              <>
+                Toque para {user.curriculum ? 'editar' : 'adicionar'} seu currículo
+                <input
+                  onChange={handleEditCurriculum}
+                  id="file-curriculum"
+                  type="file"
+                  accept="image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"
+                />
+              </>
+            ) : user.curriculum ? (
+              <a
+                href={`${process.env.REACT_APP_FILES_URL}${user.curriculum}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Toque para ver seu currículo
+              </a>
+            ) : (
+              'Nenhum currículo adicionado'
+            )}
+          </File>
         </Content>
         <Knowledges>
           <div>

@@ -75,7 +75,7 @@ function Login() {
 
   async function handleKeepLogged(e) {
     e.preventDefault();
-    return history.push('/jobs');
+    history.push('/jobs');
   }
 
   return (

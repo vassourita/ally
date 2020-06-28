@@ -164,3 +164,17 @@ export const DoubleInput = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 `;
+
+export const File = styled.label`
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  a {
+    color: #000;
+  }
+  input[type='file'] {
+    display: none;
+    height: 100%;
+    width: 100%;
+  }
+`;
