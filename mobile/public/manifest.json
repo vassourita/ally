@@ -18,8 +18,8 @@
       "sizes": "512x512"
     }
   ],
+  "display": "standalone",
   "orientation": "portrait",
-  "scope": ".",
   "start_url": ".",
   "theme_color": "#A30B54",
   "background_color": "#A30B54"
