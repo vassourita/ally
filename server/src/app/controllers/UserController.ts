@@ -159,7 +159,6 @@ export class UserController implements IController {
         },
       ],
     });
-    console.log(user);
 
     res.json({ user, updated });
   }
