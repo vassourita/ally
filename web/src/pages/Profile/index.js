@@ -21,7 +21,7 @@ function Profile() {
 
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState({
-    about: '',
+    about: user.about,
   });
 
   async function handleUpdate(e) {
@@ -70,7 +70,14 @@ function Profile() {
               <Button style={{ borderColor: 'var(--ally-blue)' }} outlined onClick={handleUpdate}>
                 <FiCheckSquare color="var(--ally-blue)" />
               </Button>
-              <Button style={{ borderColor: 'var(--ally-red)' }} outlined onClick={() => setEditMode(!editMode)}>
+              <Button
+                style={{ borderColor: 'var(--ally-red)' }}
+                outlined
+                onClick={() => {
+                  setEditMode(!editMode);
+                  setEditData({ ...editData, about: user.about });
+                }}
+              >
                 <FiXSquare color="var(--ally-red)" />
               </Button>
             </DoubleInput>
@@ -86,7 +93,7 @@ function Profile() {
         {editMode ? (
           <EditInput
             placeholder="Adicione uma descrição"
-            value={editData.about || user.about}
+            value={editData.about}
             onChange={e => setEditData({ ...editData, about: e.target.value })}
           />
         ) : (
