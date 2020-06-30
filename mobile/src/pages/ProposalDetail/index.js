@@ -30,7 +30,7 @@ function ProposalDetail() {
     if (status === 'accepted') {
       return (
         <span style={{ color: 'var(--ally-blue)' }}>
-          aceito
+          conversa disponível
           <FiCheckCircle />
         </span>
       );

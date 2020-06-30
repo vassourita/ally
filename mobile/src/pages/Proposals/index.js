@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 
 function Proposals() {
   const proposals = useSelector(state => state.proposals);
+  const chats = useSelector(state => state.chats);
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -62,7 +63,7 @@ function Proposals() {
     if (status === 'accepted') {
       return (
         <span style={{ color: 'var(--ally-blue)' }}>
-          aceito
+          ver conversa
           <FiCheckCircle />
         </span>
       );
@@ -74,7 +75,17 @@ function Proposals() {
       <List>
         {proposals.length ? (
           proposals.map(proposal => (
-            <Card onClick={() => history.push(`/proposals/${proposal.id}`)} key={proposal.id}>
+            <Card
+              onClick={() => {
+                const chat = chats.find(c => c.employer_id === proposal.job.employer.id);
+                if (chat && proposal.status === 'accepted') {
+                  history.push(`/chat/${chat.id}`);
+                } else {
+                  history.push(`/proposals/${proposal.id}`);
+                }
+              }}
+              key={proposal.id}
+            >
               <h3>{proposal.job.name}</h3>
               <p>
                 por <strong>{proposal.job.employer.name}</strong>

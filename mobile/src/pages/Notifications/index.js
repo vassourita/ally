@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -34,27 +34,40 @@ function Notifications() {
       });
   }, [dispatch]);
 
-  const handleSetRead = async (id, link) => {
-    history.push(link);
-    try {
-      const response = await api.put(`/notifications/${id}`);
-
-      if (response.status === 200) {
-        return dispatch(
-          NotificationActions.updateNotification(id, {
-            is_read: true,
-          })
-        );
+  const handleSetRead = useCallback(
+    async (id, link) => {
+      if (link) {
+        history.push(link);
       }
-      toast.error('Ocorreu um erro inesperado em nosso servidor');
-    } catch {
-      toast.error('Ocorreu um erro inesperado em nosso servidor');
-    }
+      try {
+        const response = await api.put(`/notifications/${id}`);
+
+        if (response.status === 200) {
+          return dispatch(
+            NotificationActions.updateNotification(id, {
+              is_read: true,
+            })
+          );
+        }
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      } catch {
+        toast.error('Ocorreu um erro inesperado em nosso servidor');
+      }
+    },
+    [dispatch, history]
+  );
+
+  const getNotificationDate = timestamp => {
+    return formatRelative(new Date(timestamp), new Date(), { locale: pt_BR });
   };
 
-  function getNotificationDate(timestamp) {
-    return formatRelative(new Date(timestamp), new Date(), { locale: pt_BR });
-  }
+  const handleReadAll = useCallback(() => {
+    notifications.filter(n => !n.is_read).forEach(n => handleSetRead(n.id, null));
+  }, [handleSetRead, notifications]);
+
+  useEffect(() => {
+    return handleReadAll;
+  }, [handleReadAll]);
 
   return (
     <Container>

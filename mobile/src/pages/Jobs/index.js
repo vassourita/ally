@@ -114,6 +114,7 @@ function Jobs() {
         </div>
       </Filters>
       <List>
+        {loading && !jobs.length && <NoVacancies>Carregando...</NoVacancies>}
         {!loading && !jobs.length && <NoVacancies>Não há nenhuma vaga disponível no momento</NoVacancies>}
         {jobs.sort(orderJobs).map(job => (
           <Card onClick={() => history.push(`/jobs/${job.id}`)} key={job.id}>

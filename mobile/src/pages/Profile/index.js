@@ -264,7 +264,7 @@ function Profile() {
           </div>
           {!user.knowledges?.length && <Content>Nenhum conhecimento adicionado</Content>}
           {user.knowledges?.map(k => (
-            <Content>
+            <Content key={k.id}>
               {k.type.name} - {k.name}
               {excludeMode && <FiTrash onClick={() => handleDeleteKnowledge(k.id)} />}
             </Content>
