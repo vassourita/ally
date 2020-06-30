@@ -116,6 +116,16 @@ export const ListItem = styled.li`
   margin: 0 0px 40px 0;
 `;
 
+export const Curriculum = styled.div`
+  display: flex;
+  align-items: center;
+  align-self: center;
+  color: #666;
+  svg {
+    margin-right: 5px;
+  }
+`;
+
 export const UserImg = styled.img`
   grid-area: img;
   filter: brightness(55%);

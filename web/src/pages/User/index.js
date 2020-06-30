@@ -71,7 +71,6 @@ function User() {
         <Content>{user.about || 'Não há descrição ainda'}</Content>
         <Title>Currículo</Title>
         <Content>
-          {' '}
           <FiFile />
           {user.curriculum ? (
             <a

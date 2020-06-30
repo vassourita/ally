@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useParams, useHistory } from 'react-router-dom';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
-import { FiTrash, FiCheckSquare, FiXSquare, FiEdit } from 'react-icons/fi';
+import { FiTrash, FiCheckSquare, FiXSquare, FiEdit, FiFile } from 'react-icons/fi';
 
 import * as JobActions from '../../store/modules/jobs/actions';
 import api from '../../services/api';
@@ -34,6 +34,7 @@ import {
   ModalDivisor,
   Counter,
   Inputs,
+  Curriculum,
 } from './styles';
 
 const options = [
@@ -420,20 +421,36 @@ function Vacancies() {
                   ))}
                 </div>
               </Counter>
+              <Curriculum>
+                {proposal.user.curriculum ? (
+                  <>
+                    <FiFile />
+                    <a
+                      href={`${process.env.REACT_APP_FILES_URL}${proposal.user.curriculum}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ver currículo
+                    </a>
+                  </>
+                ) : (
+                  'Nenhum currículo disponível'
+                )}
+              </Curriculum>
               <Inputs>
                 <Button
                   onClick={() => handleUpdateProposal(proposal.id, true, proposal.user.name)}
                   outlined
                   style={{ color: 'var(--ally-blue)', borderColor: 'var(--ally-blue)' }}
                 >
-                  Aceitar <FiCheckSquare />
+                  Iniciar Conversa
                 </Button>
                 <Button
                   onClick={() => handleUpdateProposal(proposal.id, false, proposal.user.name)}
                   outlined
                   style={{ color: 'var(--ally-red)', borderColor: 'var(--ally-red)' }}
                 >
-                  Rejeitar <FiXSquare />
+                  Dispensar
                 </Button>
               </Inputs>
             </UserInfo>
