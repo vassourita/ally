@@ -29,7 +29,9 @@
     "socket.io": "^2.3.0",
     "tsconfig-paths": "^3.9.0",
     "youch": "^2.0.10",
-    "yup": "^0.28.5"
+    "yup": "^0.28.5",
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.44"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -52,8 +54,6 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-import-helpers": "^1.0.2",
-    "ts-node": "^8.10.2",
-    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.9.5"
   }
 }
