@@ -28,9 +28,7 @@ function Routes() {
     socket.subscribeToNotifications(data => {
       dispatch(NotificationActions.addNotification(data.notification));
 
-      toast.info(data.notification.description, {
-        onClick: () => history.push(data.notification.link),
-      });
+      toast.info(data.notification.description);
     });
 
     socket.subscribeToMessages(data => {
