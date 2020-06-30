@@ -1,13 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiChevronLeft, FiAlertTriangle } from 'react-icons/fi';
+import { FiChevronLeft, FiAlertTriangle, FiCheckSquare, FiXSquare } from 'react-icons/fi';
 import { useParams, useHistory } from 'react-router-dom';
+import Modal from 'react-modal';
 import { toast } from 'react-toastify';
 
 import * as JobActions from '../../store/modules/jobs/actions';
 import api from '../../services/api';
 
 import Button from '../../components/Button';
+import TextAreaBlock from '../../components/TextAreaBlock';
 
 import {
   Container,
@@ -21,14 +23,18 @@ import {
   EmployerName,
   EmployerAddress,
   Counter,
+  ModalContainer,
+  DoubleInput,
 } from './styles';
 
 function JobDetail() {
   const { id } = useParams();
-  const history = useHistory();
   const job = useSelector(state => state.jobs.find(job => job.id === Number(id)));
-
+  const history = useHistory();
   const dispatch = useDispatch();
+
+  const [reportData, setReportData] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleSendProposal = useCallback(
     async e => {
@@ -54,12 +60,69 @@ function JobDetail() {
     [dispatch, history, job.id]
   );
 
+  const handleSendReport = async e => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post('/reports', {
+        description: reportData,
+        jobVacancyId: job.id,
+      });
+
+      if (response.status === 201) {
+        setModalOpen(false);
+        toast.info('A vaga foi denunciada e será analisada');
+        return history.goBack();
+      }
+
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    } catch {
+      toast.error('Ocorreu um erro inesperado em nosso servidor');
+    }
+  };
+
   return (
     <Container>
+      <Modal className="modal-refactor" overlayClassName="overlay-refactor" isOpen={modalOpen}>
+        <ModalContainer>
+          <Title>Denunciar vaga</Title>
+          <TextAreaBlock
+            label="Descrição"
+            value={reportData}
+            onChange={e => setReportData(e.target.value)}
+          ></TextAreaBlock>
+          <DoubleInput>
+            <Button
+              disabled={!reportData}
+              style={{ borderColor: 'var(--ally-blue)' }}
+              outlined
+              onClick={handleSendReport}
+            >
+              <FiCheckSquare color="var(--ally-blue)" />
+            </Button>
+            <Button
+              style={{ borderColor: 'var(--ally-red)' }}
+              outlined
+              onClick={() => {
+                setReportData('');
+                setModalOpen(false);
+              }}
+            >
+              <FiXSquare color="var(--ally-red)" />
+            </Button>
+          </DoubleInput>
+        </ModalContainer>
+      </Modal>
+
       <Header>
         <FiChevronLeft onClick={() => history.goBack(-1)} size={30} />
         <h3>{job.name}</h3>
-        <FiAlertTriangle color="var(--ally-red)" size={24} />
+        <FiAlertTriangle
+          onClick={() => setModalOpen(true)}
+          color="var(--ally-red)"
+          style={{ marginRight: '7px' }}
+          size={24}
+        />
       </Header>
       <Body>
         <Employer>
