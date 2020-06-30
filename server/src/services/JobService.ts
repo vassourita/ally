@@ -101,6 +101,11 @@ export class JobService {
           SELECT DISTINCT proposal.job_vacancy_id
           FROM proposal
           WHERE proposal.user_id = ${user.id}
+        ) AND
+        job_vacancy.id NOT IN (
+          SELECT DISTINCT report.job_vacancy_id
+          FROM report
+          WHERE report.user_id = ${user.id}
         )
       GROUP BY job_vacancy.id
     `);
