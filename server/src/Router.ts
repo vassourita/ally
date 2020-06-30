@@ -85,8 +85,8 @@ export class Router {
     routes.put('/proposals/:id', proposal.update);
     routes.delete('/proposals/:id', proposal.destroy);
 
-    routes.get('/report', report.index);
-    routes.post('/report', report.store);
+    routes.get('/reports', report.index);
+    routes.post('/reports', report.store);
 
     this.routes = routes;
   }

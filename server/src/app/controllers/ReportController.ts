@@ -8,7 +8,24 @@ export class ReportController implements IController {
   constructor(private readonly repoService: RepositoryService) {}
 
   public index = async (req: Request, res: Response): Promise<void> => {
-    const reports = await this.repoService.reports.find();
+    const reports = await this.repoService.reports.find({
+      join: [
+        {
+          repo: this.repoService.jobVacancies,
+          as: 'job',
+          on: { id: 'report.job_vacancy_id' },
+          type: 'single',
+          join: [
+            {
+              repo: this.repoService.users,
+              as: 'employer',
+              on: { id: 'job_vacancy.employer_id' },
+              type: 'single',
+            }
+          ]
+        }
+      ]
+    });
 
     res.status(201).json({ reports });
   }
