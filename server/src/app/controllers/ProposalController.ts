@@ -165,7 +165,7 @@ export class ProposalController implements IController {
       is_read: false,
     });
 
-    await this.wsService.sendNotification(proposal.job.employer_id.toString(), notification);
+    await this.wsService.sendNotification(proposal.user_id.toString(), notification);
 
     res.status(201).json({ updated: true, chat });
   }
