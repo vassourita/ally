@@ -21,6 +21,7 @@ jspm_packages/
 .env
 .env.test
 .env.local
+.env.production
 
 # Upload files
 public/uploads/**
