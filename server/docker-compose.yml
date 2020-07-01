@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  server:
+    build: .
+    ports:
+      - "3333:3333"
+    container_name: ally-server
+    command: npm start
+    environment:
+      - DB_USER=root
+      - DB_PASS=xic11250
+      - DB_NAME=database-ally-1
+      - DB_HOST=database-ally-1.cwgxy5eby9ge.us-east-1.rds.amazonaws.com
+      - DB_PORT=3306
+      - MD5=8938f05e37da705af34152cc27139552

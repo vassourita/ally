@@ -1,1 +1,0 @@
-api: yarn workspace server server:dev

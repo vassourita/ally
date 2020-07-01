@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "server:dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpileOnly --ignore-watch node_modules --no-notify src/index.ts",
+    "start": "ts-node-dev -r tsconfig-paths/register --respawn --transpileOnly --ignore-watch node_modules --no-notify src/index.ts",
     "db:migrate": "knex migrate:latest",
     "db:migrate:rollback": "knex migrate:rollback",
     "db:seed": "knex seed:run"
@@ -31,7 +32,8 @@
     "youch": "^2.0.10",
     "yup": "^0.28.5",
     "ts-node": "^8.10.2",
-    "ts-node-dev": "^1.0.0-pre.44"
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.9.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -53,7 +55,6 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-import-helpers": "^1.0.2",
-    "typescript": "^3.9.5"
+    "eslint-plugin-import-helpers": "^1.0.2"
   }
 }
