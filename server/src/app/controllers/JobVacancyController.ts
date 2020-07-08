@@ -87,6 +87,10 @@ export class JobVacancyController implements IController {
     });
 
     res.status(200).json({ job });
+
+    const [jobWithMatches] = await this.jobService.generateMatchData([job]);
+
+    res.status(200).json({ job: jobWithMatches });
   }
 
   public store = async (req: Request, res: Response): Promise<void> => {
@@ -145,7 +149,9 @@ export class JobVacancyController implements IController {
       ],
     });
 
-    res.status(201).json({ job });
+    const [jobWithMatches] = await this.jobService.generateMatchData([job]);
+
+    res.status(200).json({ job: jobWithMatches });
   }
 
   public update = async (req: Request, res: Response): Promise<void> => {
@@ -220,7 +226,9 @@ export class JobVacancyController implements IController {
       ],
     });
 
-    res.status(200).json({ job, updated });
+    const [jobWithMatches] = await this.jobService.generateMatchData([job]);
+
+    res.status(200).json({ job: jobWithMatches, updated });
   }
 
   public destroy = async (req: Request, res: Response): Promise<void> => {
