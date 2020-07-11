@@ -45,7 +45,7 @@ function JobDetail() {
         });
 
         if (response.data.proposal) {
-          toast.info('Proposta enviada! Você receberá uma mensagem se a proposta for aceita', {
+          toast.info('Candidatura enviada! Você receberá uma mensagem se ela for aceita', {
             onClick: () => history.push('/proposals'),
           });
           history.push('/jobs');
@@ -157,7 +157,7 @@ function JobDetail() {
       </Body>
       <Footer>
         <Button outlined onClick={handleSendProposal}>
-          Enviar Proposta
+          Candidatar-me
         </Button>
       </Footer>
     </Container>
