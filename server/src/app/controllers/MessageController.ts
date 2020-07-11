@@ -15,11 +15,19 @@ export class MessageController implements IController {
     const { userId } = res.locals;
 
     const user = await this.repoService.users.findOne({
-      attrs: ['employer'],
+      attrs: ['id'],
       where: { id: userId },
+      join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
+      ]
     });
 
-    const idFilter = user.employer ? ['employer', 'user'] : ['user', 'employer'];
+    const idFilter = user.type.id === 1 ? ['employer', 'user'] : ['user', 'employer'];
 
     const chats = await this.repoService.chats.find({
       where: { [`${idFilter[0]}_id`]: userId },
@@ -53,11 +61,19 @@ export class MessageController implements IController {
     });
 
     const user = await this.repoService.users.findOne({
-      attrs: ['employer'],
+      attrs: ['id'],
       where: { id: userId },
+      join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
+      ]
     });
 
-    const idFilter = user.employer ? 'employer' : 'user';
+    const idFilter = user.type.id === 1 ? 'employer' : 'user';
 
     const chat = await this.repoService.chats.findOne({
       where: { id: chatId },
