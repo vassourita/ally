@@ -68,7 +68,6 @@ export class JobService {
           'neighborhood', user.neighborhood,
           'microregion_id', user.microregion_id,
           'postal_code', user.postal_code,
-          'employer', user.employer,
           'about', user.about,
           'created_at', user.created_at
         ) AS employer,
@@ -222,7 +221,10 @@ export class JobService {
   }
 
   public normalize(s: string) {
-    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return s.normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s{1,}/g, '')
+      .toLowerCase();
   }
 
   public generateMatchData = async (jobList: JobVacancy[]) => {

@@ -19,6 +19,12 @@ export class OpportunityController implements IController {
       where: { id: userId },
       join: [
         {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
+        {
           repo: this.repoService.knowledges,
           on: { user_id: 'user.id' },
           type: 'many',
