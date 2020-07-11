@@ -15,6 +15,10 @@ const INITIAL_STATE = {
   microregion_id: 0,
   birth: '',
   created_at: '',
+  type: {
+    id: 0,
+    name: '',
+  },
 };
 
 function user(state = INITIAL_STATE, { type, data }) {

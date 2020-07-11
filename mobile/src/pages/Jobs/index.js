@@ -29,7 +29,6 @@ const localOptions = [
 const orderOptions = [
   { label: 'Mais antigas', value: 'older' },
   { label: 'Mais recentes', value: 'newer' },
-  { label: 'Requisitos', value: 'requirements' },
 ];
 
 function Jobs() {

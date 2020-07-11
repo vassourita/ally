@@ -56,7 +56,7 @@ function Login() {
       });
 
       if (response.status === 200) {
-        if (response.data.user.employer) {
+        if (response.data.user.type.id !== 2) {
           return toast.error(
             'Você está tentando se conectar com uma conta empresarial. Utilize nosso site para acessar sua conta.'
           );

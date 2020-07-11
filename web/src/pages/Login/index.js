@@ -57,7 +57,7 @@ function Login() {
       setError('');
 
       if (response.status === 200) {
-        if (!response.data.user.employer) {
+        if (response.data.user.type.id !== 1) {
           return toast.error(
             'Você está tentando se conectar com uma conta não-empresarial. Utilize nosso aplicativo para acessar usa conta.'
           );
