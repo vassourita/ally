@@ -7,6 +7,7 @@ import { Notification } from '@models/Notification';
 import { Proposal } from '@models/Proposal';
 import { Report } from '@models/Report';
 import { User } from '@models/User';
+import { UserType } from '@models/UserType';
 
 import { BaseRepository } from '@repositories/BaseRepository';
 import { ChatRepository } from '@repositories/ChatRepository';
@@ -18,9 +19,11 @@ import { NotificationRepository } from '@repositories/NotificationRepository';
 import { ProposalRepository } from '@repositories/ProposalRepository';
 import { ReportRepository } from '@repositories/ReportRepository';
 import { UserRepository } from '@repositories/UserRepository';
+import { UserTypeRepository } from '@repositories/UserTypeRepository';
 
 export class RepositoryService {
   public readonly users: BaseRepository<User> = new UserRepository();
+  public readonly userTypes: BaseRepository<UserType> = new UserTypeRepository();
   public readonly chats: BaseRepository<Chat> = new ChatRepository();
   public readonly jobVacancies: BaseRepository<JobVacancy> = new JobVacancyRepository();
   public readonly knowledges: BaseRepository<Knowledge> = new KnowledgeRepository();

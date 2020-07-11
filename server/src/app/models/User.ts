@@ -2,6 +2,7 @@ import { Chat } from '@models/Chat';
 import { JobVacancy } from '@models/JobVacancy';
 import { Knowledge } from '@models/Knowledge';
 import { Notification } from '@models/Notification';
+import { UserType } from '@models/UserType';
 
 export class User {
   public id: number;
@@ -18,10 +19,11 @@ export class User {
   public neighborhood: string;
   public microregion_id: number;
   public postal_code: string;
-  public employer: Boolean;
   public about: string;
   public created_at: string;
+  public type_id: number;
 
+  public type: UserType;
   public chats: Chat[];
   public jobs: JobVacancy[];
   public knowledges: Knowledge[];

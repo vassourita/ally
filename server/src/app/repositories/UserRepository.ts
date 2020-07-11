@@ -19,9 +19,9 @@ export class UserRepository extends BaseRepository<User> {
       neighborhood: { },
       microregion_id: { },
       postal_code: { },
-      employer: { },
       about: { },
       created_at: { },
+      type_id: {},
     });
   }
 }
