@@ -14,10 +14,16 @@ export class UserController implements IController {
     const { page = 1 } = req.query;
 
     const users = await this.repoService.users.find({
-      where: { employer: false },
+      where: { user_type_id: 2 },
       limit: 10 * Number(page),
       offset: (Number(page) - 1) * 10,
       join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
         {
           repo: this.repoService.knowledges,
           attrs: ['id', 'name'],
@@ -42,8 +48,14 @@ export class UserController implements IController {
     const { id } = req.params;
 
     const user = await this.repoService.users.findOne({
-      where: { id: Number(id), employer: false },
+      where: { id: Number(id), user_type_id: 2 },
       join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
         {
           repo: this.repoService.knowledges,
           on: { user_id: 'user.id' },
@@ -70,7 +82,7 @@ export class UserController implements IController {
 
     const userExists = await this.repoService.users.findOne({
       attrs: ['id', 'email'],
-      where: { email, employer: true },
+      where: { email },
     });
 
     if (userExists) {
@@ -88,7 +100,7 @@ export class UserController implements IController {
     const passwordHash = await bcrypt.hash(password, 8);
 
     const user = await this.repoService.users.create({
-      employer: false,
+      user_type_id: 2,
       name,
       email,
       password: passwordHash,
@@ -144,6 +156,12 @@ export class UserController implements IController {
       where: { id: userId },
       join: [
         {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
+        {
           repo: this.repoService.knowledges,
           attrs: ['id', 'name'],
           on: { user_id: 'user.id' },
@@ -173,7 +191,7 @@ export class UserController implements IController {
     }
 
     const deleted = await this.repoService.users.delete({
-      where: { id: Number(id), employer: false },
+      where: { id: Number(id), user_type_id: 2 },
     });
 
     res.status(200).json({ deleted });

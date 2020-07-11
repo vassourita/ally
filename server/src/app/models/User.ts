@@ -21,7 +21,7 @@ export class User {
   public postal_code: string;
   public about: string;
   public created_at: string;
-  public type_id: number;
+  public user_type_id: number;
 
   public type: UserType;
   public chats: Chat[];

@@ -21,7 +21,7 @@ export class UserRepository extends BaseRepository<User> {
       postal_code: { },
       about: { },
       created_at: { },
-      type_id: {},
+      user_type_id: {},
     });
   }
 }

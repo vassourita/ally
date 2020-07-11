@@ -37,6 +37,14 @@ export class SessionController implements IController {
 
     const loggedUser = await this.repoService.users.findOne({
       where: { id: user.id },
+      join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
+      ]
     });
 
     res.status(200).json({

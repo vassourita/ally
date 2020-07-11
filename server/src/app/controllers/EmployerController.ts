@@ -16,10 +16,16 @@ export class EmployerController implements IController {
     const { page = 1 } = req.query;
 
     const users = await this.repoService.users.find({
-      where: { employer: true },
+      where: { user_type_id: 1 },
       limit: 10 * Number(page),
       offset: (Number(page) - 1) * 10,
       join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
         {
           repo: this.repoService.jobVacancies,
           on: { employer_id: 'user.id' },
@@ -36,8 +42,14 @@ export class EmployerController implements IController {
     const { id } = req.params;
 
     const user = await this.repoService.users.findOne({
-      where: { id: Number(id), employer: true },
+      where: { id: Number(id), user_type_id: 1 },
       join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
         {
           repo: this.repoService.jobVacancies,
           on: { employer_id: 'user.id' },
@@ -56,7 +68,15 @@ export class EmployerController implements IController {
 
     const userExists = await this.repoService.users.findOne({
       attrs: ['id', 'email'],
-      where: { email, employer: true },
+      where: { email },
+      join: [
+        {
+          repo: this.repoService.userTypes,
+          on: { id: 'user.user_type_id' },
+          type: 'single',
+          as: 'type',
+        },
+      ]
     });
 
     if (userExists) {
@@ -74,7 +94,7 @@ export class EmployerController implements IController {
     const passwordHash = await bcrypt.hash(password, 8);
 
     const user = await this.repoService.users.create({
-      employer: true,
+      user_type_id: 1,
       name,
       email,
       password: passwordHash,
@@ -120,7 +140,7 @@ export class EmployerController implements IController {
     }
 
     const deleted = await this.repoService.users.delete({
-      where: { id: Number(id), employer: true },
+      where: { id: Number(id), user_type_id: 1 },
     });
 
     res.json({ deleted });
