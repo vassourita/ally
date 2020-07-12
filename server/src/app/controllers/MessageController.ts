@@ -34,7 +34,7 @@ export class MessageController implements IController {
       join: [
         {
           repo: this.repoService.jobVacancies,
-          on: { job_vacancy_id: 'job_vacancy.id' },
+          on: { id: 'chat.job_vacancy_id' },
           type: 'single',
           as: 'job',
         },

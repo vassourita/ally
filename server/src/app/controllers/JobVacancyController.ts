@@ -151,7 +151,7 @@ export class JobVacancyController implements IController {
 
     const [jobWithMatches] = await this.jobService.generateMatchData([job]);
 
-    res.status(200).json({ job: jobWithMatches });
+    res.status(201).json({ job: jobWithMatches });
   }
 
   public update = async (req: Request, res: Response): Promise<void> => {
