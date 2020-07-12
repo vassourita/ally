@@ -40,7 +40,7 @@ function Chat() {
       return null;
     }
     if (last.length > 30) {
-      return `${last.substring(0, 30)}...`;
+      return `${last.substring(0, 35)}...`;
     }
     return last;
   }
@@ -55,7 +55,9 @@ function Chat() {
               <NavLink activeClassName="nav-link-active" to={`/chat/${chat.id}`}>
                 <img src={`${process.env.REACT_APP_FILES_URL}${chat.employer.image_url}`} alt={chat.employer.name} />
                 <div>
-                  <Title>{chat.employer.name}</Title>
+                  <Title>
+                    {chat.employer.name} - {chat.job.name}
+                  </Title>
                   <LastMessage>{getLastMessage(chat.messages) || 'Nenhuma mensagem ainda'}</LastMessage>
                 </div>
               </NavLink>

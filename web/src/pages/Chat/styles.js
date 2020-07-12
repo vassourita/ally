@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 330px 1fr;
   grid-template-areas: 'nav head' 'nav list';
   gap: 40px;
   height: calc(100vh - 60px);
@@ -67,7 +67,7 @@ export const Badge = styled.strong`
 export const Title = styled.h5`
   color: #000;
   font-family: 'Quicksand';
-  font-size: 15px;
+  font-size: 14px;
 `;
 
 export const LastMessage = styled.span`
@@ -119,7 +119,8 @@ export const MessageList = styled.ul`
   grid-area: list;
   overflow-y: auto;
   display: grid;
-  grid-template-rows: 1fr 40px 40px;
+  grid-template-rows: 1fr 40px;
+  margin-bottom: 40px;
 `;
 
 export const Messages = styled.div`

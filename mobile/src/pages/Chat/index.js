@@ -80,7 +80,9 @@ function Chat() {
     <Container>
       <Header>
         <FiChevronLeft onClick={() => history.goBack(-1)} size={30} />
-        <h3>{chat.employer.name}</h3>
+        <h3>
+          {chat.employer.name} - {chat.job.name}
+        </h3>
         <img src={`${process.env.REACT_APP_FILES_URL}${chat.employer.image_url}`} alt={chat.employer.name} />
       </Header>
       <MessageList>
