@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
-  grid-template-columns: 330px 1fr;
+  grid-template-columns: 360px 1fr;
   grid-template-areas: 'nav head' 'nav list';
   gap: 40px;
   height: calc(100vh - 60px);
@@ -87,9 +87,14 @@ export const Header = styled.div`
     h2 {
       font-family: 'Quicksand';
       font-size: 20px;
-      opacity: 85%;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      color: #333;
+      span {
+        font-family: 'Quicksand';
+        font-size: 15px;
+        color: #777;
+      }
     }
     img {
       height: 48px;

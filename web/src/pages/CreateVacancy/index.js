@@ -60,7 +60,7 @@ function CreateVacancy() {
         local,
       });
       if (response.status !== 201) {
-        toast.error('Ocorreu um erro inesperado em nosso servidor');
+        return toast.error('Ocorreu um erro inesperado em nosso servidor');
       }
       dispatch(JobActions.addJob(response.data.job));
       setName('');
@@ -114,8 +114,15 @@ function CreateVacancy() {
                 label="Tipo"
                 options={options}
               />
-              <InputBlock value={knowledge.name} onChange={e => handleSetKnowledge(e.target.value, i, 'name')} label="Nome" />
-              <CheckBox checked={knowledge.differential} onChange={e => handleSetKnowledge(e.target.checked, i, 'differential')}>
+              <InputBlock
+                value={knowledge.name}
+                onChange={e => handleSetKnowledge(e.target.value, i, 'name')}
+                label="Nome"
+              />
+              <CheckBox
+                checked={knowledge.differential}
+                onChange={e => handleSetKnowledge(e.target.checked, i, 'differential')}
+              >
                 Diferencial
               </CheckBox>
               <Button
@@ -131,7 +138,8 @@ function CreateVacancy() {
             <Button
               outlined
               disabled={
-                knowledges.length && (!knowledges[knowledges.length - 1].name || !knowledges[knowledges.length - 1].typeId)
+                knowledges.length &&
+                (!knowledges[knowledges.length - 1].name || !knowledges[knowledges.length - 1].typeId)
               }
               onClick={() => setKnowledges([...knowledges, { differential: false }])}
             >
