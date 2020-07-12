@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { FiSend } from 'react-icons/fi';
 import { NavLink, useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { ptBR } from 'date-fns/locale';
 
 import CardBox from '../../components/CardBox';
 import CardHeader from '../../components/CardHeader';
+import SelectBlock from '../../components/SelectBlock';
 
 import * as ChatActions from '../../store/modules/chats/actions';
 import api from '../../services/api';
@@ -31,13 +32,26 @@ function Chat() {
   const { id: chatId } = useParams();
 
   const dispatch = useDispatch();
+  const jobs = useSelector(state => state.jobs);
   const chats = useSelector(state => state.chats);
   const userId = useSelector(state => state.auth.id);
 
   const actualChat = chats.find(j => j.id === Number(chatId));
   const [message, setMessage] = useState();
+  const [filter, setFilter] = useState(0);
 
   const lastMessageRef = useRef();
+
+  const filterOptions = useMemo(() => {
+    const filters = jobs.map(job => ({ label: job.name, value: job.id }));
+    return [
+      {
+        label: 'Todas as vagas',
+        value: 0,
+      },
+      ...filters,
+    ];
+  }, [jobs]);
 
   useEffect(() => {
     api
@@ -115,19 +129,27 @@ function Chat() {
       <Nav className="modal-shadow">
         <CardHeader title="Suas conversas" sub="Envie e visualize mensagens sobre suas vagas" />
         <NavList>
-          {chats.map(chat => (
-            <NavItem key={chat.id}>
-              <NavLink activeClassName="nav-link-active" to={`/chat/${chat.id}`}>
-                <img src={`${process.env.REACT_APP_FILES_URL}${chat.user.image_url}`} alt={chat.user.name} />
-                <div>
-                  <Title>
-                    {chat.user.name} - {chat.job.name}
-                  </Title>
-                  <LastMessage>{getLastMessage(chat.messages) || 'Nenhuma mensagem ainda'}</LastMessage>
-                </div>
-              </NavLink>
-            </NavItem>
-          ))}
+          <span>Filtrar por vaga</span>
+          <SelectBlock
+            onChange={({ label, value }) => setFilter(value)}
+            options={filterOptions}
+            defaultValue={filterOptions[0]}
+          />
+          {chats
+            .filter(chat => (filter ? chat.job.id === filter : true))
+            .map(chat => (
+              <NavItem key={chat.id}>
+                <NavLink activeClassName="nav-link-active" to={`/chat/${chat.id}`}>
+                  <img src={`${process.env.REACT_APP_FILES_URL}${chat.user.image_url}`} alt={chat.user.name} />
+                  <div>
+                    <Title>
+                      {chat.user.name} - {chat.job.name}
+                    </Title>
+                    <LastMessage>{getLastMessage(chat.messages) || 'Nenhuma mensagem ainda'}</LastMessage>
+                  </div>
+                </NavLink>
+              </NavItem>
+            ))}
         </NavList>
       </Nav>
       <Header>

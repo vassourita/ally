@@ -20,7 +20,20 @@ export const Nav = styled.nav`
   }
 `;
 
-export const NavList = styled.ul``;
+export const NavList = styled.ul`
+  & > span {
+    position: relative;
+    bottom: 12px;
+    margin: 35px;
+    color: #777;
+    font-size: 12px;
+  }
+  .select-block {
+    position: relative;
+    bottom: 12px;
+    margin: 5px 35px 20px;
+  }
+`;
 
 export const NavItem = styled.li`
   margin-left: 35px;
