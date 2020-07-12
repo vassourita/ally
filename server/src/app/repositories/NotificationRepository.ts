@@ -5,7 +5,7 @@ import { BaseRepository } from '@repositories/BaseRepository';
 export class NotificationRepository extends BaseRepository<Notification> {
   constructor() {
     super('notification', {
-      id: { primary: true, },
+      id: { primary: true },
       description: { },
       title: { },
       link: { },

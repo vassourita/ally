@@ -5,7 +5,7 @@ import { BaseRepository } from '@repositories/BaseRepository';
 export class JobVacancyRepository extends BaseRepository<JobVacancy> {
   constructor() {
     super('job_vacancy', {
-      id: { primary: true, },
+      id: { primary: true },
       employer_id: { },
       name: { },
       local: { },

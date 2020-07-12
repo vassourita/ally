@@ -9,7 +9,7 @@ import { IController } from '@controllers/IController';
 
 export class EmployerController implements IController {
   constructor(
-    private readonly repoService: RepositoryService
+    private readonly repoService: RepositoryService,
   ) {}
 
   public index = async (req: Request, res: Response): Promise<void> => {
@@ -76,7 +76,7 @@ export class EmployerController implements IController {
           type: 'single',
           as: 'type',
         },
-      ]
+      ],
     });
 
     if (userExists) {

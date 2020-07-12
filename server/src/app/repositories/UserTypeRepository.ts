@@ -5,7 +5,7 @@ import { BaseRepository } from '@repositories/BaseRepository';
 export class UserTypeRepository extends BaseRepository<UserType> {
   constructor() {
     super('user_type', {
-      id: { primary: true, },
+      id: { primary: true },
       name: { },
     });
   }

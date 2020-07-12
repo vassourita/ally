@@ -8,6 +8,7 @@ export class ChatRepository extends BaseRepository<Chat> {
       id: { primary: true, },
       employer_id: { },
       user_id: { },
+      job_vacancy_id: { },
     });
   }
 }

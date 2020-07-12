@@ -6,7 +6,7 @@ import { IController } from '@controllers/IController';
 
 export class CurriculumController implements IController {
   constructor(
-    private readonly repoService: RepositoryService
+    private readonly repoService: RepositoryService,
   ) {}
 
   public store = async (req: Request, res: Response): Promise<void> => {
@@ -15,7 +15,7 @@ export class CurriculumController implements IController {
 
     const updated = await this.repoService.users.update({
       set: { curriculum: `** = '${filename}'` },
-      where: { id: Number(userId) }
+      where: { id: Number(userId) },
     });
 
     res.json({ updated: updated ? filename : false });
@@ -26,7 +26,7 @@ export class CurriculumController implements IController {
 
     const updated = await this.repoService.users.update({
       set: { curriculum: null },
-      where: { id: Number(userId) }
+      where: { id: Number(userId) },
     });
 
     res.json({ updated });

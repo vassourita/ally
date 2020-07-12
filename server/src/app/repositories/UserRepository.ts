@@ -5,10 +5,10 @@ import { BaseRepository } from '@repositories/BaseRepository';
 export class UserRepository extends BaseRepository<User> {
   constructor() {
     super('user', {
-      id: { primary: true, },
+      id: { primary: true },
       name: { },
       email: { },
-      password: { returning: false, },
+      password: { returning: false },
       fiscal_code: { },
       image_url: { },
       curriculum: { },
@@ -21,7 +21,7 @@ export class UserRepository extends BaseRepository<User> {
       postal_code: { },
       about: { },
       created_at: { },
-      user_type_id: {},
+      user_type_id: { },
     });
   }
 }

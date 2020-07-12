@@ -10,7 +10,7 @@ import { IController } from '@controllers/IController';
 
 export class SessionController implements IController {
   constructor(
-    private repoService: RepositoryService
+    private repoService: RepositoryService,
   ) {}
 
   public store = async (req: Request, res: Response): Promise<void> => {
@@ -44,7 +44,7 @@ export class SessionController implements IController {
           type: 'single',
           as: 'type',
         },
-      ]
+      ],
     });
 
     res.status(200).json({

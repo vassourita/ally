@@ -20,7 +20,6 @@
     "arrow-body-style": "off",
     "array-callback-return": "off",
     "class-methods-use-this": "off",
-    "comma-dangle": "off",
     "camelcase": "off",
     "lines-between-class-members": "off",
     "lines-around-directive": "off",

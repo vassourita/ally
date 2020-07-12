@@ -8,7 +8,7 @@ import { IController } from '@controllers/IController';
 export class JobVacancyController implements IController {
   constructor(
     private readonly repoService: RepositoryService,
-    private readonly jobService: JobService
+    private readonly jobService: JobService,
   ) {}
 
   public index = async (req: Request, res: Response): Promise<void> => {

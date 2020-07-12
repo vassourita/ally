@@ -291,12 +291,12 @@ export class BaseRepository<M> {
         if (join) {
           return {
             sql,
-            params
+            params,
           };
         }
         return {
           sql: '',
-          params
+          params,
         };
       },
     };

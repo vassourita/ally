@@ -5,7 +5,7 @@ import { BaseRepository } from '@repositories/BaseRepository';
 export class ProposalRepository extends BaseRepository<Proposal> {
   constructor() {
     super('proposal', {
-      id: { primary: true, },
+      id: { primary: true },
       status: { },
       user_id: { },
       job_vacancy_id: { },

@@ -250,7 +250,7 @@ export class JobService {
                 },
               ],
             },
-          ]
+          ],
         });
 
         const requirementMatches: IMatch[] = [];
@@ -307,13 +307,13 @@ export class JobService {
           differentialMatches,
           requirementMatches,
           reqMatchPercent: reqPercent(),
-          diffMatchPercent: diffPercent()
+          diffMatchPercent: diffPercent(),
         };
       }));
 
       return {
         ...job,
-        proposals
+        proposals,
       };
     }));
 

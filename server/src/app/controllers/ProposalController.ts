@@ -8,7 +8,7 @@ import { IController } from '@controllers/IController';
 export class ProposalController implements IController {
   constructor(
     private readonly repoService: RepositoryService,
-    private readonly wsService: WebSocketService
+    private readonly wsService: WebSocketService,
   ) {}
 
   public index = async (req: Request, res: Response): Promise<void> => {
@@ -114,19 +114,24 @@ export class ProposalController implements IController {
       return;
     }
 
-    if (![true, false].includes(status)) {
+    if (typeof status !== 'boolean') {
       res.status(401).json({ error: { message: 'Invalid status sent', field: 'status' } });
       return;
     }
 
     let chat = await this.repoService.chats.findOne({
-      where: { employer_id: employerId, user_id: proposal.user_id },
+      where: {
+        employer_id: employerId,
+        user_id: proposal.user_id,
+        job_vacancy_id: proposal.job.id,
+      },
     });
 
     if (!chat) {
       chat = await this.repoService.chats.create({
         employer_id: employerId,
         user_id: proposal.user_id,
+        job_vacancy_id: proposal.job.id,
       });
     }
 
@@ -135,12 +140,12 @@ export class ProposalController implements IController {
     let link: string;
     if (status === true) {
       title = 'Proposta aceita';
-      text = `Sua proposta para ${proposal.job.name} foi aceita! A empresa ${proposal.job.employer.name} entrará em contato.`;
+      text = `A empresa ${proposal.job.employer.name} entrará em contato para falar sobre a vaga '${proposal.job.name}'`;
       link = `/proposals/${proposalId}`;
       if (proposal.job.amount > 0) {
         await this.repoService.jobVacancies.update({
           set: { amount: '** = job_vacancy.amount - 1' as any },
-          where: { id: proposal.job_vacancy_id }
+          where: { id: proposal.job_vacancy_id },
         });
       }
       await this.repoService.proposals.update({
@@ -149,7 +154,7 @@ export class ProposalController implements IController {
       });
     } else {
       title = 'Proposta negada';
-      text = `Sua proposta para ${proposal.job.name} foi negada.`;
+      text = `${proposal.job.employer.name} não demonstrou interesse em sua candidatura para a vaga '${proposal.job.name}''`;
       link = `/proposals/${proposalId}`;
       await this.repoService.proposals.update({
         set: { status: 'denied' },

@@ -5,7 +5,7 @@ import { BaseRepository } from '@repositories/BaseRepository';
 export class ReportRepository extends BaseRepository<Report> {
   constructor() {
     super('report', {
-      id: { primary: true, },
+      id: { primary: true },
       description: { },
       user_id: { },
       job_vacancy_id: { },

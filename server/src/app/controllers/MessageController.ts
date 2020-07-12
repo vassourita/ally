@@ -8,7 +8,7 @@ import { IController } from '@controllers/IController';
 export class MessageController implements IController {
   constructor(
     private readonly repoService: RepositoryService,
-    private readonly wsService: WebSocketService
+    private readonly wsService: WebSocketService,
   ) {}
 
   public index = async (req: Request, res: Response): Promise<void> => {
@@ -24,7 +24,7 @@ export class MessageController implements IController {
           type: 'single',
           as: 'type',
         },
-      ]
+      ],
     });
 
     const idFilter = user.type.id === 1 ? ['employer', 'user'] : ['user', 'employer'];
@@ -32,6 +32,12 @@ export class MessageController implements IController {
     const chats = await this.repoService.chats.find({
       where: { [`${idFilter[0]}_id`]: userId },
       join: [
+        {
+          repo: this.repoService.jobVacancies,
+          on: { job_vacancy_id: 'job_vacancy.id' },
+          type: 'single',
+          as: 'job',
+        },
         {
           repo: this.repoService.messages,
           on: { chat_id: 'chat.id' },
@@ -41,8 +47,8 @@ export class MessageController implements IController {
         {
           repo: this.repoService.users,
           on: { id: `chat.${idFilter[1]}_id` },
-          as: idFilter[1],
           type: 'single',
+          as: idFilter[1],
         },
       ],
     });
@@ -70,7 +76,7 @@ export class MessageController implements IController {
           type: 'single',
           as: 'type',
         },
-      ]
+      ],
     });
 
     const idFilter = user.type.id === 1 ? 'employer' : 'user';
@@ -84,7 +90,7 @@ export class MessageController implements IController {
           as: idFilter,
           type: 'single',
         },
-      ]
+      ],
     });
 
     message.chat = chat;

@@ -21,10 +21,10 @@ export class ReportController implements IController {
               as: 'employer',
               on: { id: 'job_vacancy.employer_id' },
               type: 'single',
-            }
-          ]
-        }
-      ]
+            },
+          ],
+        },
+      ],
     });
 
     res.status(201).json({ reports });
