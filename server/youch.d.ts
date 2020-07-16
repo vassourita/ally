@@ -1,5 +1,5 @@
 declare module 'youch' {
-  import { Request } from 'express';
+  import { Request, Request } from 'express';
 
   class Youch {
     constructor(err: Error, req: Request);
@@ -7,4 +7,8 @@ declare module 'youch' {
     toJSON(): Promise<any>;
   }
   export default Youch;
+}
+
+declare module 'leite' {
+  export default {} as any;
 }

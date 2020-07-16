@@ -1,11 +1,12 @@
 version: "3"
 
 services:
+
   server:
+    container_name: ally_server
     build: .
     ports:
       - "3333:3333"
-    container_name: ally-server
-    command: npm start
+    command: npm run server:run
     env_file:
-      - ./.env
+      - ./.env.production

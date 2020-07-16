@@ -23,6 +23,9 @@ jspm_packages/
 .env.local
 .env.production
 
+# Docker
+docker-production.yml
+
 # Upload files
 public/uploads/**
 !public/uploads/seed*

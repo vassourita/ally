@@ -11,8 +11,12 @@ export class Database {
   private client: mysql.Connection;
 
   constructor(config: ConnectionConfig) {
-    this.client = mysql.createConnection(config);
-    this.connect();
+    try {
+      this.client = mysql.createConnection(config);
+      this.connect();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public static getInstance() {
