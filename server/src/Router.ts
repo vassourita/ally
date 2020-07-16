@@ -87,6 +87,7 @@ export class Router {
 
     routes.get('/reports', report.index);
     routes.post('/reports', report.store);
+    routes.delete('/reports/:id', report.delete);
 
     this.routes = routes;
   }

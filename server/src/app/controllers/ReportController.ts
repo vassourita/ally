@@ -42,4 +42,12 @@ export class ReportController implements IController {
 
     res.status(201).json({ report });
   }
+
+  public delete = async (req: Request, res: Response): Promise<void> => {
+    const deleted = await this.repoService.reports.delete({
+      where: { id: req.params.id },
+    });
+
+    res.status(201).json({ deleted });
+  }
 }
