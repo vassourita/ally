@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 
 import { Container } from './styles';
 
-export interface IProps {
+export interface IProps extends ButtonHTMLAttributes<any> {
   outlined?: boolean;
   disabled?: boolean;
   isLoading?: boolean;

@@ -5,10 +5,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async req => {
-  const storage = localStorage.getItem('@ally-admin/authorization');
-  if (storage) {
-    req.headers.authorization = `Bearer ${JSON.parse(storage).token}`;
-  }
+  req.headers.authorization = `Bearer ${process.env.REACT_APP_AUTHORIZATION}`;
+  
   return req;
 });
 
