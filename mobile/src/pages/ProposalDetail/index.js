@@ -22,7 +22,7 @@ function ProposalDetail() {
     if (status === 'denied') {
       return (
         <span style={{ color: 'var(--ally-red)' }}>
-          rejeitado
+          não aceito
           <FiXCircle />
         </span>
       );
