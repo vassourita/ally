@@ -11,12 +11,7 @@ export class Database {
   private client: mysql.Connection;
 
   constructor(config: ConnectionConfig) {
-    try {
-      this.client = mysql.createConnection(config);
-      this.connect();
-    } catch (error) {
-      console.log(error);
-    }
+    this.client = mysql.createConnection(config);
   }
 
   public static getInstance() {
@@ -28,10 +23,14 @@ export class Database {
 
   private connect() {
     this.client.connect(err => {
-      if (err) throw err;
-      Logger.info('Database', 'ok');
+      if (err) { throw err; }
     });
-    this.raw("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+  }
+
+  private disconnect() {
+    this.client.end(err => {
+      if (err) { throw err; }
+    });
   }
 
   public static escape<T>(value: T) {
@@ -39,7 +38,9 @@ export class Database {
   }
 
   public async raw<T>(sql: string, params: any[] = []): Promise<T> {
+    this.connect();
     const res = await promisify<string, any[], T>(this.client.query).bind(this.client)(sql, params);
+    this.disconnect();
     return res;
   }
 

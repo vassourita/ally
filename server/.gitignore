@@ -1,6 +1,7 @@
 # production
 /build
 /dist
+/data
 
 # Logs
 logs
