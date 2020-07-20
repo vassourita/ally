@@ -12,6 +12,8 @@ export class Database {
 
   constructor(config: ConnectionConfig) {
     this.client = mysql.createConnection(config);
+    this.connect();
+    Logger.info('Database', 'ok');
   }
 
   public static getInstance() {
@@ -38,9 +40,7 @@ export class Database {
   }
 
   public async raw<T>(sql: string, params: any[] = []): Promise<T> {
-    this.connect();
     const res = await promisify<string, any[], T>(this.client.query).bind(this.client)(sql, params);
-    this.disconnect();
     return res;
   }
 
