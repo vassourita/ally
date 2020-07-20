@@ -52,11 +52,6 @@ function HomeHeader() {
               SOBRE NÓS
             </NavLink>
           </li>
-          <li>
-            <NavLink activeClassName="active-link" to="/contact">
-              CONTATO
-            </NavLink>
-          </li>
           {validSession ? (
             <>
               <li>
