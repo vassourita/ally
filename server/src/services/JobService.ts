@@ -116,7 +116,7 @@ export class JobService {
       if (job.local === 'state' && user.state !== job.employer.state) {
         return false;
       }
-      if (job.local === 'city' && user.city !== job.employer.city && user.state !== job.employer.state) {
+      if (job.local === 'city' && user.city !== job.employer.city) {
         return false;
       }
       return true;
