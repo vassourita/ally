@@ -43,5 +43,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/date-fns": "^2.6.0",
+    "date-fns": "^2.15.0"
   }
 }

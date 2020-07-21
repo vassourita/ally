@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
+import { formatRelative } from 'date-fns';
+import pt_BR from 'date-fns/locale/pt-BR';
 
 import Logo from '../assets/logo@3x.png'
 import api from '../services/api';
@@ -43,6 +45,10 @@ const Dashboard: React.FC = () => {
     })
   }
 
+  const getDate = (timestamp: string) => {
+    return formatRelative(new Date(timestamp), new Date(), { locale: pt_BR });
+  };
+
   return (
     <Container>
       <Header>
@@ -64,7 +70,7 @@ const Dashboard: React.FC = () => {
                   <h3>{report.job.name}</h3>
                   <p>por <strong>{report.job.employer.name}</strong></p>
                 </div>
-                <p>denunciado <strong>ontem às 19:40</strong></p>
+                <p>denunciado <strong>{getDate(report.created_at)}</strong></p>
               </>
             ) : (
               <>
@@ -76,7 +82,7 @@ const Dashboard: React.FC = () => {
                   <h3>{report.job.name}</h3>
                   <p>por <strong>{report.job.employer.name}</strong></p>
                   <p>em <strong>{report.job.employer.city} - {report.job.employer.state}</strong></p>
-                  <p>criado em <strong>15 de junho</strong></p>
+                  <p>criado em <strong>{getDate(report.job.created_at)}</strong></p>
                 </div>
                 <div>
                   <p>
@@ -97,7 +103,7 @@ const Dashboard: React.FC = () => {
                   </p>
                 </div>
                 <div>
-                  <p>denunciado <strong>ontem às 19:40</strong></p>
+                  <p>denunciado <strong>{getDate(report.created_at)}</strong></p>
                 </div>
                 <div></div>
                 <div>
